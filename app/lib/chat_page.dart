@@ -346,8 +346,11 @@ class _ChatPageState extends State<ChatPage> {
                           ),
                           constraints: const BoxConstraints(maxWidth: 280),
                           decoration: BoxDecoration(
-                            color: isMine ? const Color(0xFFD1F5D3) : const Color(0xFFEAEAEA),
-                            borderRadius: BorderRadius.circular(12),
+                            color: isMine ? const Color(0xFFDDF4FF) : const Color(0xFFF3F4F6),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: isMine ? const Color(0xFFB8E6FF) : const Color(0xFFE5E7EB),
+                            ),
                           ),
                           child: Column(
                             crossAxisAlignment:
@@ -362,11 +365,18 @@ class _ChatPageState extends State<ChatPage> {
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              Text(
-                                _formatTime(createdAt),
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.grey.shade700,
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Text(
+                                  _formatTime(createdAt),
+                                  style: TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey.shade700,
+                                  ),
                                 ),
                               ),
                             ],
@@ -391,27 +401,42 @@ class _ChatPageState extends State<ChatPage> {
             top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      minLines: 1,
-                      maxLines: 4,
-                      textInputAction: TextInputAction.send,
-                      onSubmitted: (_) => _sendMessage(),
-                      decoration: const InputDecoration(
-                        hintText: AppStrings.chatTypeHint,
-                        border: OutlineInputBorder(),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0xFFE5E7EB)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        minLines: 1,
+                        maxLines: 4,
+                        textInputAction: TextInputAction.send,
+                        onSubmitted: (_) => _sendMessage(),
+                        decoration: const InputDecoration(
+                          hintText: AppStrings.chatTypeHint,
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  ElevatedButton(
-                    onPressed: _sending ? null : _sendMessage,
-                    child: const Text('Gonder'),
-                  ),
-                ],
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _sending ? null : _sendMessage,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                      child: const Text('Gonder'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
