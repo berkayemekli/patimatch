@@ -233,8 +233,30 @@ class _DiscoverPageState extends State<DiscoverPage> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: const Text('Eslesme Oldu!'),
-              content: Text('$matchedDogName ile karsilikli begeni olustu.'),
+              title: const Row(
+                children: [
+                  Icon(Icons.favorite, color: Colors.red),
+                  SizedBox(width: 8),
+                  Text('Eslesme Oldu!'),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 4),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      '$matchedDogName ile karsilikli begeni olustu.',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              ),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -464,26 +486,43 @@ class _DiscoverPageState extends State<DiscoverPage> {
               children: [
                 SizedBox(
                   height: 260,
-                  child: photoUrl == null
-                      ? const ColoredBox(
-                          color: Color(0xFFECECEC),
-                          child: Center(child: Icon(Icons.pets, size: 64)),
-                        )
-                      : Image.network(
-                          photoUrl,
-                          fit: BoxFit.cover,
-                          loadingBuilder: (context, child, progress) {
-                            if (progress == null) return child;
-                            return const ColoredBox(
-                              color: Color(0xFFF2F2F2),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          },
-                          errorBuilder: (context, error, stackTrace) => const ColoredBox(
-                            color: Color(0xFFECECEC),
-                            child: Center(child: Icon(Icons.broken_image, size: 40)),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      photoUrl == null
+                          ? const ColoredBox(
+                              color: Color(0xFFECECEC),
+                              child: Center(child: Icon(Icons.pets, size: 64)),
+                            )
+                          : Image.network(
+                              photoUrl,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (context, child, progress) {
+                                if (progress == null) return child;
+                                return const ColoredBox(
+                                  color: Color(0xFFF2F2F2),
+                                  child: Center(child: CircularProgressIndicator()),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) => const ColoredBox(
+                                color: Color(0xFFECECEC),
+                                child: Center(child: Icon(Icons.broken_image, size: 40)),
+                              ),
+                            ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.transparent,
+                              Color(0x66000000),
+                            ],
                           ),
                         ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -519,7 +558,15 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       const SizedBox(height: 6),
                       Text('Irk: $breed'),
                       Text('Yas: $ageMonths ay'),
-                      Text('Sehir: $city'),
+                      const SizedBox(height: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text('Sehir: $city'),
+                      ),
                     ],
                   ),
                 ),
