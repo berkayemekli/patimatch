@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'discover_page.dart';
 import 'matches_page.dart';
+import 'notifications_page.dart';
 import 'pati_bnb_page.dart';
 import 'pati_gezdirme_page.dart';
 import 'pati_parent_page.dart';
+import 'payments_page.dart';
 import 'settings_page.dart';
 
 class MainShellPage extends StatefulWidget {
@@ -66,6 +68,24 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ]
             : [
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const NotificationsPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.notifications_outlined),
+                  tooltip: 'Bildirimler',
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const PaymentsPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                  tooltip: 'Odemeler',
+                ),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).push(
