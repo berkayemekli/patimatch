@@ -39,6 +39,36 @@ class _DogProfilePageState extends State<DogProfilePage> {
   String? _existingDogId;
   String? _existingPhotoUrl;
 
+  List<String> _missingFields() {
+    final missing = <String>[];
+    if (_nameController.text.trim().isEmpty) missing.add('Ad');
+    if (_breedController.text.trim().isEmpty) missing.add('Irk');
+    if ((int.tryParse(_ageController.text.trim()) ?? 0) <= 0) missing.add('Yas');
+    if ((int.tryParse(_weightController.text.trim()) ?? 0) <= 0) missing.add('Kilo');
+    if (_cityController.text.trim().isEmpty) missing.add('Sehir');
+    if (_passportCodeController.text.trim().isEmpty) missing.add('Pasaport');
+    if ((_imageBytes == null) && (_existingPhotoUrl == null)) missing.add('Fotograf');
+    return missing;
+  }
+
+  int _profileCompletionPercent() {
+    const total = 12;
+    int filled = 0;
+    if (_nameController.text.trim().isNotEmpty) filled++;
+    if (_breedController.text.trim().isNotEmpty) filled++;
+    if ((int.tryParse(_ageController.text.trim()) ?? 0) > 0) filled++;
+    if ((int.tryParse(_weightController.text.trim()) ?? 0) > 0) filled++;
+    if (_cityController.text.trim().isNotEmpty) filled++;
+    if (_passportCodeController.text.trim().isNotEmpty) filled++;
+    if (_microchipController.text.trim().isNotEmpty) filled++;
+    if (_colorController.text.trim().isNotEmpty) filled++;
+    if (_temperamentController.text.trim().isNotEmpty) filled++;
+    if (_healthNotesController.text.trim().isNotEmpty) filled++;
+    if (_sex.isNotEmpty) filled++;
+    if ((_imageBytes != null) || (_existingPhotoUrl != null)) filled++;
+    return ((filled / total) * 100).round().clamp(0, 100);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -241,8 +271,59 @@ class _DogProfilePageState extends State<DogProfilePage> {
               padding: const EdgeInsets.all(16),
               child: ListView(
           children: [
+            Builder(
+              builder: (context) {
+                final percent = _profileCompletionPercent();
+                final missing = _missingFields();
+                return Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.blue.shade100),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.verified_user_outlined),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Profil Tamamlama: %$percent',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      LinearProgressIndicator(value: percent / 100),
+                      const SizedBox(height: 8),
+                      if (missing.isNotEmpty)
+                        Text(
+                          'Eksik alanlar: ${missing.join(', ')}',
+                          style: const TextStyle(fontSize: 13),
+                        ),
+                      if (missing.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        OutlinedButton(
+                          onPressed: null,
+                          child: const Text('Once zorunlu alanlari tamamla'),
+                        ),
+                      ],
+                    ],
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
             TextField(
               controller: _nameController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileNameLabel,
                 border: OutlineInputBorder(),
@@ -251,6 +332,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _breedController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileBreedLabel,
                 border: OutlineInputBorder(),
@@ -260,6 +342,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             TextField(
               controller: _ageController,
               keyboardType: TextInputType.number,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileAgeLabel,
                 border: OutlineInputBorder(),
@@ -269,6 +352,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             TextField(
               controller: _weightController,
               keyboardType: TextInputType.number,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileWeightLabel,
                 border: OutlineInputBorder(),
@@ -277,6 +361,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _cityController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileCityLabel,
                 border: OutlineInputBorder(),
@@ -285,6 +370,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _passportCodeController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profilePassportLabel,
                 border: OutlineInputBorder(),
@@ -293,6 +379,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _microchipController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileMicrochipLabel,
                 border: OutlineInputBorder(),
@@ -301,6 +388,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _colorController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileColorLabel,
                 border: OutlineInputBorder(),
@@ -370,6 +458,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             const SizedBox(height: 12),
             TextField(
               controller: _temperamentController,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileTemperamentLabel,
                 border: OutlineInputBorder(),
@@ -379,6 +468,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             TextField(
               controller: _healthNotesController,
               maxLines: 3,
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileHealthNotesLabel,
                 border: OutlineInputBorder(),
