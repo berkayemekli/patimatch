@@ -172,9 +172,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchWalkers(),
       builder: (context, snapshot) {
-        final source = snapshot.hasError
-            ? _servicesRepository.demoWalkers
-            : (snapshot.data ?? _servicesRepository.demoWalkers);
+        final raw = snapshot.data ?? <Map<String, dynamic>>[];
+        final source = raw.isEmpty ? _servicesRepository.demoWalkers : raw;
         final walkers = _applyFilters(source);
 
         return Column(
@@ -241,7 +240,11 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             ),
             Expanded(
               child: walkers.isEmpty
-                  ? const Center(child: Text('Filtrelere uygun gezdirici bulunamadi.'))
+                  ? Center(
+                      child: Text(
+                        'Filtrelere uygun gezdirici bulunamadi. (ham:${raw.length} kaynak:${source.length})',
+                      ),
+                    )
                   : ListView.separated(
                           itemCount: walkers.length,
                           separatorBuilder: (_, _) => const SizedBox(height: 8),

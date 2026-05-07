@@ -222,9 +222,8 @@ class _PatiParentPageState extends State<PatiParentPage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchAdoptionPosts(),
       builder: (context, snapshot) {
-        final source = snapshot.hasError
-            ? _servicesRepository.demoAdoptionPosts
-            : (snapshot.data ?? _servicesRepository.demoAdoptionPosts);
+        final raw = snapshot.data ?? <Map<String, dynamic>>[];
+        final source = raw.isEmpty ? _servicesRepository.demoAdoptionPosts : raw;
         final posts = _applyFilters(source);
 
         return Column(
@@ -296,7 +295,11 @@ class _PatiParentPageState extends State<PatiParentPage> {
             ),
             Expanded(
               child: posts.isEmpty
-                  ? const Center(child: Text('Filtrelere uygun ilan bulunamadi.'))
+                  ? Center(
+                      child: Text(
+                        'Filtrelere uygun ilan bulunamadi. (ham:${raw.length} kaynak:${source.length})',
+                      ),
+                    )
                   : ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
                           itemCount: posts.length,

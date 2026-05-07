@@ -162,9 +162,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchBnbHosts(),
       builder: (context, snapshot) {
-        final source = snapshot.hasError
-            ? _servicesRepository.demoBnbHosts
-            : (snapshot.data ?? _servicesRepository.demoBnbHosts);
+        final raw = snapshot.data ?? <Map<String, dynamic>>[];
+        final source = raw.isEmpty ? _servicesRepository.demoBnbHosts : raw;
         final hosts = _applyFilters(source);
 
         return Column(
@@ -214,7 +213,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             ),
             Expanded(
               child: hosts.isEmpty
-                  ? const Center(child: Text('Filtrelere uygun bakici bulunamadi.'))
+                  ? Center(
+                      child: Text(
+                        'Filtrelere uygun bakici bulunamadi. (ham:${raw.length} kaynak:${source.length})',
+                      ),
+                    )
                   : ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
                           itemCount: hosts.length,
