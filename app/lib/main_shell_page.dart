@@ -56,6 +56,7 @@ class _MainShellPageState extends State<MainShellPage> {
     final selectedModule = _modules[_selectedModuleIndex];
     final user = FirebaseAuth.instance.currentUser;
     final isGuest = widget.guestMode && user == null;
+    final maxWidth = MediaQuery.of(context).size.width > 1200 ? 1180.0 : 980.0;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
@@ -116,107 +117,131 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ],
       ),
-      body: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xFFEAF2FF),
-                  Colors.white,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-            child: Row(
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxWidth),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+            child: Column(
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFFEEF4FF), Colors.white],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(color: const Color(0xFFDDE7F5)),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
+                  child: Row(
                     children: [
-                      Text(
-                        selectedModule.title,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Trusted Pet Parenting Ecosystem',
+                              style: TextStyle(fontSize: 12, color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              selectedModule.title,
+                              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(selectedModule.subtitle, style: const TextStyle(color: Color(0xFF475569))),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(selectedModule.subtitle),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: const Color(0xFFD8E3F3)),
+                        ),
+                        child: const Text(
+                          '4 Modules',
+                          style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF334155)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: const Color(0xFFD8E3F3)),
+                const SizedBox(height: 14),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List<Widget>.generate(_modules.length, (index) {
+                          final module = _modules[index];
+                          final selected = index == _selectedModuleIndex;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: ChoiceChip(
+                              selected: selected,
+                              onSelected: (_) => setState(() => _selectedModuleIndex = index),
+                              label: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(module.icon, size: 17, color: selected ? Colors.white : const Color(0xFF475569)),
+                                  const SizedBox(width: 6),
+                                  Text(module.title),
+                                ],
+                              ),
+                              selectedColor: const Color(0xFF111827),
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Color(0x00000000)),
+                              labelStyle: TextStyle(
+                                color: selected ? Colors.white : const Color(0xFF111827),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    '4 ModUl',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      color: const Color(0xFF334155),
+                ),
+                const SizedBox(height: 12),
+                const Divider(height: 1),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: IndexedStack(
+                        index: _selectedModuleIndex,
+                        children: const [
+                          PatiGezdirmePage(),
+                          PatiBnbPage(),
+                          DiscoverPage(embedded: true),
+                          PatiParentPage(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(
-            height: 58,
-            child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                final module = _modules[index];
-                final selected = index == _selectedModuleIndex;
-                return ChoiceChip(
-                  selected: selected,
-                  onSelected: (_) {
-                    setState(() => _selectedModuleIndex = index);
-                  },
-                  label: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        module.icon,
-                        size: 18,
-                        color: selected ? Colors.white : module.color,
-                      ),
-                      const SizedBox(width: 6),
-                      Text(module.title),
-                    ],
-                  ),
-                  selectedColor: const Color(0xFF111827),
-                  backgroundColor: Colors.white,
-                  labelStyle: TextStyle(
-                    color: selected ? Colors.white : const Color(0xFF111827),
-                    fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  ),
-                );
-              },
-              separatorBuilder: (_, _) => const SizedBox(width: 8),
-              itemCount: _modules.length,
-            ),
-          ),
-          const Divider(height: 1),
-          Expanded(
-            child: IndexedStack(
-              index: _selectedModuleIndex,
-              children: const [
-                PatiGezdirmePage(),
-                PatiBnbPage(),
-                DiscoverPage(embedded: true),
-                PatiParentPage(),
-              ],
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
