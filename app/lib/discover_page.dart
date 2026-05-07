@@ -7,6 +7,7 @@ import 'data/app_providers.dart';
 import 'data/swipe_repository.dart';
 import 'data/user_repository.dart';
 import 'firestore_payloads.dart';
+import 'login_page.dart';
 import 'matches_page.dart';
 import 'settings_page.dart';
 
@@ -816,6 +817,54 @@ class _DiscoverPageState extends State<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (!_loading && _myOwnerId == null) {
+      final guestFallback = Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 460),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: const Color(0xFFE5E7EB)),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.favorite_border, size: 44, color: Color(0xFF64748B)),
+                  const SizedBox(height: 10),
+                  const Text(
+                    'PatiMatch icin giris gerekli',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Eslesmeleri gorebilmek icin once hesabina giris yap.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Color(0xFF6B7280)),
+                  ),
+                  const SizedBox(height: 14),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                      );
+                    },
+                    child: const Text('Giris Yap'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      if (widget.embedded) return guestFallback;
+      return Scaffold(body: guestFallback);
+    }
+
     final body = Padding(
       padding: const EdgeInsets.all(16),
       child: _loading
