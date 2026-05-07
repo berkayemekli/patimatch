@@ -128,31 +128,27 @@ class _MainShellPageState extends State<MainShellPage> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Color(0xFFEEF4FF), Colors.white],
+                      colors: [Color(0xFFFAF7F2), Color(0xFFF2F6FF), Color(0xFFFFFFFF)],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: const Color(0xFFDDE7F5)),
+                    borderRadius: BorderRadius.circular(32),
                   ),
-                  padding: const EdgeInsets.fromLTRB(22, 22, 22, 18),
+                  padding: const EdgeInsets.fromLTRB(30, 30, 30, 24),
                   child: Row(
                     children: [
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Trusted Pet Parenting Ecosystem',
-                              style: TextStyle(fontSize: 12, color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-                            ),
+                            const Text('Trusted Pet Parenting Ecosystem', style: TextStyle(fontSize: 13, color: Color(0xFF7C8AA0), fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
                             Text(
                               selectedModule.title,
-                              style: const TextStyle(fontSize: 44, fontWeight: FontWeight.w600, color: Color(0xFF111827), height: 1.08),
+                              style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w500, color: Color(0xFF0F172A), height: 1.02),
                             ),
                             const SizedBox(height: 4),
-                            Text(selectedModule.subtitle, style: const TextStyle(color: Color(0xFF475569))),
+                            Text(selectedModule.subtitle, style: const TextStyle(color: Color(0xFF475569), fontSize: 17, height: 1.5)),
                             const SizedBox(height: 14),
                             Wrap(
                               spacing: 10,
@@ -190,7 +186,7 @@ class _MainShellPageState extends State<MainShellPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 24),
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
@@ -233,11 +229,11 @@ class _MainShellPageState extends State<MainShellPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 const Divider(height: 1),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 SizedBox(
-                  height: 220,
+                  height: 260,
                   child: ListView(
                     scrollDirection: Axis.horizontal,
                     children: const [
@@ -261,16 +257,15 @@ class _MainShellPageState extends State<MainShellPage> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 20),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                      borderRadius: BorderRadius.circular(28),
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(28),
                       child: IndexedStack(
                         index: _selectedModuleIndex,
                         children: const [
@@ -398,9 +393,9 @@ class _StoryVisualCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 340,
+      width: 380,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -425,9 +420,9 @@ class _StoryVisualCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: const TextStyle(color: Color(0xFFE5E7EB), fontSize: 13)),
+                  Text(title, style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w600, height: 1.15)),
+                  const SizedBox(height: 6),
+                  Text(subtitle, style: const TextStyle(color: Color(0xFFE5E7EB), fontSize: 14, height: 1.45)),
                 ],
               ),
             ),
