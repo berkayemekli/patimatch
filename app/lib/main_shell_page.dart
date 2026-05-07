@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'discover_page.dart';
 import 'matches_page.dart';
@@ -51,6 +53,7 @@ class _MainShellPageState extends State<MainShellPage> {
   @override
   Widget build(BuildContext context) {
     final selectedModule = _modules[_selectedModuleIndex];
+    final user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +77,7 @@ class _MainShellPageState extends State<MainShellPage> {
                       MaterialPageRoute(builder: (_) => const NotificationsPage()),
                     );
                   },
-                  icon: const Icon(Icons.notifications_outlined),
+                  icon: _buildNotificationIcon(user?.uid),
                   tooltip: 'Bildirimler',
                 ),
                 IconButton(
@@ -83,7 +86,7 @@ class _MainShellPageState extends State<MainShellPage> {
                       MaterialPageRoute(builder: (_) => const PaymentsPage()),
                     );
                   },
-                  icon: const Icon(Icons.account_balance_wallet_outlined),
+                  icon: _buildPendingPaymentIcon(user?.uid),
                   tooltip: 'Odemeler',
                 ),
                 IconButton(
@@ -210,6 +213,58 @@ class _MainShellPageState extends State<MainShellPage> {
       ),
     );
   }
+
+  Widget _buildNotificationIcon(String? userId) {
+    if (userId == null) return const Icon(Icons.notifications_outlined);
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .where('isRead', isEqualTo: false)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final count = snapshot.data?.docs.length ?? 0;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const Icon(Icons.notifications_outlined),
+            if (count > 0)
+              Positioned(
+                right: -4,
+                top: -4,
+                child: _CountBadge(count: count),
+              ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _buildPendingPaymentIcon(String? userId) {
+    if (userId == null) return const Icon(Icons.account_balance_wallet_outlined);
+    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('payments')
+          .where('userId', isEqualTo: userId)
+          .where('status', isEqualTo: 'pending')
+          .snapshots(),
+      builder: (context, snapshot) {
+        final count = snapshot.data?.docs.length ?? 0;
+        return Stack(
+          clipBehavior: Clip.none,
+          children: [
+            const Icon(Icons.account_balance_wallet_outlined),
+            if (count > 0)
+              Positioned(
+                right: -4,
+                top: -4,
+                child: _CountBadge(count: count),
+              ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class _ModuleItem {
@@ -224,4 +279,30 @@ class _ModuleItem {
   final String subtitle;
   final IconData icon;
   final Color color;
+}
+
+class _CountBadge extends StatelessWidget {
+  const _CountBadge({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = count > 99 ? '99+' : count.toString();
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+      decoration: BoxDecoration(
+        color: Colors.red,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
 }
