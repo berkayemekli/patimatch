@@ -158,15 +158,9 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     final dateLabel = _dateRange == null
         ? 'Tarih Sec'
         : '${_formatDate(_dateRange!.start)} - ${_formatDate(_dateRange!.end)}';
-
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _servicesRepository.watchBnbHosts(),
-      builder: (context, snapshot) {
-        final raw = snapshot.data ?? <Map<String, dynamic>>[];
-        final source = raw.isEmpty ? _servicesRepository.demoBnbHosts : raw;
-        final hosts = _applyFilters(source);
-
-        return Column(
+    final source = _servicesRepository.demoBnbHosts;
+    final hosts = _applyFilters(source);
+    return Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -213,11 +207,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             ),
             Expanded(
               child: hosts.isEmpty
-                  ? Center(
-                      child: Text(
-                        'Filtrelere uygun bakici bulunamadi. (ham:${raw.length} kaynak:${source.length})',
-                      ),
-                    )
+                  ? const Center(child: Text('Filtrelere uygun bakici bulunamadi.'))
                   : ListView.separated(
                           padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
                           itemCount: hosts.length,
@@ -311,8 +301,6 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                         ),
             ),
           ],
-        );
-      },
     );
   }
 

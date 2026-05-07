@@ -169,14 +169,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<Map<String, dynamic>>>(
-      stream: _servicesRepository.watchWalkers(),
-      builder: (context, snapshot) {
-        final raw = snapshot.data ?? <Map<String, dynamic>>[];
-        final source = raw.isEmpty ? _servicesRepository.demoWalkers : raw;
-        final walkers = _applyFilters(source);
-
-        return Column(
+    final source = _servicesRepository.demoWalkers;
+    final walkers = _applyFilters(source);
+    return Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 10),
@@ -240,11 +235,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             ),
             Expanded(
               child: walkers.isEmpty
-                  ? Center(
-                      child: Text(
-                        'Filtrelere uygun gezdirici bulunamadi. (ham:${raw.length} kaynak:${source.length})',
-                      ),
-                    )
+                  ? const Center(child: Text('Filtrelere uygun gezdirici bulunamadi.'))
                   : ListView.separated(
                           itemCount: walkers.length,
                           separatorBuilder: (_, _) => const SizedBox(height: 8),
@@ -335,8 +326,6 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                         ),
             ),
           ],
-        );
-      },
     );
   }
 }
