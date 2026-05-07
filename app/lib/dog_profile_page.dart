@@ -42,9 +42,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
   String? _existingDogId;
   String? _existingPhotoUrl;
   final List<String> _cityOptions = const <String>[
-    'Istanbul', 'İstanbul', 'Ankara', 'Izmir', 'İzmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Muğla', 'Adana'
+    'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Adana'
   ];
-  String? _selectedCity;
   final Set<String> _selectedTraits = <String>{};
   final List<String> _traitOptions = const <String>[
     'Oyuncu', 'Sakin', 'Sosyal', 'Egitilebilir', 'Koruyucu', 'Enerjik'
@@ -130,9 +129,6 @@ class _DogProfilePageState extends State<DogProfilePage> {
         _ageController.text = (data['ageMonths']?.toString() ?? '');
         _weightController.text = (data['weightKg']?.toString() ?? '');
         _cityController.text = data['city'] as String? ?? '';
-        _selectedCity = _cityOptions.contains(_cityController.text)
-            ? _cityController.text
-            : null;
         _districtController.text = data['district'] as String? ?? '';
         final loc = data['location'] as Map<String, dynamic>?;
         _latController.text = (loc?['lat']?.toString() ?? '');
@@ -278,6 +274,10 @@ class _DogProfilePageState extends State<DogProfilePage> {
       _existingPhotoUrl = imageUrl;
 
       if (!mounted) return;
+      setState(() {
+        _status =
+            'Kaydedildi: ${city.isEmpty ? "-" : city}/${district.isEmpty ? "-" : district} (${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)})';
+      });
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const MainShellPage()),
       );
@@ -397,35 +397,23 @@ class _DogProfilePageState extends State<DogProfilePage> {
               ),
             ),
             const SizedBox(height: 12),
-            DropdownButtonFormField<String>(
-              initialValue: _selectedCity,
-              decoration: const InputDecoration(
-                labelText: AppStrings.profileCityLabel,
-                border: OutlineInputBorder(),
-              ),
-              items: _cityOptions
-                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
-                  .toList(),
-              onChanged: (value) {
-                if (value == null) return;
-                setState(() {
-                  _selectedCity = value;
-                  _cityController.text = value;
-                });
-              },
-            ),
-            const SizedBox(height: 8),
             TextField(
               controller: _cityController,
-              onChanged: (_) => setState(() {
-                _selectedCity = _cityOptions.contains(_cityController.text)
-                    ? _cityController.text
-                    : null;
-              }),
+              onChanged: (_) => setState(() {}),
               decoration: const InputDecoration(
-                labelText: 'Sehir (elle giris)',
+                labelText: 'Sehir',
                 border: OutlineInputBorder(),
               ),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              children: _cityOptions.map((c) {
+                return ActionChip(
+                  label: Text(c),
+                  onPressed: () => setState(() => _cityController.text = c),
+                );
+              }).toList(),
             ),
             const SizedBox(height: 12),
             Row(
