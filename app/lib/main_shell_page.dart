@@ -53,7 +53,6 @@ class _MainShellPageState extends State<MainShellPage> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedModule = _modules[_selectedModuleIndex];
     final user = FirebaseAuth.instance.currentUser;
     final isGuest = widget.guestMode && user == null;
     final maxWidth = MediaQuery.of(context).size.width > 1200 ? 1180.0 : 980.0;
@@ -143,12 +142,15 @@ class _MainShellPageState extends State<MainShellPage> {
                           children: [
                             const Text('Trusted Pet Parenting Ecosystem', style: TextStyle(fontSize: 13, color: Color(0xFF7C8AA0), fontWeight: FontWeight.w500)),
                             const SizedBox(height: 8),
-                            Text(
-                              selectedModule.title,
-                              style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w500, color: Color(0xFF0F172A), height: 1.02),
+                            const Text(
+                              'Her adimda\nsevgi, guven ve\npremium bakim',
+                              style: TextStyle(fontSize: 56, fontWeight: FontWeight.w500, color: Color(0xFF0F172A), height: 1.02),
                             ),
-                            const SizedBox(height: 4),
-                            Text(selectedModule.subtitle, style: const TextStyle(color: Color(0xFF475569), fontSize: 17, height: 1.5)),
+                            const SizedBox(height: 8),
+                            const Text(
+                              'PatiParent, evcil dostun icin dogru bakiciyi, guvenli yuruyusu ve huzurlu emanet deneyimini tek bir sicak platformda bulusturur.',
+                              style: TextStyle(color: Color(0xFF475569), fontSize: 17, height: 1.5),
+                            ),
                             const SizedBox(height: 14),
                             Wrap(
                               spacing: 10,
@@ -164,11 +166,47 @@ class _MainShellPageState extends State<MainShellPage> {
                                 ),
                                 OutlinedButton(
                                   onPressed: () {},
-                                  child: const Text('Nasil Calisir'),
+                                  child: const Text('Hikayemizi Kesfet'),
                                 ),
                               ],
                             ),
                           ],
+                        ),
+                      ),
+                      const SizedBox(width: 18),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(22),
+                        child: SizedBox(
+                          width: 280,
+                          height: 220,
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              Image.network(
+                                'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=900&q=80',
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => const ColoredBox(color: Color(0xFFE5E7EB)),
+                              ),
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [Color(0x990F172A), Color(0x22000000)],
+                                  ),
+                                ),
+                              ),
+                              const Positioned(
+                                left: 12,
+                                right: 12,
+                                bottom: 12,
+                                child: Text(
+                                  'Dogrulanmis bakicilar,\nmutlu patiler, huzurlu ebeveynler.',
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, height: 1.3),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Container(
