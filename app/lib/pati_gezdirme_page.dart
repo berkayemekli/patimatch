@@ -8,189 +8,270 @@ class PatiGezdirmePage extends StatefulWidget {
 }
 
 class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
-  String _city = 'Tum Sehirler';
-  final Set<String> _features = <String>{};
-  final _latController = TextEditingController();
-  final _lngController = TextEditingController();
-
-  @override
-  void dispose() {
-    _latController.dispose();
-    _lngController.dispose();
-    super.dispose();
-  }
+  String _city = 'Istanbul';
+  final Set<String> _filters = <String>{'Asili', 'Dogrulandi'};
 
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       children: [
-        const _SectionTitle('Filtreler'),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          initialValue: _city,
-          decoration: const InputDecoration(labelText: 'Sehir', border: OutlineInputBorder()),
-          items: const [
-            DropdownMenuItem(value: 'Tum Sehirler', child: Text('Tum Sehirler')),
-            DropdownMenuItem(value: 'Istanbul', child: Text('Istanbul')),
-            DropdownMenuItem(value: 'Ankara', child: Text('Ankara')),
-            DropdownMenuItem(value: 'Izmir', child: Text('Izmir')),
-          ],
-          onChanged: (v) => setState(() => _city = v ?? 'Tum Sehirler'),
+        _Hero(city: _city),
+        const SizedBox(height: 14),
+        _FilterBar(
+          city: _city,
+          filters: _filters,
+          onCityChanged: (v) => setState(() => _city = v),
+          onFilterToggle: (name, selected) {
+            setState(() {
+              if (selected) {
+                _filters.add(name);
+              } else {
+                _filters.remove(name);
+              }
+            });
+          },
         ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: ['Asili', 'Egitimli', 'Kamerali Takip', 'Acil Destek'].map((f) {
-            return FilterChip(
-              label: Text(f),
-              selected: _features.contains(f),
-              onSelected: (v) {
-                setState(() {
-                  if (v) {
-                    _features.add(f);
-                  } else {
-                    _features.remove(f);
-                  }
-                });
-              },
-            );
-          }).toList(),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _latController,
-                decoration: const InputDecoration(labelText: 'Latitude', border: OutlineInputBorder()),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: TextField(
-                controller: _lngController,
-                decoration: const InputDecoration(labelText: 'Longitude', border: OutlineInputBorder()),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.blue.shade50, borderRadius: BorderRadius.circular(10)),
-          child: Text('Konum altyapisi hazir: ${_latController.text.isEmpty ? "-" : _latController.text}, ${_lngController.text.isEmpty ? "-" : _lngController.text}'),
-        ),
-        const SizedBox(height: 16),
-        const _SectionTitle('One Cikan Gezdiriciler'),
-        SizedBox(height: 8),
-        const _SimpleCard(
-          title: 'Ece A. - Istanbul',
-          subtitle: '312 yuruyus • 290 TL/saat',
-          badge: 'Aninda Musait',
+        const SizedBox(height: 14),
+        const _WalkerCard(
+          name: 'Ece Aras',
+          city: 'Istanbul',
           rating: 4.9,
+          walks: 312,
+          pricePerHour: 290,
+          availability: 'Aninda Musait',
+          verified: true,
         ),
-        SizedBox(height: 10),
-        const _SimpleCard(
-          title: 'Mert K. - Istanbul',
-          subtitle: '188 yuruyus • 250 TL/saat',
-          badge: 'Aksam Slotu',
+        const SizedBox(height: 10),
+        const _WalkerCard(
+          name: 'Mert Kaya',
+          city: 'Istanbul',
           rating: 4.8,
+          walks: 188,
+          pricePerHour: 250,
+          availability: 'Aksam Slotu',
+          verified: true,
         ),
-        SizedBox(height: 16),
-        const _SectionTitle('Yeni Katilanlar'),
-        SizedBox(height: 8),
-        const _SimpleCard(
-          title: 'Sena D. - Ankara',
-          subtitle: '140 yuruyus • 220 TL/saat',
-          badge: 'Yeni',
+        const SizedBox(height: 10),
+        const _WalkerCard(
+          name: 'Sena Demir',
+          city: 'Ankara',
           rating: 4.7,
+          walks: 140,
+          pricePerHour: 220,
+          availability: 'Yeni',
+          verified: false,
         ),
       ],
     );
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.text);
-
-  final String text;
+class _Hero extends StatelessWidget {
+  const _Hero({required this.city});
+  final String city;
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF0E9F6E), Color(0xFF1F7A8C)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'PatiGezdirme',
+            style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            '$city icin premium gezdiriciler',
+            style: const TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _SimpleCard extends StatelessWidget {
-  const _SimpleCard({
-    required this.title,
-    required this.subtitle,
-    required this.badge,
-    required this.rating,
+class _FilterBar extends StatelessWidget {
+  const _FilterBar({
+    required this.city,
+    required this.filters,
+    required this.onCityChanged,
+    required this.onFilterToggle,
   });
 
-  final String title;
-  final String subtitle;
-  final String badge;
-  final double rating;
+  final String city;
+  final Set<String> filters;
+  final ValueChanged<String> onCityChanged;
+  final void Function(String name, bool selected) onFilterToggle;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.directions_walk)),
-        title: Text(title),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 2),
-            Row(
-              children: [
-                ...List<Widget>.generate(5, (i) {
-                  final isFilled = rating >= i + 1;
-                  return Icon(
-                    isFilled ? Icons.star_rounded : Icons.star_border_rounded,
-                    size: 16,
-                    color: const Color(0xFFF59E0B),
-                  );
-                }),
-                const SizedBox(width: 6),
-                Text(
-                  rating.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w800,
-                    color: Color(0xFF111827),
-                  ),
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        children: [
+          DropdownButtonFormField<String>(
+            initialValue: city,
+            decoration: const InputDecoration(labelText: 'Sehir', border: OutlineInputBorder()),
+            items: const [
+              DropdownMenuItem(value: 'Istanbul', child: Text('Istanbul')),
+              DropdownMenuItem(value: 'Ankara', child: Text('Ankara')),
+              DropdownMenuItem(value: 'Izmir', child: Text('Izmir')),
+            ],
+            onChanged: (v) {
+              if (v != null) onCityChanged(v);
+            },
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: ['Asili', 'Dogrulandi', 'Acil Destek', 'Kamerali Takip'].map((item) {
+              return FilterChip(
+                label: Text(item),
+                selected: filters.contains(item),
+                onSelected: (v) => onFilterToggle(item, v),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _WalkerCard extends StatelessWidget {
+  const _WalkerCard({
+    required this.name,
+    required this.city,
+    required this.rating,
+    required this.walks,
+    required this.pricePerHour,
+    required this.availability,
+    required this.verified,
+  });
+
+  final String name;
+  final String city;
+  final double rating;
+  final int walks;
+  final int pricePerHour;
+  final String availability;
+  final bool verified;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const CircleAvatar(radius: 22, child: Icon(Icons.person)),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
+                        if (verified) ...[
+                          const SizedBox(width: 6),
+                          const Icon(Icons.verified, size: 18, color: Color(0xFF0E9F6E)),
+                        ],
+                      ],
+                    ),
+                    Text(city, style: const TextStyle(color: Color(0xFF6B7280))),
+                  ],
                 ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(subtitle),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: Colors.green.shade100,
-                borderRadius: BorderRadius.circular(999),
               ),
-              child: Text(
-                badge,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700),
+              _Badge(text: availability),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(child: _Metric(icon: Icons.star_rounded, label: 'Puan', value: rating.toStringAsFixed(1))),
+              Expanded(child: _Metric(icon: Icons.route_rounded, label: 'Yuruyus', value: '$walks')),
+              Expanded(child: _Metric(icon: Icons.payments_rounded, label: 'Saatlik', value: '₺$pricePerHour')),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0E9F6E),
+                foregroundColor: Colors.white,
+                disabledBackgroundColor: const Color(0xFF0E9F6E),
+                disabledForegroundColor: Colors.white,
               ),
+              child: const Text('Talep Gonder'),
             ),
-            const SizedBox(height: 6),
-            ElevatedButton(onPressed: null, child: const Text('Talep')),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _Metric extends StatelessWidget {
+  const _Metric({required this.icon, required this.label, required this.value});
+  final IconData icon;
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Icon(icon, size: 18, color: const Color(0xFFF59E0B)),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w800)),
+        Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
+      ],
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  const _Badge({required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color(0xFFD1FAE5),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF065F46)),
       ),
     );
   }
