@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:ui';
 
 import 'discover_page.dart';
 import 'login_page.dart';
@@ -210,65 +209,60 @@ class _MainShellPageState extends State<MainShellPage> {
                           ),
                         ),
                       ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: const Color(0xFFD8E3F3)),
+                        ),
+                        child: const Text(
+                          '4 Modules',
+                          style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF334155)),
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.85),
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(color: const Color(0xFFE2E8F0)),
-                          boxShadow: const [
-                            BoxShadow(color: Color(0x14000000), blurRadius: 18, offset: Offset(0, 8)),
-                          ],
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: List<Widget>.generate(_modules.length, (index) {
-                              final module = _modules[index];
-                              final selected = index == _selectedModuleIndex;
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 5),
-                                child: InkWell(
-                                  borderRadius: BorderRadius.circular(999),
-                                  onTap: () => setState(() => _selectedModuleIndex = index),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 220),
-                                    curve: Curves.easeOutCubic,
-                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                    decoration: BoxDecoration(
-                                      color: selected ? const Color(0xFF111827) : Colors.white.withValues(alpha: 0.7),
-                                      borderRadius: BorderRadius.circular(999),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Icon(module.icon, size: 19, color: selected ? Colors.white : const Color(0xFF475569)),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          module.title,
-                                          style: TextStyle(
-                                            color: selected ? Colors.white : const Color(0xFF111827),
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: const Color(0xFFE2E8F0)),
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: List<Widget>.generate(_modules.length, (index) {
+                          final module = _modules[index];
+                          final selected = index == _selectedModuleIndex;
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: ChoiceChip(
+                              selected: selected,
+                              onSelected: (_) => setState(() => _selectedModuleIndex = index),
+                              label: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(module.icon, size: 17, color: selected ? Colors.white : const Color(0xFF475569)),
+                                  const SizedBox(width: 6),
+                                  Text(module.title),
+                                ],
+                              ),
+                              selectedColor: const Color(0xFF111827),
+                              backgroundColor: Colors.white,
+                              side: const BorderSide(color: Color(0x00000000)),
+                              labelStyle: TextStyle(
+                                color: selected ? Colors.white : const Color(0xFF111827),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        }),
                       ),
                     ),
                   ),
@@ -276,10 +270,30 @@ class _MainShellPageState extends State<MainShellPage> {
                 const SizedBox(height: 20),
                 const Divider(height: 1),
                 const SizedBox(height: 20),
-                const _StoryVisualCard(
-                  title: 'Mutlu Yuruyus Rutinleri',
-                  subtitle: 'Canli takip ve dogrulanmis gezdiricilerle guvenli yuruyusler.',
-                  imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1600&q=80',
+                SizedBox(
+                  height: 260,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: const [
+                      _StoryVisualCard(
+                        title: 'Guvenli Emanet Deneyimi',
+                        subtitle: 'Dogrulanmis bakicilarla huzurlu seyahat',
+                        imageUrl: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                      SizedBox(width: 12),
+                      _StoryVisualCard(
+                        title: 'Mutlu Yuruyus Rutinleri',
+                        subtitle: 'Canli takip ve premium gezdirici standartlari',
+                        imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                      SizedBox(width: 12),
+                      _StoryVisualCard(
+                        title: 'Akilli Eslesme ve Bag Kurma',
+                        subtitle: 'AI destekli uyum sinyalleriyle dogru eslesme',
+                        imageUrl: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Expanded(
