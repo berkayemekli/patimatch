@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'app_entry_page.dart';
 import 'firebase_options.dart';
-import 'main_shell_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +18,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PatiMatch',
       home: FutureBuilder<FirebaseApp>(
-        future: Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        ).timeout(const Duration(seconds: 8)),
+        future: Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
@@ -29,7 +26,31 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.hasError) {
-            return const MainShellPage(guestMode: true);
+            return Scaffold(
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        'Baglanti baslatilamadi. Lutfen tekrar deneyin.',
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (_) => const MyApp()),
+                          );
+                        },
+                        child: const Text('Tekrar Dene'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
           }
           return const AppEntryPage();
         },
