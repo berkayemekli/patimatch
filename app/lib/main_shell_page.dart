@@ -58,7 +58,11 @@ class _MainShellPageState extends State<MainShellPage> {
     final isGuest = widget.guestMode && user == null;
 
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        backgroundColor: const Color(0xFFF5F7FA),
         title: const Text('PatiParent'),
         actions: isGuest
             ? [
@@ -119,7 +123,7 @@ class _MainShellPageState extends State<MainShellPage> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  selectedModule.color.withValues(alpha: 0.16),
+                  const Color(0xFFEAF2FF),
                   Colors.white,
                 ],
                 begin: Alignment.topLeft,
@@ -150,13 +154,13 @@ class _MainShellPageState extends State<MainShellPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: selectedModule.color.withValues(alpha: 0.35)),
+                    border: Border.all(color: const Color(0xFFD8E3F3)),
                   ),
                   child: Text(
                     '4 ModUl',
                     style: TextStyle(
                       fontWeight: FontWeight.w700,
-                      color: selectedModule.color,
+                      color: const Color(0xFF334155),
                     ),
                   ),
                 ),
@@ -188,10 +192,10 @@ class _MainShellPageState extends State<MainShellPage> {
                       Text(module.title),
                     ],
                   ),
-                  selectedColor: module.color,
-                  backgroundColor: Colors.grey.shade100,
+                  selectedColor: const Color(0xFF111827),
+                  backgroundColor: Colors.white,
                   labelStyle: TextStyle(
-                    color: selected ? Colors.white : Colors.black87,
+                    color: selected ? Colors.white : const Color(0xFF111827),
                     fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                   ),
                 );
