@@ -42,8 +42,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
   String? _existingDogId;
   String? _existingPhotoUrl;
   final List<String> _cityOptions = const <String>[
-    'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Adana'
+    'Istanbul', 'İstanbul', 'Ankara', 'Izmir', 'İzmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Muğla', 'Adana'
   ];
+  String? _selectedCity;
   final Set<String> _selectedTraits = <String>{};
   final List<String> _traitOptions = const <String>[
     'Oyuncu', 'Sakin', 'Sosyal', 'Egitilebilir', 'Koruyucu', 'Enerjik'
@@ -129,6 +130,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
         _ageController.text = (data['ageMonths']?.toString() ?? '');
         _weightController.text = (data['weightKg']?.toString() ?? '');
         _cityController.text = data['city'] as String? ?? '';
+        _selectedCity = _cityOptions.contains(_cityController.text)
+            ? _cityController.text
+            : null;
         _districtController.text = data['district'] as String? ?? '';
         final loc = data['location'] as Map<String, dynamic>?;
         _latController.text = (loc?['lat']?.toString() ?? '');
@@ -197,8 +201,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
         .map((e) => e.trim())
         .where((e) => e.isNotEmpty)
         .toList();
-    final lat = double.tryParse(_latController.text.trim()) ?? 0.0;
-    final lng = double.tryParse(_lngController.text.trim()) ?? 0.0;
+    final lat = double.tryParse(_latController.text.trim().replaceAll(',', '.')) ?? 0.0;
+    final lng = double.tryParse(_lngController.text.trim().replaceAll(',', '.')) ?? 0.0;
     final mergedTraits = <String>{...temperamentTags, ..._selectedTraits}.toList();
     final healthNotes = _healthNotesController.text.trim();
 
@@ -394,7 +398,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              initialValue: _cityController.text.isEmpty ? null : _cityController.text,
+              initialValue: _selectedCity,
               decoration: const InputDecoration(
                 labelText: AppStrings.profileCityLabel,
                 border: OutlineInputBorder(),
@@ -404,8 +408,24 @@ class _DogProfilePageState extends State<DogProfilePage> {
                   .toList(),
               onChanged: (value) {
                 if (value == null) return;
-                setState(() => _cityController.text = value);
+                setState(() {
+                  _selectedCity = value;
+                  _cityController.text = value;
+                });
               },
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: _cityController,
+              onChanged: (_) => setState(() {
+                _selectedCity = _cityOptions.contains(_cityController.text)
+                    ? _cityController.text
+                    : null;
+              }),
+              decoration: const InputDecoration(
+                labelText: 'Sehir (elle giris)',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 12),
             Row(
