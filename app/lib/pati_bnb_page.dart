@@ -1,0 +1,235 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'app_strings.dart';
+import 'data/app_providers.dart';
+import 'data/services_repository.dart';
+import 'data/user_repository.dart';
+
+class PatiBnbPage extends StatefulWidget {
+  const PatiBnbPage({super.key});
+
+  @override
+  State<PatiBnbPage> createState() => _PatiBnbPageState();
+}
+
+class _PatiBnbPageState extends State<PatiBnbPage> {
+  final ServicesRepository _servicesRepository = AppProviders.servicesRepository;
+  final UserRepository _userRepository = AppProviders.userRepository;
+
+  DateTimeRange? _dateRange;
+  bool _verifiedOnly = true;
+  double _maxNightlyPrice = 900;
+
+  List<Map<String, dynamic>> _applyFilters(List<Map<String, dynamic>> hosts) {
+    return hosts.where((host) {
+      final verified = host['verified'] == true;
+      final nightlyPrice = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
+      final verifiedOk = !_verifiedOnly || verified;
+      final priceOk = nightlyPrice <= _maxNightlyPrice.round();
+      return verifiedOk && priceOk;
+    }).toList();
+  }
+
+  Future<void> _pickDateRange() async {
+    final now = DateTime.now();
+    final result = await showDateRangePicker(
+      context: context,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365)),
+      initialDateRange: _dateRange,
+      helpText: 'Konaklama Tarihleri',
+    );
+    if (result != null) {
+      setState(() => _dateRange = result);
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    return '$day.$month.${date.year}';
+  }
+
+  Future<void> _requestStay(Map<String, dynamic> host) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null || _dateRange == null) return;
+
+    final myDog = await _userRepository.fetchMyDogDoc(user.uid);
+    if (myDog == null) return;
+
+    await _servicesRepository.createBnbRequest(
+      requesterUserId: user.uid,
+      requesterDogId: myDog.id,
+      hostId: host['id'] as String? ?? '',
+      hostName: host['name'] as String? ?? '',
+      checkIn: _dateRange!.start,
+      checkOut: _dateRange!.end,
+      note: 'In-app quick bnb request',
+    );
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text(AppStrings.bnbRequestSent)),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dateLabel = _dateRange == null
+        ? 'Tarih Sec'
+        : '${_formatDate(_dateRange!.start)} - ${_formatDate(_dateRange!.end)}';
+
+    return StreamBuilder<List<Map<String, dynamic>>>(
+      stream: _servicesRepository.watchBnbHosts(),
+      builder: (context, snapshot) {
+        final hosts = _applyFilters(snapshot.data ?? <Map<String, dynamic>>[]);
+
+        return Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: _pickDateRange,
+                          icon: const Icon(Icons.calendar_month),
+                          label: Text(dateLabel),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      FilterChip(
+                        selected: _verifiedOnly,
+                        onSelected: (value) => setState(() => _verifiedOnly = value),
+                        label: const Text('Sadece Dogrulanmis'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Text('Maks Gece Ucreti:'),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${_maxNightlyPrice.round()} TL',
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ],
+                  ),
+                  Slider(
+                    value: _maxNightlyPrice,
+                    min: 400,
+                    max: 1200,
+                    divisions: 16,
+                    label: '${_maxNightlyPrice.round()} TL',
+                    onChanged: (value) => setState(() => _maxNightlyPrice = value),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: hosts.isEmpty
+                  ? const Center(child: Text('Filtrelere uygun bakici bulunamadi.'))
+                  : ListView.separated(
+                          padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
+                          itemCount: hosts.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 8),
+                          itemBuilder: (context, index) {
+                            final host = hosts[index];
+                            final name = host['name'] as String? ?? '-';
+                            final initial = name.isEmpty ? '?' : name.substring(0, 1);
+                            final city = host['city'] as String? ?? '-';
+                            final bio = host['bio'] as String? ?? '';
+                            final yard = host['yard'] == true;
+                            final verified = host['verified'] == true;
+                            final nightlyPrice = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
+                            final rating = (host['rating'] as num?)?.toDouble() ?? 0;
+
+                            return Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundColor: Colors.orange.shade100,
+                                          child: Text(initial),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                name,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                              Text(city),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                          decoration: BoxDecoration(
+                                            color: Colors.amber.shade100,
+                                            borderRadius: BorderRadius.circular(999),
+                                          ),
+                                          child: Text('Puan ${rating.toStringAsFixed(1)}'),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(bio),
+                                    const SizedBox(height: 10),
+                                    Wrap(
+                                      spacing: 8,
+                                      runSpacing: 6,
+                                      children: [
+                                        if (verified) _tag('Dogrulanmis', Colors.green.shade100),
+                                        _tag(yard ? 'Bahce Var' : 'Apartman', Colors.blue.shade100),
+                                        _tag('$nightlyPrice TL/gece', Colors.grey.shade200),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ElevatedButton(
+                                        onPressed: _dateRange == null ? null : () => _requestStay(host),
+                                        child: const Text('Konaklama Talebi'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _tag(String label, Color bg) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}

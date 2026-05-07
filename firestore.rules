@@ -1,0 +1,156 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function hasKeys(data, keys) {
+      return data.keys().hasAll(keys);
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create, update: if isOwner(userId);
+      allow delete: if false;
+    }
+
+    match /dogs/{dogId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /health_docs/{docId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.ownerId == request.auth.uid;
+      allow delete: if false;
+    }
+
+    match /swipes/{swipeId} {
+      allow read: if isSignedIn();
+      allow create, update: if isSignedIn()
+        && request.resource.data.fromOwnerId == request.auth.uid
+        && hasKeys(request.resource.data, ['swipeId', 'fromDogId', 'fromOwnerId', 'toDogId', 'toOwnerId', 'liked', 'decision'])
+        && request.resource.data.swipeId is string
+        && request.resource.data.fromDogId is string
+        && request.resource.data.toDogId is string
+        && request.resource.data.toOwnerId is string
+        && request.resource.data.liked is bool
+        && (request.resource.data.decision == 'like' || request.resource.data.decision == 'pass');
+      allow delete: if isSignedIn() && resource.data.fromOwnerId == request.auth.uid;
+    }
+
+    match /matches/{matchId} {
+      allow read: if isSignedIn() && request.auth.uid in resource.data.ownerIds;
+      allow create: if isSignedIn()
+        && request.auth.uid in request.resource.data.ownerIds
+        && hasKeys(request.resource.data, ['matchId', 'dogAId', 'dogBId', 'dogIds', 'ownerIds', 'status'])
+        && request.resource.data.matchId is string
+        && request.resource.data.dogAId is string
+        && request.resource.data.dogBId is string
+        && request.resource.data.dogIds is list
+        && request.resource.data.ownerIds is list
+        && request.resource.data.status == 'active';
+      allow update: if isSignedIn() && request.auth.uid in resource.data.ownerIds;
+      allow delete: if false;
+    }
+
+    match /chats/{chatId} {
+      allow read: if isSignedIn() && request.auth.uid in resource.data.participantOwnerIds;
+      allow create: if isSignedIn()
+        && request.auth.uid in request.resource.data.participantOwnerIds
+        && hasKeys(request.resource.data, ['chatId', 'matchId', 'participantDogIds', 'participantOwnerIds', 'status'])
+        && request.resource.data.chatId is string
+        && request.resource.data.matchId is string
+        && request.resource.data.participantDogIds is list
+        && request.resource.data.participantOwnerIds is list
+        && request.resource.data.status == 'active';
+      allow update: if isSignedIn() && request.auth.uid in resource.data.participantOwnerIds;
+      allow delete: if false;
+
+      match /messages/{messageId} {
+        allow read: if isSignedIn() && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds;
+        allow create: if isSignedIn()
+          && request.resource.data.senderUserId == request.auth.uid
+          && hasKeys(request.resource.data, ['messageId', 'chatId', 'senderUserId', 'text'])
+          && request.resource.data.messageId is string
+          && request.resource.data.chatId == chatId
+          && request.resource.data.text is string
+          && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds;
+        allow update: if isSignedIn()
+          && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds
+          && request.auth.uid == resource.data.senderUserId;
+        allow delete: if false;
+      }
+    }
+
+    match /reports/{reportId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.reporterUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['reportId', 'reporterUserId', 'reportedUserId', 'status', 'reasonCode']);
+      allow update, delete: if false;
+    }
+
+    match /blocks/{blockId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && hasKeys(request.resource.data, ['blockId', 'userId', 'blockedUserId', 'reason']);
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+
+    match /walkers/{walkerId} {
+      allow read: if isSignedIn() && resource.data.status == 'active';
+      allow create, update, delete: if false;
+    }
+
+    match /bnb_hosts/{hostId} {
+      allow read: if isSignedIn() && resource.data.status == 'active';
+      allow create, update, delete: if false;
+    }
+
+    match /adoption_posts/{postId} {
+      allow read: if isSignedIn() && resource.data.status == 'active';
+      allow create, update, delete: if false;
+    }
+
+    match /walk_requests/{requestId} {
+      allow read: if isSignedIn()
+        && (resource.data.requesterUserId == request.auth.uid || resource.data.walkerOwnerUserId == request.auth.uid);
+      allow create: if isSignedIn()
+        && request.resource.data.requesterUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'walkerId', 'walkerName', 'preferredAt', 'status'])
+        && request.resource.data.status == 'pending';
+      allow update, delete: if false;
+    }
+
+    match /bnb_requests/{requestId} {
+      allow read: if isSignedIn()
+        && (resource.data.requesterUserId == request.auth.uid || resource.data.hostOwnerUserId == request.auth.uid);
+      allow create: if isSignedIn()
+        && request.resource.data.requesterUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'hostId', 'hostName', 'checkIn', 'checkOut', 'status'])
+        && request.resource.data.status == 'pending';
+      allow update, delete: if false;
+    }
+
+    match /adoption_applications/{applicationId} {
+      allow read: if isSignedIn()
+        && (resource.data.requesterUserId == request.auth.uid || resource.data.ownerUserId == request.auth.uid);
+      allow create: if isSignedIn()
+        && request.resource.data.requesterUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['applicationId', 'requesterUserId', 'requesterDogId', 'postId', 'ownerUserId', 'dogName', 'status'])
+        && request.resource.data.status == 'pending';
+      allow update, delete: if false;
+    }
+  }
+}

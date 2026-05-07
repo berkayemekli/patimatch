@@ -1,0 +1,12 @@
+{
+  "name": "patimatch-backend-bootstrap",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "seed": "node scripts/seed.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
+

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "506242188849",
+    "project_id": "patimatch-app-2026-berkay",
+    "storage_bucket": "patimatch-app-2026-berkay.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506242188849:android:f1aa6179984088d2f43710",
+        "android_client_info": {
+          "package_name": "com.example.patimatch_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnvWVxN9Y2eg-HpbFK8KyEguCV7BzCVLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
