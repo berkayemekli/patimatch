@@ -19,9 +19,19 @@ class _DogProfilePageState extends State<DogProfilePage> {
   final _nameController = TextEditingController();
   final _breedController = TextEditingController();
   final _ageController = TextEditingController();
+  final _weightController = TextEditingController();
   final _cityController = TextEditingController();
   final _passportCodeController = TextEditingController();
+  final _microchipController = TextEditingController();
+  final _colorController = TextEditingController();
+  final _temperamentController = TextEditingController();
+  final _healthNotesController = TextEditingController();
   String _sex = 'female';
+  String _activityLevel = 'medium';
+  bool _isNeutered = false;
+  bool _isVaccinated = false;
+  bool _friendlyWithDogs = true;
+  bool _friendlyWithKids = true;
   bool _saving = false;
   Uint8List? _imageBytes;
   String _status = '';
@@ -40,8 +50,13 @@ class _DogProfilePageState extends State<DogProfilePage> {
     _nameController.dispose();
     _breedController.dispose();
     _ageController.dispose();
+    _weightController.dispose();
     _cityController.dispose();
     _passportCodeController.dispose();
+    _microchipController.dispose();
+    _colorController.dispose();
+    _temperamentController.dispose();
+    _healthNotesController.dispose();
     super.dispose();
   }
 
@@ -69,9 +84,23 @@ class _DogProfilePageState extends State<DogProfilePage> {
         _nameController.text = data['name'] as String? ?? '';
         _breedController.text = data['breed'] as String? ?? '';
         _ageController.text = (data['ageMonths']?.toString() ?? '');
+        _weightController.text = (data['weightKg']?.toString() ?? '');
         _cityController.text = data['city'] as String? ?? '';
         _passportCodeController.text = data['passportCode'] as String? ?? '';
+        _microchipController.text = data['microchipNo'] as String? ?? '';
+        _colorController.text = data['color'] as String? ?? '';
         _sex = data['sex'] as String? ?? 'female';
+        _activityLevel = data['activityLevel'] as String? ?? 'medium';
+        _isNeutered = data['isNeutered'] == true;
+        _isVaccinated = data['isVaccinated'] == true;
+        _friendlyWithDogs = data['friendlyWithDogs'] != false;
+        _friendlyWithKids = data['friendlyWithKids'] != false;
+        final temperamentTags =
+            (data['temperamentTags'] as List<dynamic>? ?? <dynamic>[])
+                .whereType<String>()
+                .toList();
+        _temperamentController.text = temperamentTags.join(', ');
+        _healthNotesController.text = data['healthNotes'] as String? ?? '';
         final photos = (data['photoUrls'] as List<dynamic>? ?? <dynamic>[])
             .whereType<String>()
             .toList();
@@ -107,12 +136,22 @@ class _DogProfilePageState extends State<DogProfilePage> {
     final name = _nameController.text.trim();
     final breed = _breedController.text.trim();
     final ageMonths = int.tryParse(_ageController.text.trim()) ?? 0;
+    final weightKg = int.tryParse(_weightController.text.trim()) ?? 0;
     final city = _cityController.text.trim();
     final passportCode = _passportCodeController.text.trim();
+    final microchipNo = _microchipController.text.trim();
+    final color = _colorController.text.trim();
+    final temperamentTags = _temperamentController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+    final healthNotes = _healthNotesController.text.trim();
 
     if (name.isEmpty ||
         breed.isEmpty ||
         ageMonths <= 0 ||
+        weightKg <= 0 ||
         city.isEmpty ||
         passportCode.isEmpty) {
       setState(() => _status = AppStrings.profileAllFieldsRequired);
@@ -152,10 +191,18 @@ class _DogProfilePageState extends State<DogProfilePage> {
         'breed': breed,
         'passportCode': passportCode,
         'ageMonths': ageMonths,
-        'weightKg': 0,
+        'weightKg': weightKg,
+        'microchipNo': microchipNo,
+        'color': color,
         'sex': _sex,
-        'temperamentTags': <String>[],
-        'bio': '',
+        'temperamentTags': temperamentTags,
+        'activityLevel': _activityLevel,
+        'healthNotes': healthNotes,
+        'isNeutered': _isNeutered,
+        'isVaccinated': _isVaccinated,
+        'friendlyWithDogs': _friendlyWithDogs,
+        'friendlyWithKids': _friendlyWithKids,
+        'bio': healthNotes,
         'photoUrls': imageUrl == null ? <String>[] : <String>[imageUrl],
         'city': city,
         'location': {'lat': 0.0, 'lng': 0.0},
@@ -220,6 +267,15 @@ class _DogProfilePageState extends State<DogProfilePage> {
             ),
             const SizedBox(height: 12),
             TextField(
+              controller: _weightController,
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileWeightLabel,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
               controller: _cityController,
               decoration: const InputDecoration(
                 labelText: AppStrings.profileCityLabel,
@@ -231,6 +287,22 @@ class _DogProfilePageState extends State<DogProfilePage> {
               controller: _passportCodeController,
               decoration: const InputDecoration(
                 labelText: AppStrings.profilePassportLabel,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _microchipController,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileMicrochipLabel,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _colorController,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileColorLabel,
                 border: OutlineInputBorder(),
               ),
             ),
@@ -248,6 +320,69 @@ class _DogProfilePageState extends State<DogProfilePage> {
               onChanged: (value) {
                 if (value != null) setState(() => _sex = value);
               },
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _activityLevel,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileActivityLevel,
+                border: OutlineInputBorder(),
+              ),
+              items: const [
+                DropdownMenuItem(
+                  value: 'low',
+                  child: Text(AppStrings.profileActivityLow),
+                ),
+                DropdownMenuItem(
+                  value: 'medium',
+                  child: Text(AppStrings.profileActivityMedium),
+                ),
+                DropdownMenuItem(
+                  value: 'high',
+                  child: Text(AppStrings.profileActivityHigh),
+                ),
+              ],
+              onChanged: (value) {
+                if (value != null) setState(() => _activityLevel = value);
+              },
+            ),
+            const SizedBox(height: 12),
+            SwitchListTile(
+              value: _isNeutered,
+              title: const Text(AppStrings.profileNeutered),
+              onChanged: (v) => setState(() => _isNeutered = v),
+            ),
+            SwitchListTile(
+              value: _isVaccinated,
+              title: const Text(AppStrings.profileVaccinated),
+              onChanged: (v) => setState(() => _isVaccinated = v),
+            ),
+            SwitchListTile(
+              value: _friendlyWithDogs,
+              title: const Text(AppStrings.profileFriendlyDogs),
+              onChanged: (v) => setState(() => _friendlyWithDogs = v),
+            ),
+            SwitchListTile(
+              value: _friendlyWithKids,
+              title: const Text(AppStrings.profileFriendlyKids),
+              onChanged: (v) => setState(() => _friendlyWithKids = v),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _temperamentController,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileTemperamentLabel,
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _healthNotesController,
+              maxLines: 3,
+              decoration: const InputDecoration(
+                labelText: AppStrings.profileHealthNotesLabel,
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 12),
             OutlinedButton(
