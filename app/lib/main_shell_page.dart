@@ -53,7 +53,7 @@ class _MainShellPageState extends State<MainShellPage> {
   @override
   Widget build(BuildContext context) {
     final selectedModule = _modules[_selectedModuleIndex];
-    final user = FirebaseAuth.instance.currentUser;
+    final user = widget.guestMode ? null : FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
