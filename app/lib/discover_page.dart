@@ -681,6 +681,41 @@ class _DiscoverPageState extends State<DiscoverPage> {
   }
 
   Widget _buildStackedCards() {
+    if (_myOwnerId == null) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.lock_outline, size: 42, color: Color(0xFF64748B)),
+              const SizedBox(height: 10),
+              const Text(
+                'PatiMatch icin giris yapman gerekiyor.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 6),
+              const Text(
+                'Giris yaptiginda profiline gore eslesmeleri gosterecegiz.',
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 14),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                  );
+                },
+                child: const Text('Giris / Profil Ayarlari'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     if (_candidates.isEmpty || _index >= _candidates.length) {
       return Center(
         child: Column(
