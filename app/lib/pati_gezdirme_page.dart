@@ -9,293 +9,104 @@ class PatiGezdirmePage extends StatefulWidget {
 
 class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   String _city = 'Istanbul';
-  final Set<String> _filters = <String>{'Asili', 'Dogrulandi'};
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final crossCount = width > 1080 ? 3 : (width > 740 ? 2 : 1);
+
     return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
-        _Hero(city: _city),
-        const SizedBox(height: 14),
-        const _TrustLayer(),
-        const SizedBox(height: 14),
-        _FilterBar(
-          city: _city,
-          filters: _filters,
-          onCityChanged: (v) => setState(() => _city = v),
-          onFilterToggle: (name, selected) {
-            setState(() {
-              if (selected) {
-                _filters.add(name);
-              } else {
-                _filters.remove(name);
-              }
-            });
-          },
+        _TopFilter(city: _city, onCityChanged: (v) => setState(() => _city = v)),
+        const SizedBox(height: 16),
+        const Text(
+          'Guvenilir gezdiricilerden sec',
+          style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF111827)),
+        ),
+        const SizedBox(height: 6),
+        const Text(
+          'Dogrulanmis profiller, sicak yorumlar ve premium deneyim.',
+          style: TextStyle(color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 14),
-        const _WalkerCard(
-          name: 'Ece Aras',
-          city: 'Istanbul',
-          rating: 4.9,
-          walks: 312,
-          pricePerHour: 290,
-          availability: 'Aninda Musait',
-          verified: true,
-        ),
-        const SizedBox(height: 10),
-        const _WalkerCard(
-          name: 'Mert Kaya',
-          city: 'Istanbul',
-          rating: 4.8,
-          walks: 188,
-          pricePerHour: 250,
-          availability: 'Aksam Slotu',
-          verified: true,
-        ),
-        const SizedBox(height: 10),
-        const _WalkerCard(
-          name: 'Sena Demir',
-          city: 'Ankara',
-          rating: 4.7,
-          walks: 140,
-          pricePerHour: 220,
-          availability: 'Yeni',
-          verified: false,
+        GridView.count(
+          crossAxisCount: crossCount,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+          childAspectRatio: 0.80,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          children: const [
+            _WalkerTile(
+              name: 'Ece Aras',
+              city: 'Istanbul',
+              rating: 4.9,
+              walks: 312,
+              price: 290,
+              imageUrl: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80',
+              badge: 'Verified',
+            ),
+            _WalkerTile(
+              name: 'Mert Kaya',
+              city: 'Istanbul',
+              rating: 4.8,
+              walks: 188,
+              price: 250,
+              imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
+              badge: 'Top Rated',
+            ),
+            _WalkerTile(
+              name: 'Sena Demir',
+              city: 'Ankara',
+              rating: 4.7,
+              walks: 140,
+              price: 220,
+              imageUrl: 'https://images.unsplash.com/photo-1542204625-de293a4f7a9b?auto=format&fit=crop&w=900&q=80',
+              badge: 'New',
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _Hero extends StatelessWidget {
-  const _Hero({required this.city});
+class _TopFilter extends StatelessWidget {
+  const _TopFilter({required this.city, required this.onCityChanged});
   final String city;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: const LinearGradient(
-          colors: [Color(0xFFF4F7FB), Color(0xFFEAF2FF)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'PatiGezdirme',
-            style: TextStyle(color: Color(0xFF111827), fontSize: 24, fontWeight: FontWeight.w800),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '$city icin premium gezdiriciler',
-            style: const TextStyle(color: Color(0xFF4B5563), fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterBar extends StatelessWidget {
-  const _FilterBar({
-    required this.city,
-    required this.filters,
-    required this.onCityChanged,
-    required this.onFilterToggle,
-  });
-
-  final String city;
-  final Set<String> filters;
   final ValueChanged<String> onCityChanged;
-  final void Function(String name, bool selected) onFilterToggle;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFF8FAFC),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-      ),
-      child: Column(
-        children: [
-          DropdownButtonFormField<String>(
-            initialValue: city,
-            decoration: const InputDecoration(labelText: 'Sehir', border: OutlineInputBorder()),
-            items: const [
-              DropdownMenuItem(value: 'Istanbul', child: Text('Istanbul')),
-              DropdownMenuItem(value: 'Ankara', child: Text('Ankara')),
-              DropdownMenuItem(value: 'Izmir', child: Text('Izmir')),
-            ],
-            onChanged: (v) {
-              if (v != null) onCityChanged(v);
-            },
-          ),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: ['Asili', 'Dogrulandi', 'Acil Destek', 'Kamerali Takip'].map((item) {
-              return FilterChip(
-                label: Text(item),
-                selected: filters.contains(item),
-                onSelected: (v) => onFilterToggle(item, v),
-              );
-            }).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _TrustLayer extends StatelessWidget {
-  const _TrustLayer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: const [
-        Expanded(
-          child: _TrustCard(
-            icon: Icons.verified_user_outlined,
-            title: 'Verified Walkers',
-            subtitle: 'Kimlik ve profil dogrulama',
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: _TrustCard(
-            icon: Icons.location_searching_outlined,
-            title: 'Live Tracking',
-            subtitle: 'Canli rota ve durum takibi',
-          ),
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: _TrustCard(
-            icon: Icons.health_and_safety_outlined,
-            title: 'Emergency Support',
-            subtitle: 'Acil destek protokolu',
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TrustCard extends StatelessWidget {
-  const _TrustCard({required this.icon, required this.title, required this.subtitle});
-  final IconData icon;
-  final String title;
-  final String subtitle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(999),
         border: Border.all(color: const Color(0xFFE5E7EB)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Icon(icon, size: 18, color: const Color(0xFF0A84FF)),
-          const SizedBox(height: 8),
-          Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12)),
-          const SizedBox(height: 3),
-          Text(subtitle, style: const TextStyle(fontSize: 11, color: Color(0xFF64748B))),
-        ],
-      ),
-    );
-  }
-}
-
-class _WalkerCard extends StatelessWidget {
-  const _WalkerCard({
-    required this.name,
-    required this.city,
-    required this.rating,
-    required this.walks,
-    required this.pricePerHour,
-    required this.availability,
-    required this.verified,
-  });
-
-  final String name;
-  final String city;
-  final double rating;
-  final int walks;
-  final int pricePerHour;
-  final String availability;
-  final bool verified;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-        boxShadow: const [BoxShadow(color: Color(0x0A000000), blurRadius: 10, offset: Offset(0, 4))],
-      ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              const CircleAvatar(radius: 22, child: Icon(Icons.person)),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-                        if (verified) ...[
-                          const SizedBox(width: 6),
-                          const Icon(Icons.verified, size: 18, color: Color(0xFF0A84FF)),
-                        ],
-                      ],
-                    ),
-                    Text(city, style: const TextStyle(color: Color(0xFF6B7280))),
-                  ],
-                ),
+          const SizedBox(width: 8),
+          const Icon(Icons.search_rounded, color: Color(0xFF64748B)),
+          const SizedBox(width: 8),
+          const Text('Sehir', style: TextStyle(color: Color(0xFF6B7280))),
+          const SizedBox(width: 8),
+          Expanded(
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: city,
+                isExpanded: true,
+                items: const [
+                  DropdownMenuItem(value: 'Istanbul', child: Text('Istanbul')),
+                  DropdownMenuItem(value: 'Ankara', child: Text('Ankara')),
+                  DropdownMenuItem(value: 'Izmir', child: Text('Izmir')),
+                ],
+                onChanged: (v) {
+                  if (v != null) onCityChanged(v);
+                },
               ),
-              _Badge(text: availability),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _Metric(icon: Icons.star_rounded, label: 'Puan', value: rating.toStringAsFixed(1))),
-              Expanded(child: _Metric(icon: Icons.route_rounded, label: 'Yuruyus', value: '$walks')),
-              Expanded(child: _Metric(icon: Icons.payments_rounded, label: 'Saatlik', value: '₺$pricePerHour')),
-            ],
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF111827),
-                foregroundColor: Colors.white,
-                disabledBackgroundColor: const Color(0xFF111827),
-                disabledForegroundColor: Colors.white,
-              ),
-              child: const Text('Guvenli Yuruyus Planla'),
             ),
           ),
         ],
@@ -304,40 +115,84 @@ class _WalkerCard extends StatelessWidget {
   }
 }
 
-class _Metric extends StatelessWidget {
-  const _Metric({required this.icon, required this.label, required this.value});
-  final IconData icon;
-  final String label;
-  final String value;
+class _WalkerTile extends StatelessWidget {
+  const _WalkerTile({
+    required this.name,
+    required this.city,
+    required this.rating,
+    required this.walks,
+    required this.price,
+    required this.imageUrl,
+    required this.badge,
+  });
 
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Icon(icon, size: 18, color: const Color(0xFF0A84FF)),
-        const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.w800)),
-        Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
-      ],
-    );
-  }
-}
-
-class _Badge extends StatelessWidget {
-  const _Badge({required this.text});
-  final String text;
+  final String name;
+  final String city;
+  final double rating;
+  final int walks;
+  final int price;
+  final String imageUrl;
+  final String badge;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFEAF2FF),
-        borderRadius: BorderRadius.circular(999),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: const [BoxShadow(color: Color(0x12000000), blurRadius: 16, offset: Offset(0, 8))],
       ),
-      child: Text(
-        text,
-        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF1E3A8A)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(imageUrl, fit: BoxFit.cover),
+                  Positioned(
+                    top: 10,
+                    left: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.92),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(badge, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1E3A8A))),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(child: Text(name, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16))),
+                      const Icon(Icons.star_rounded, size: 16),
+                      Text(rating.toStringAsFixed(1), style: const TextStyle(fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                  const SizedBox(height: 3),
+                  Text('$city · $walks yuruyus', style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                  const SizedBox(height: 8),
+                  Text('₺$price / saat', style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF111827))),
+                  const SizedBox(height: 8),
+                  OutlinedButton(
+                    onPressed: null,
+                    child: const Text('Yuruyus Planla'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
