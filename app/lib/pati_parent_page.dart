@@ -215,7 +215,10 @@ class _PatiParentPageState extends State<PatiParentPage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchAdoptionPosts(),
       builder: (context, snapshot) {
-        final posts = _applyFilters(snapshot.data ?? <Map<String, dynamic>>[]);
+        final source = snapshot.hasError
+            ? _servicesRepository.demoAdoptionPosts
+            : (snapshot.data ?? _servicesRepository.demoAdoptionPosts);
+        final posts = _applyFilters(source);
 
         return Column(
           children: [

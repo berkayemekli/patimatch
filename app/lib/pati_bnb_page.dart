@@ -148,7 +148,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchBnbHosts(),
       builder: (context, snapshot) {
-        final hosts = _applyFilters(snapshot.data ?? <Map<String, dynamic>>[]);
+        final source = snapshot.hasError
+            ? _servicesRepository.demoBnbHosts
+            : (snapshot.data ?? _servicesRepository.demoBnbHosts);
+        final hosts = _applyFilters(source);
 
         return Column(
           children: [

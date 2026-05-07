@@ -7,6 +7,11 @@ class ServicesRepository {
       : _db = firestore ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _db;
+  List<Map<String, dynamic>> get demoWalkers => List<Map<String, dynamic>>.from(_demoWalkers);
+  List<Map<String, dynamic>> get demoBnbHosts =>
+      List<Map<String, dynamic>>.from(_demoBnbHosts);
+  List<Map<String, dynamic>> get demoAdoptionPosts =>
+      List<Map<String, dynamic>>.from(_demoAdoptionPosts);
 
   Stream<List<Map<String, dynamic>>> watchWalkers() {
     return _db

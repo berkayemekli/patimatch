@@ -158,7 +158,10 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _servicesRepository.watchWalkers(),
       builder: (context, snapshot) {
-        final walkers = _applyFilters(snapshot.data ?? <Map<String, dynamic>>[]);
+        final source = snapshot.hasError
+            ? _servicesRepository.demoWalkers
+            : (snapshot.data ?? _servicesRepository.demoWalkers);
+        final walkers = _applyFilters(source);
 
         return Column(
           children: [
