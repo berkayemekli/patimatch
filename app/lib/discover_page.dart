@@ -22,6 +22,8 @@ class DiscoverPage extends StatefulWidget {
 class _DiscoverPageState extends State<DiscoverPage> {
   static const String _prefCityFilterKey = 'discover_city_filter';
   static const String _prefVerifiedOnlyKey = 'discover_verified_only';
+  static const String _prefVaccinatedOnlyKey = 'discover_vaccinated_only';
+  static const String _prefActivityFilterKey = 'discover_activity_filter';
   bool _loading = true;
   bool _swiping = false;
   String _status = '';
@@ -38,6 +40,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
   String _cityFilter = 'all';
   String _myCity = '';
   bool _verifiedOnly = false;
+  bool _vaccinatedOnly = false;
+  String _activityFilter = 'all';
   DismissDirection _lastDismissDirection = DismissDirection.none;
   double _swipeProgress = 0;
   DismissDirection _swipeDirection = DismissDirection.none;
@@ -59,10 +63,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
     final prefs = await SharedPreferences.getInstance();
     final savedCityFilter = prefs.getString(_prefCityFilterKey);
     final savedVerifiedOnly = prefs.getBool(_prefVerifiedOnlyKey);
+    final savedVaccinatedOnly = prefs.getBool(_prefVaccinatedOnlyKey);
+    final savedActivityFilter = prefs.getString(_prefActivityFilterKey);
     if (!mounted) return;
     setState(() {
       _cityFilter = savedCityFilter ?? _cityFilter;
       _verifiedOnly = savedVerifiedOnly ?? _verifiedOnly;
+      _vaccinatedOnly = savedVaccinatedOnly ?? _vaccinatedOnly;
+      _activityFilter = savedActivityFilter ?? _activityFilter;
     });
   }
 
@@ -70,6 +78,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_prefCityFilterKey, _cityFilter);
     await prefs.setBool(_prefVerifiedOnlyKey, _verifiedOnly);
+    await prefs.setBool(_prefVaccinatedOnlyKey, _vaccinatedOnly);
+    await prefs.setString(_prefActivityFilterKey, _activityFilter);
   }
 
   Future<void> _loadDiscoverData() async {
@@ -172,10 +182,14 @@ class _DiscoverPageState extends State<DiscoverPage> {
         .where((dog) {
           final dogId = dog['dogId'] as String? ?? '';
           final ownerId = dog['ownerId'] as String? ?? '';
+          final isVaccinated = dog['isVaccinated'] == true;
+          final activityLevel = (dog['activityLevel'] as String? ?? '').trim();
           return dogId != _myDogId &&
               ownerId != _myOwnerId &&
               !_blockedOwnerIds.contains(ownerId) &&
               !_swipedDogIds.contains(dogId) &&
+              (!_vaccinatedOnly || isVaccinated) &&
+              (_activityFilter == 'all' || activityLevel == _activityFilter) &&
               !_candidates.any((e) => e['dogId'] == dogId);
         })
         .toList();
@@ -792,6 +806,22 @@ class _DiscoverPageState extends State<DiscoverPage> {
                     _verifiedOnly ? 'Dogrulanmis Profiller: Acik' : 'Dogrulanmis Profiller: Kapali',
                   ),
                 ),
+                const SizedBox(height: 4),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _vaccinatedOnly ? 'Sadece Asili: Acik' : 'Sadece Asili: Kapali',
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _activityFilter == 'all'
+                        ? 'Aktivite: Tum Seviyeler'
+                        : 'Aktivite: $_activityFilter',
+                  ),
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -858,6 +888,40 @@ class _DiscoverPageState extends State<DiscoverPage> {
                         ? null
                         : () {
                             setState(() {
+                              _vaccinatedOnly = !_vaccinatedOnly;
+                            });
+                            _saveFilterPrefs();
+                            _loadDiscoverData();
+                          },
+                    icon: Icon(
+                      _vaccinatedOnly ? Icons.shield : Icons.shield_outlined,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: _loading
+                        ? null
+                        : () {
+                            setState(() {
+                              if (_activityFilter == 'all') {
+                                _activityFilter = 'low';
+                              } else if (_activityFilter == 'low') {
+                                _activityFilter = 'medium';
+                              } else if (_activityFilter == 'medium') {
+                                _activityFilter = 'high';
+                              } else {
+                                _activityFilter = 'all';
+                              }
+                            });
+                            _saveFilterPrefs();
+                            _loadDiscoverData();
+                          },
+                    icon: const Icon(Icons.directions_run),
+                  ),
+                  IconButton(
+                    onPressed: _loading
+                        ? null
+                        : () {
+                            setState(() {
                               _cityFilter = _cityFilter == 'all' ? 'my_city' : 'all';
                             });
                             _saveFilterPrefs();
@@ -915,6 +979,40 @@ class _DiscoverPageState extends State<DiscoverPage> {
           IconButton(
             onPressed: (_swiping || _swipeHistory.isEmpty) ? null : _undoLastSwipe,
             icon: const Icon(Icons.undo),
+          ),
+          IconButton(
+            onPressed: _loading
+                ? null
+                : () {
+                    setState(() {
+                      _vaccinatedOnly = !_vaccinatedOnly;
+                    });
+                    _saveFilterPrefs();
+                    _loadDiscoverData();
+                  },
+            icon: Icon(
+              _vaccinatedOnly ? Icons.shield : Icons.shield_outlined,
+            ),
+          ),
+          IconButton(
+            onPressed: _loading
+                ? null
+                : () {
+                    setState(() {
+                      if (_activityFilter == 'all') {
+                        _activityFilter = 'low';
+                      } else if (_activityFilter == 'low') {
+                        _activityFilter = 'medium';
+                      } else if (_activityFilter == 'medium') {
+                        _activityFilter = 'high';
+                      } else {
+                        _activityFilter = 'all';
+                      }
+                    });
+                    _saveFilterPrefs();
+                    _loadDiscoverData();
+                  },
+            icon: const Icon(Icons.directions_run),
           ),
           IconButton(
             onPressed: _loading
