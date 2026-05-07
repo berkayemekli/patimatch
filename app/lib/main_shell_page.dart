@@ -236,6 +236,32 @@ class _MainShellPageState extends State<MainShellPage> {
                 const SizedBox(height: 12),
                 const Divider(height: 1),
                 const SizedBox(height: 12),
+                SizedBox(
+                  height: 220,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: const [
+                      _StoryVisualCard(
+                        title: 'Guvenli Emanet Deneyimi',
+                        subtitle: 'Dogrulanmis bakicilarla huzurlu seyahat',
+                        imageUrl: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                      SizedBox(width: 12),
+                      _StoryVisualCard(
+                        title: 'Mutlu Yuruyus Rutinleri',
+                        subtitle: 'Canli takip ve premium gezdirici standartlari',
+                        imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                      SizedBox(width: 12),
+                      _StoryVisualCard(
+                        title: 'Akilli Eslesme ve Bag Kurma',
+                        subtitle: 'AI destekli uyum sinyalleriyle dogru eslesme',
+                        imageUrl: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=1200&q=80',
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 14),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
@@ -352,6 +378,60 @@ class _CountBadge extends StatelessWidget {
           color: Colors.white,
           fontSize: 10,
           fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+class _StoryVisualCard extends StatelessWidget {
+  const _StoryVisualCard({
+    required this.title,
+    required this.subtitle,
+    required this.imageUrl,
+  });
+
+  final String title;
+  final String subtitle;
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 340,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.network(
+              imageUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => const ColoredBox(color: Color(0xFFE5E7EB)),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Color(0xAA111827), Color(0x22000000)],
+                ),
+              ),
+            ),
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 16,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 4),
+                  Text(subtitle, style: const TextStyle(color: Color(0xFFE5E7EB), fontSize: 13)),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
