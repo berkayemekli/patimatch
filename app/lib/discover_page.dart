@@ -416,6 +416,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
     final breed = dog['breed'] as String? ?? '-';
     final city = dog['city'] as String? ?? '-';
     final ageMonths = dog['ageMonths']?.toString() ?? '-';
+    final weightKg = dog['weightKg']?.toString() ?? '-';
+    final activityLevel = dog['activityLevel'] as String? ?? '-';
+    final vaccinated = dog['isVaccinated'] == true;
+    final friendlyDogs = dog['friendlyWithDogs'] == true;
+    final friendlyKids = dog['friendlyWithKids'] == true;
     final photos = (dog['photoUrls'] as List<dynamic>? ?? <dynamic>[])
         .whereType<String>()
         .toList();
@@ -558,6 +563,8 @@ class _DiscoverPageState extends State<DiscoverPage> {
                       const SizedBox(height: 6),
                       Text('Irk: $breed'),
                       Text('Yas: $ageMonths ay'),
+                      Text('Kilo: $weightKg kg'),
+                      Text('Aktivite: $activityLevel'),
                       const SizedBox(height: 6),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -566,6 +573,19 @@ class _DiscoverPageState extends State<DiscoverPage> {
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text('Sehir: $city'),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 6,
+                        children: [
+                          if (vaccinated)
+                            _tagChip('Asili', Colors.green.shade100),
+                          if (friendlyDogs)
+                            _tagChip('Kopeklerle Uyumlu', Colors.blue.shade100),
+                          if (friendlyKids)
+                            _tagChip('Cocuklarla Uyumlu', Colors.orange.shade100),
+                        ],
                       ),
                     ],
                   ),
@@ -628,6 +648,20 @@ class _DiscoverPageState extends State<DiscoverPage> {
               ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _tagChip(String text, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
       ),
     );
   }
