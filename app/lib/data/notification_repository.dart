@@ -25,4 +25,36 @@ class NotificationRepository {
       'createdAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
   }
+
+  Stream<List<Map<String, dynamic>>> watchNotificationsForUser(String userId) {
+    return _db
+        .collection('notifications')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map(
+          (snap) => snap.docs
+              .map((doc) => <String, dynamic>{'id': doc.id, ...doc.data()})
+              .toList()
+            ..sort((a, b) {
+              final aTs = a['createdAt'];
+              final bTs = b['createdAt'];
+              if (aTs is! Timestamp && bTs is! Timestamp) return 0;
+              if (aTs is! Timestamp) return 1;
+              if (bTs is! Timestamp) return -1;
+              return bTs.compareTo(aTs);
+            }),
+        );
+  }
+
+  Future<void> markRead({
+    required String notificationId,
+  }) async {
+    await _db.collection('notifications').doc(notificationId).set(
+      <String, dynamic>{
+        'isRead': true,
+        'readAt': FieldValue.serverTimestamp(),
+      },
+      SetOptions(merge: true),
+    );
+  }
 }

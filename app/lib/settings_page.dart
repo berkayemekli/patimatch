@@ -5,6 +5,7 @@ import 'app_strings.dart';
 import 'blocked_users_page.dart';
 import 'dog_profile_page.dart';
 import 'login_page.dart';
+import 'notifications_page.dart';
 import 'payments_page.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -52,6 +53,16 @@ class SettingsPage extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const PaymentsPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.notifications_outlined),
+            title: const Text(AppStrings.settingsNotifications),
+            subtitle: const Text(AppStrings.settingsNotificationsSub),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const NotificationsPage()),
               );
             },
           ),

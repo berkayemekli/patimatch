@@ -76,6 +76,8 @@ class AppStrings {
   static const settingsBlockedSub = 'Engellenen kullanicilari yonet';
   static const settingsPayments = 'Odemelerim';
   static const settingsPaymentsSub = 'Bekleyen ve tamamlanan odemeleri gor';
+  static const settingsNotifications = 'Bildirimlerim';
+  static const settingsNotificationsSub = 'Talep, odeme ve sistem bildirimleri';
   static const settingsSignOut = 'Cikis Yap';
 
   static const walkRequestSent = 'Gezdirme talebi gonderildi.';
