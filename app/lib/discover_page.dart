@@ -65,6 +65,15 @@ class _DiscoverPageState extends State<DiscoverPage> {
   }
 
   Future<void> _initFiltersAndLoad() async {
+    if (FirebaseAuth.instance.currentUser == null) {
+      if (!mounted) return;
+      setState(() {
+        _loading = false;
+        _myOwnerId = null;
+        _status = 'Misafir onizleme acik.';
+      });
+      return;
+    }
     await _loadFilterPrefs();
     await _loadDiscoverData();
   }
