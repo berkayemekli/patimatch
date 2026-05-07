@@ -87,22 +87,25 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
         SizedBox(height: 8),
         const _SimpleCard(
           title: 'Ece A. - Istanbul',
-          subtitle: '4.9 puan ? 312 yuruyus ? 290 TL/saat',
+          subtitle: '312 yuruyus • 290 TL/saat',
           badge: 'Aninda Musait',
+          rating: 4.9,
         ),
         SizedBox(height: 10),
         const _SimpleCard(
           title: 'Mert K. - Istanbul',
-          subtitle: '4.8 puan ? 188 yuruyus ? 250 TL/saat',
+          subtitle: '188 yuruyus • 250 TL/saat',
           badge: 'Aksam Slotu',
+          rating: 4.8,
         ),
         SizedBox(height: 16),
         const _SectionTitle('Yeni Katilanlar'),
         SizedBox(height: 8),
         const _SimpleCard(
           title: 'Sena D. - Ankara',
-          subtitle: '4.7 puan ? 140 yuruyus ? 220 TL/saat',
+          subtitle: '140 yuruyus • 220 TL/saat',
           badge: 'Yeni',
+          rating: 4.7,
         ),
       ],
     );
@@ -128,11 +131,13 @@ class _SimpleCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.badge,
+    required this.rating,
   });
 
   final String title;
   final String subtitle;
   final String badge;
+  final double rating;
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +145,34 @@ class _SimpleCard extends StatelessWidget {
       child: ListTile(
         leading: const CircleAvatar(child: Icon(Icons.directions_walk)),
         title: Text(title),
-        subtitle: Text(subtitle),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 2),
+            Row(
+              children: [
+                ...List<Widget>.generate(5, (i) {
+                  final isFilled = rating >= i + 1;
+                  return Icon(
+                    isFilled ? Icons.star_rounded : Icons.star_border_rounded,
+                    size: 16,
+                    color: const Color(0xFFF59E0B),
+                  );
+                }),
+                const SizedBox(width: 6),
+                Text(
+                  rating.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    color: Color(0xFF111827),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(subtitle),
+          ],
+        ),
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
