@@ -21,6 +21,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _cityController = TextEditingController();
+  final _districtController = TextEditingController();
+  final _latController = TextEditingController();
+  final _lngController = TextEditingController();
   final _passportCodeController = TextEditingController();
   final _microchipController = TextEditingController();
   final _colorController = TextEditingController();
@@ -38,6 +41,13 @@ class _DogProfilePageState extends State<DogProfilePage> {
   bool _loading = true;
   String? _existingDogId;
   String? _existingPhotoUrl;
+  final List<String> _cityOptions = const <String>[
+    'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Adana'
+  ];
+  final Set<String> _selectedTraits = <String>{};
+  final List<String> _traitOptions = const <String>[
+    'Oyuncu', 'Sakin', 'Sosyal', 'Egitilebilir', 'Koruyucu', 'Enerjik'
+  ];
 
   List<String> _missingFields() {
     final missing = <String>[];
@@ -82,6 +92,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
     _ageController.dispose();
     _weightController.dispose();
     _cityController.dispose();
+    _districtController.dispose();
+    _latController.dispose();
+    _lngController.dispose();
     _passportCodeController.dispose();
     _microchipController.dispose();
     _colorController.dispose();
@@ -116,6 +129,10 @@ class _DogProfilePageState extends State<DogProfilePage> {
         _ageController.text = (data['ageMonths']?.toString() ?? '');
         _weightController.text = (data['weightKg']?.toString() ?? '');
         _cityController.text = data['city'] as String? ?? '';
+        _districtController.text = data['district'] as String? ?? '';
+        final loc = data['location'] as Map<String, dynamic>?;
+        _latController.text = (loc?['lat']?.toString() ?? '');
+        _lngController.text = (loc?['lng']?.toString() ?? '');
         _passportCodeController.text = data['passportCode'] as String? ?? '';
         _microchipController.text = data['microchipNo'] as String? ?? '';
         _colorController.text = data['color'] as String? ?? '';
@@ -130,6 +147,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
                 .whereType<String>()
                 .toList();
         _temperamentController.text = temperamentTags.join(', ');
+        _selectedTraits
+          ..clear()
+          ..addAll(temperamentTags.where(_traitOptions.contains));
         _healthNotesController.text = data['healthNotes'] as String? ?? '';
         final photos = (data['photoUrls'] as List<dynamic>? ?? <dynamic>[])
             .whereType<String>()
@@ -168,6 +188,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
     final ageMonths = int.tryParse(_ageController.text.trim()) ?? 0;
     final weightKg = int.tryParse(_weightController.text.trim()) ?? 0;
     final city = _cityController.text.trim();
+    final district = _districtController.text.trim();
     final passportCode = _passportCodeController.text.trim();
     final microchipNo = _microchipController.text.trim();
     final color = _colorController.text.trim();
@@ -176,6 +197,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
         .map((e) => e.trim())
         .where((e) => e.isNotEmpty)
         .toList();
+    final lat = double.tryParse(_latController.text.trim()) ?? 0.0;
+    final lng = double.tryParse(_lngController.text.trim()) ?? 0.0;
+    final mergedTraits = <String>{...temperamentTags, ..._selectedTraits}.toList();
     final healthNotes = _healthNotesController.text.trim();
 
     if (name.isEmpty ||
@@ -225,7 +249,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
         'microchipNo': microchipNo,
         'color': color,
         'sex': _sex,
-        'temperamentTags': temperamentTags,
+        'temperamentTags': mergedTraits,
         'activityLevel': _activityLevel,
         'healthNotes': healthNotes,
         'isNeutered': _isNeutered,
@@ -235,7 +259,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
         'bio': healthNotes,
         'photoUrls': imageUrl == null ? <String>[] : <String>[imageUrl],
         'city': city,
-        'location': {'lat': 0.0, 'lng': 0.0},
+        'district': district,
+        'location': {'lat': lat, 'lng': lng},
         'isProfileComplete': true,
         'verificationStatus': 'unverified',
         'updatedAt': FieldValue.serverTimestamp(),
@@ -360,13 +385,56 @@ class _DogProfilePageState extends State<DogProfilePage> {
             ),
             const SizedBox(height: 12),
             TextField(
-              controller: _cityController,
+              controller: _districtController,
               onChanged: (_) => setState(() {}),
+              decoration: const InputDecoration(
+                labelText: 'Ilce',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _cityController.text.isEmpty ? null : _cityController.text,
               decoration: const InputDecoration(
                 labelText: AppStrings.profileCityLabel,
                 border: OutlineInputBorder(),
               ),
+              items: _cityOptions
+                  .map((c) => DropdownMenuItem(value: c, child: Text(c)))
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() => _cityController.text = value);
+              },
             ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _latController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Latitude',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    controller: _lngController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'Longitude',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            const Text('Harita Altyapisi: Bu koordinatlar sonraki adimda map pin icin kullanilacak.'),
             const SizedBox(height: 12),
             TextField(
               controller: _passportCodeController,
@@ -454,6 +522,28 @@ class _DogProfilePageState extends State<DogProfilePage> {
               value: _friendlyWithKids,
               title: const Text(AppStrings.profileFriendlyKids),
               onChanged: (v) => setState(() => _friendlyWithKids = v),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: _traitOptions.map((trait) {
+                final selected = _selectedTraits.contains(trait);
+                return FilterChip(
+                  label: Text(trait),
+                  selected: selected,
+                  onSelected: (v) {
+                    setState(() {
+                      if (v) {
+                        _selectedTraits.add(trait);
+                      } else {
+                        _selectedTraits.remove(trait);
+                      }
+                      _temperamentController.text = _selectedTraits.join(', ');
+                    });
+                  },
+                );
+              }).toList(),
             ),
             const SizedBox(height: 12),
             TextField(

@@ -97,59 +97,72 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.loginTitle)),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 12),
-            TextField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              decoration: const InputDecoration(
-                labelText: AppStrings.loginPhoneHint,
-                border: OutlineInputBorder(),
+      appBar: AppBar(title: const Text('Giris Yap')),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Card(
+            margin: const EdgeInsets.all(16),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const Text(
+                    'Hizli Giris',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('Telefon ile devam et. Dilersen misafir modunda kalabilirsin.'),
+                  const SizedBox(height: 14),
+                  TextField(
+                    controller: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      labelText: AppStrings.loginPhoneHint,
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _loading ? null : _sendCode,
+                    child: const Text(AppStrings.loginSendCode),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: _codeController,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: AppStrings.loginSmsCodeHint,
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: _loading ? null : _verifyCode,
+                    child: const Text(AppStrings.loginVerifyCode),
+                  ),
+                  const SizedBox(height: 10),
+                  OutlinedButton.icon(
+                    onPressed: _loading
+                        ? null
+                        : () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (_) => const MainShellPage(guestMode: true),
+                              ),
+                            );
+                          },
+                    icon: const Icon(Icons.pets_outlined),
+                    label: const Text('Misafir Olarak Devam Et'),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(_status, style: const TextStyle(fontSize: 13)),
+                ],
               ),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _loading ? null : _sendCode,
-              child: const Text(AppStrings.loginSendCode),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _codeController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: AppStrings.loginSmsCodeHint,
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _loading ? null : _verifyCode,
-              child: const Text(AppStrings.loginVerifyCode),
-            ),
-            const SizedBox(height: 12),
-            OutlinedButton(
-              onPressed: _loading
-                  ? null
-                  : () {
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                          builder: (_) => const MainShellPage(guestMode: true),
-                        ),
-                      );
-                    },
-              child: const Text('Misafir Olarak Devam Et'),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              _status,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ],
+          ),
         ),
       ),
     );
