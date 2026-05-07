@@ -36,6 +36,13 @@ class _PatiParentPageState extends State<PatiParentPage> {
     'Buyuk',
   ];
 
+  int _asInt(dynamic value, {int fallback = 0}) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? fallback;
+    return fallback;
+  }
+
   List<Map<String, dynamic>> _applyFilters(List<Map<String, dynamic>> posts) {
     return posts.where((post) {
       final city = (post['city'] as String? ?? '').trim();
@@ -157,7 +164,7 @@ class _PatiParentPageState extends State<PatiParentPage> {
   Future<void> _showPostDetails(Map<String, dynamic> post) async {
     final dogName = post['dogName'] as String? ?? '-';
     final city = post['city'] as String? ?? '-';
-    final ageMonths = (post['ageMonths'] as num?)?.toInt() ?? 0;
+                    final ageMonths = _asInt(post['ageMonths']);
     final size = post['size'] as String? ?? '-';
     final vaccinated = post['vaccinated'] == true;
     final bio = post['bio'] as String? ?? '';
@@ -299,7 +306,7 @@ class _PatiParentPageState extends State<PatiParentPage> {
                             final dogName = post['dogName'] as String? ?? '-';
                             final initial = dogName.isEmpty ? '?' : dogName.substring(0, 1);
                             final city = post['city'] as String? ?? '-';
-                            final ageMonths = (post['ageMonths'] as num?)?.toInt() ?? 0;
+    final ageMonths = _asInt(post['ageMonths']);
                             final size = post['size'] as String? ?? '-';
                             final vaccinated = post['vaccinated'] == true;
                             final bio = post['bio'] as String? ?? '';

@@ -28,10 +28,24 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   bool _verifiedOnly = true;
   double _maxNightlyPrice = 900;
 
+  int _asInt(dynamic value, {int fallback = 0}) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? fallback;
+    return fallback;
+  }
+
+  double _asDouble(dynamic value, {double fallback = 0}) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? fallback;
+    return fallback;
+  }
+
   List<Map<String, dynamic>> _applyFilters(List<Map<String, dynamic>> hosts) {
     return hosts.where((host) {
       final verified = host['verified'] == true;
-      final nightlyPrice = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
+      final nightlyPrice = _asInt(host['nightlyPrice']);
       final verifiedOk = !_verifiedOnly || verified;
       final priceOk = nightlyPrice <= _maxNightlyPrice.round();
       return verifiedOk && priceOk;
@@ -213,8 +227,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                             final bio = host['bio'] as String? ?? '';
                             final yard = host['yard'] == true;
                             final verified = host['verified'] == true;
-                            final nightlyPrice = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
-                            final rating = (host['rating'] as num?)?.toDouble() ?? 0;
+                            final nightlyPrice = _asInt(host['nightlyPrice']);
+                            final rating = _asDouble(host['rating']);
                             final nights = _dateRange == null
                                 ? 0
                                 : _dateRange!.duration.inDays.clamp(1, 365);

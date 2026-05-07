@@ -36,11 +36,25 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     'Bursa',
   ];
 
+  int _asInt(dynamic value, {int fallback = 0}) {
+    if (value is int) return value;
+    if (value is num) return value.toInt();
+    if (value is String) return int.tryParse(value) ?? fallback;
+    return fallback;
+  }
+
+  double _asDouble(dynamic value, {double fallback = 0}) {
+    if (value is double) return value;
+    if (value is num) return value.toDouble();
+    if (value is String) return double.tryParse(value) ?? fallback;
+    return fallback;
+  }
+
   List<Map<String, dynamic>> _applyFilters(List<Map<String, dynamic>> walkers) {
     return walkers.where((walker) {
       final city = (walker['city'] as String? ?? '').trim();
       final instant = walker['instantBooking'] == true;
-      final pricePerHour = (walker['pricePerHour'] as num?)?.toInt() ?? 0;
+      final pricePerHour = _asInt(walker['pricePerHour']);
       final cityOk = _cityFilter == 'Tum Sehirler' || city == _cityFilter;
       final instantOk = !_instantOnly || instant;
       final priceOk = pricePerHour <= _maxPrice.round();
@@ -234,14 +248,14 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                           padding: const EdgeInsets.fromLTRB(16, 2, 16, 16),
                           itemBuilder: (context, index) {
                             final walker = walkers[index];
-                            final name = walker['name'] as String? ?? '-';
-                            final initial = name.isEmpty ? '?' : name.substring(0, 1);
-                            final city = walker['city'] as String? ?? '-';
-                            final walkCount = (walker['walkCount'] as num?)?.toInt() ?? 0;
-                            final pricePerHour = (walker['pricePerHour'] as num?)?.toInt() ?? 0;
-                            final instant = walker['instantBooking'] == true;
-                            final bio = walker['bio'] as String? ?? '';
-                            final rating = (walker['rating'] as num?)?.toDouble() ?? 0;
+                    final name = walker['name'] as String? ?? '-';
+                    final initial = name.isEmpty ? '?' : name.substring(0, 1);
+                    final city = walker['city'] as String? ?? '-';
+                    final walkCount = _asInt(walker['walkCount']);
+                    final pricePerHour = _asInt(walker['pricePerHour']);
+                    final instant = walker['instantBooking'] == true;
+                    final bio = walker['bio'] as String? ?? '';
+                    final rating = _asDouble(walker['rating']);
 
                             return Card(
                               child: Padding(
