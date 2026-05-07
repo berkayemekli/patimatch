@@ -78,7 +78,7 @@ class _Hero extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         gradient: const LinearGradient(
-          colors: [Color(0xFF0E9F6E), Color(0xFF1F7A8C)],
+          colors: [Color(0xFFF4F7FB), Color(0xFFEAF2FF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -88,12 +88,12 @@ class _Hero extends StatelessWidget {
         children: [
           const Text(
             'PatiGezdirme',
-            style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.w800),
+            style: TextStyle(color: Color(0xFF111827), fontSize: 24, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 6),
           Text(
             '$city icin premium gezdiriciler',
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: const TextStyle(color: Color(0xFF4B5563), fontSize: 14),
           ),
         ],
       ),
@@ -199,7 +199,7 @@ class _WalkerCard extends StatelessWidget {
                         Text(name, style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
                         if (verified) ...[
                           const SizedBox(width: 6),
-                          const Icon(Icons.verified, size: 18, color: Color(0xFF0E9F6E)),
+                          const Icon(Icons.verified, size: 18, color: Color(0xFF0A84FF)),
                         ],
                       ],
                     ),
@@ -224,9 +224,9 @@ class _WalkerCard extends StatelessWidget {
             child: ElevatedButton(
               onPressed: null,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF0E9F6E),
+                backgroundColor: const Color(0xFF111827),
                 foregroundColor: Colors.white,
-                disabledBackgroundColor: const Color(0xFF0E9F6E),
+                disabledBackgroundColor: const Color(0xFF111827),
                 disabledForegroundColor: Colors.white,
               ),
               child: const Text('Talep Gonder'),
@@ -248,7 +248,7 @@ class _Metric extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Icon(icon, size: 18, color: const Color(0xFFF59E0B)),
+        Icon(icon, size: 18, color: const Color(0xFF0A84FF)),
         const SizedBox(height: 4),
         Text(value, style: const TextStyle(fontWeight: FontWeight.w800)),
         Text(label, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280))),
@@ -266,12 +266,12 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
       decoration: BoxDecoration(
-        color: const Color(0xFFD1FAE5),
+        color: const Color(0xFFEAF2FF),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         text,
-        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF065F46)),
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11, color: Color(0xFF1E3A8A)),
       ),
     );
   }

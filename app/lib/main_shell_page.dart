@@ -29,25 +29,25 @@ class _MainShellPageState extends State<MainShellPage> {
       title: 'PatiGezdirme',
       subtitle: 'Saatlik veya duzenli gezdirici bul.',
       icon: Icons.directions_walk,
-      color: Color(0xFF0E9F6E),
+      color: Color(0xFF0A84FF),
     ),
     _ModuleItem(
       title: 'PatiBnB',
       subtitle: 'Seyahatlerde guvenli emanet bakici bul.',
       icon: Icons.home_work,
-      color: Color(0xFFF59E0B),
+      color: Color(0xFF0A84FF),
     ),
     _ModuleItem(
       title: 'PatiMatch',
       subtitle: 'Kopegini uygun eslesmelerle bulustur.',
       icon: Icons.favorite,
-      color: Color(0xFFEF4444),
+      color: Color(0xFF0A84FF),
     ),
     _ModuleItem(
       title: 'PatiParent',
       subtitle: 'Sahiplenme ve ebeveynlik yolculugu.',
       icon: Icons.pets,
-      color: Color(0xFF2563EB),
+      color: Color(0xFF0A84FF),
     ),
   ];
 
