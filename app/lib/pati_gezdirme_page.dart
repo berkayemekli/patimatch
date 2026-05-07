@@ -47,14 +47,70 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
 
     final myDog = await _userRepository.fetchMyDogDoc(user.uid);
     if (myDog == null) return;
+    if (!mounted) return;
+
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 60)),
+      initialDate: now,
+      helpText: 'Yuruyus Gunu',
+    );
+    if (picked == null) return;
+    if (!mounted) return;
+    final tod = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(now.add(const Duration(hours: 2))),
+      helpText: 'Yuruyus Saati',
+    );
+    if (tod == null) return;
+    if (!mounted) return;
+    final noteController = TextEditingController();
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Talep Notu'),
+          content: TextField(
+            controller: noteController,
+            maxLines: 3,
+            decoration: const InputDecoration(
+              hintText: 'Varsa kisa not ekleyin (opsiyonel)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Vazgec'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Gonder'),
+            ),
+          ],
+        );
+      },
+    );
+    if (approved != true) return;
+    if (!mounted) return;
+
+    final preferredAt = DateTime(
+      picked.year,
+      picked.month,
+      picked.day,
+      tod.hour,
+      tod.minute,
+    );
 
     await _servicesRepository.createWalkRequest(
       requesterUserId: user.uid,
       requesterDogId: myDog.id,
       walkerId: walker['id'] as String? ?? '',
       walkerName: walker['name'] as String? ?? '',
-      preferredAt: DateTime.now().add(const Duration(hours: 2)),
-      note: 'In-app quick request',
+      preferredAt: preferredAt,
+      note: noteController.text.trim(),
     );
 
     if (!mounted) return;

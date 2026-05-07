@@ -90,20 +90,50 @@ class _MainShellPageState extends State<MainShellPage> {
         children: [
           Container(
             width: double.infinity,
-            color: selectedModule.color.withValues(alpha: 0.1),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  selectedModule.color.withValues(alpha: 0.16),
+                  Colors.white,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
-                Text(
-                  selectedModule.title,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        selectedModule.title,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(selectedModule.subtitle),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(selectedModule.subtitle),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(color: selectedModule.color.withValues(alpha: 0.35)),
+                  ),
+                  child: Text(
+                    '4 ModUl',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      color: selectedModule.color,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

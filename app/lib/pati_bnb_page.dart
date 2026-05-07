@@ -57,6 +57,35 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
 
     final myDog = await _userRepository.fetchMyDogDoc(user.uid);
     if (myDog == null) return;
+    if (!mounted) return;
+    final noteController = TextEditingController();
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Konaklama Notu'),
+          content: TextField(
+            controller: noteController,
+            maxLines: 3,
+            decoration: const InputDecoration(
+              hintText: 'Beslenme / ilac gibi notlar (opsiyonel)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Vazgec'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Gonder'),
+            ),
+          ],
+        );
+      },
+    );
+    if (approved != true) return;
 
     await _servicesRepository.createBnbRequest(
       requesterUserId: user.uid,
@@ -65,7 +94,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       hostName: host['name'] as String? ?? '',
       checkIn: _dateRange!.start,
       checkOut: _dateRange!.end,
-      note: 'In-app quick bnb request',
+      note: noteController.text.trim(),
     );
 
     if (!mounted) return;
@@ -147,6 +176,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                             final verified = host['verified'] == true;
                             final nightlyPrice = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
                             final rating = (host['rating'] as num?)?.toDouble() ?? 0;
+                            final nights = _dateRange == null
+                                ? 0
+                                : _dateRange!.duration.inDays.clamp(1, 365);
+                            final total = nights == 0 ? 0 : nightlyPrice * nights;
 
                             return Card(
                               child: Padding(
@@ -199,6 +232,14 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                                       ],
                                     ),
                                     const SizedBox(height: 12),
+                                    if (nights > 0)
+                                      Padding(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        child: Text(
+                                          '$nights gece • Toplam $total TL',
+                                          style: const TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ),
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: ElevatedButton(
