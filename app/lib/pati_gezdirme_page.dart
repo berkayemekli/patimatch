@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 class PatiGezdirmePage extends StatefulWidget {
   const PatiGezdirmePage({super.key});
@@ -18,18 +18,28 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       children: [
-        _TopFilter(city: _city, onCityChanged: (v) => setState(() => _city = v)),
-        const SizedBox(height: 16),
         const Text(
-          'Guvenilir gezdiricilerden sec',
+          'Her adimda sevgi,\nguven ve premium bakim.',
+          style: TextStyle(fontSize: 36, fontWeight: FontWeight.w500, color: Color(0xFF111827), height: 1.1),
+        ),
+        const SizedBox(height: 10),
+        const Text(
+          'Sakin, guvenli ve sicak yuruyus deneyimi icin secili partnerler.',
+          style: TextStyle(color: Color(0xFF64748B), fontSize: 15),
+        ),
+        const SizedBox(height: 16),
+        _TopFilter(city: _city, onCityChanged: (v) => setState(() => _city = v)),
+        const SizedBox(height: 24),
+        const Text(
+          'Istanbul’daki guvenilir yuruyus partnerleri',
           style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: Color(0xFF111827)),
         ),
         const SizedBox(height: 6),
         const Text(
-          'Dogrulanmis profiller, sicak yorumlar ve premium deneyim.',
+          'Dogrulanmis profiller, sicak yorumlar ve guvenli yuruyus deneyimi.',
           style: TextStyle(color: Color(0xFF64748B)),
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 18),
         GridView.count(
           crossAxisCount: crossCount,
           crossAxisSpacing: 12,
@@ -38,33 +48,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           children: const [
-            _WalkerTile(
-              name: 'Ece Aras',
-              city: 'Istanbul',
-              rating: 4.9,
-              walks: 312,
-              price: 290,
-              imageUrl: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80',
-              badge: 'Verified',
-            ),
-            _WalkerTile(
-              name: 'Mert Kaya',
-              city: 'Istanbul',
-              rating: 4.8,
-              walks: 188,
-              price: 250,
-              imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80',
-              badge: 'Top Rated',
-            ),
-            _WalkerTile(
-              name: 'Sena Demir',
-              city: 'Ankara',
-              rating: 4.7,
-              walks: 140,
-              price: 220,
-              imageUrl: 'https://images.unsplash.com/photo-1542204625-de293a4f7a9b?auto=format&fit=crop&w=900&q=80',
-              badge: 'New',
-            ),
+            _WalkerTile(name: 'Ece Aras', city: 'Istanbul', rating: 4.9, walks: 312, price: 290, imageUrl: 'https://images.unsplash.com/photo-1504593811423-6dd665756598?auto=format&fit=crop&w=900&q=80', badge: 'Verified'),
+            _WalkerTile(name: 'Mert Kaya', city: 'Istanbul', rating: 4.8, walks: 188, price: 250, imageUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80', badge: 'Top Rated'),
+            _WalkerTile(name: 'Sena Demir', city: 'Ankara', rating: 4.7, walks: 140, price: 220, imageUrl: 'https://images.unsplash.com/photo-1542204625-de293a4f7a9b?auto=format&fit=crop&w=900&q=80', badge: 'Available Today'),
           ],
         ),
       ],
@@ -80,7 +66,7 @@ class _TopFilter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(999),
@@ -88,10 +74,9 @@ class _TopFilter extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const SizedBox(width: 8),
-          const Icon(Icons.search_rounded, color: Color(0xFF64748B)),
-          const SizedBox(width: 8),
-          const Text('Sehir', style: TextStyle(color: Color(0xFF6B7280))),
+          const Icon(Icons.place_outlined, size: 18, color: Color(0xFF64748B)),
+          const SizedBox(width: 6),
+          const Text('Nerede', style: TextStyle(color: Color(0xFF6B7280))),
           const SizedBox(width: 8),
           Expanded(
             child: DropdownButtonHideUnderline(
@@ -109,6 +94,9 @@ class _TopFilter extends StatelessWidget {
               ),
             ),
           ),
+          const Text('Ne zaman', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+          const SizedBox(width: 8),
+          const Text('Pet boyutu', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
         ],
       ),
     );
@@ -116,15 +104,7 @@ class _TopFilter extends StatelessWidget {
 }
 
 class _WalkerTile extends StatelessWidget {
-  const _WalkerTile({
-    required this.name,
-    required this.city,
-    required this.rating,
-    required this.walks,
-    required this.price,
-    required this.imageUrl,
-    required this.badge,
-  });
+  const _WalkerTile({required this.name, required this.city, required this.rating, required this.walks, required this.price, required this.imageUrl, required this.badge});
 
   final String name;
   final String city;
@@ -139,11 +119,11 @@ class _WalkerTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: const [BoxShadow(color: Color(0x12000000), blurRadius: 16, offset: Offset(0, 8))],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -157,11 +137,8 @@ class _WalkerTile extends StatelessWidget {
                     left: 10,
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.92),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Text(badge, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1E3A8A))),
+                      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.92), borderRadius: BorderRadius.circular(999)),
+                      child: Text(badge, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF1E3A8A))),
                     ),
                   ),
                 ],
@@ -180,14 +157,13 @@ class _WalkerTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 3),
-                  Text('$city · $walks yuruyus', style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                  const Text('Sicak, deneyimli ve guven odakli yuruyus partneri', style: TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                  const SizedBox(height: 3),
+                  Text('$city • $walks tamamlanan yuruyus', style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
                   const SizedBox(height: 8),
                   Text('₺$price / saat', style: const TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF111827))),
                   const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: null,
-                    child: const Text('Yuruyus Planla'),
-                  ),
+                  OutlinedButton(onPressed: null, child: const Text('Yuruyus Planla →')),
                 ],
               ),
             ),

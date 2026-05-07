@@ -209,18 +209,6 @@ class _MainShellPageState extends State<MainShellPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(color: const Color(0xFFD8E3F3)),
-                        ),
-                        child: const Text(
-                          '4 Modules',
-                          style: TextStyle(fontWeight: FontWeight.w700, color: Color(0xFF334155)),
-                        ),
-                      ),
                     ],
                   ),
                 ),
@@ -270,30 +258,10 @@ class _MainShellPageState extends State<MainShellPage> {
                 const SizedBox(height: 20),
                 const Divider(height: 1),
                 const SizedBox(height: 20),
-                SizedBox(
-                  height: 260,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: const [
-                      _StoryVisualCard(
-                        title: 'Guvenli Emanet Deneyimi',
-                        subtitle: 'Dogrulanmis bakicilarla huzurlu seyahat',
-                        imageUrl: 'https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&w=1200&q=80',
-                      ),
-                      SizedBox(width: 12),
-                      _StoryVisualCard(
-                        title: 'Mutlu Yuruyus Rutinleri',
-                        subtitle: 'Canli takip ve premium gezdirici standartlari',
-                        imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80',
-                      ),
-                      SizedBox(width: 12),
-                      _StoryVisualCard(
-                        title: 'Akilli Eslesme ve Bag Kurma',
-                        subtitle: 'AI destekli uyum sinyalleriyle dogru eslesme',
-                        imageUrl: 'https://images.unsplash.com/photo-1537151625747-768eb6cf92b2?auto=format&fit=crop&w=1200&q=80',
-                      ),
-                    ],
-                  ),
+                const _StoryVisualCard(
+                  title: 'Mutlu Yuruyus Rutinleri',
+                  subtitle: 'Canli takip ve dogrulanmis gezdiricilerle guvenli yuruyusler.',
+                  imageUrl: 'https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1600&q=80',
                 ),
                 const SizedBox(height: 20),
                 Expanded(
