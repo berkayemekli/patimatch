@@ -50,7 +50,7 @@ class ServicesRepository {
     });
   }
 
-  Future<void> createWalkRequest({
+  Future<String> createWalkRequest({
     required String requesterUserId,
     required String requesterDogId,
     required String walkerId,
@@ -71,9 +71,10 @@ class ServicesRepository {
       ),
       SetOptions(merge: true),
     );
+    return ref.id;
   }
 
-  Future<void> createBnbRequest({
+  Future<String> createBnbRequest({
     required String requesterUserId,
     required String requesterDogId,
     required String hostId,
@@ -96,6 +97,7 @@ class ServicesRepository {
       ),
       SetOptions(merge: true),
     );
+    return ref.id;
   }
 
   Future<void> createAdoptionApplication({

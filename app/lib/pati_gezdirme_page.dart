@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'app_strings.dart';
 import 'data/app_providers.dart';
+import 'data/booking_repository.dart';
+import 'data/notification_repository.dart';
+import 'data/payment_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 
@@ -15,6 +18,10 @@ class PatiGezdirmePage extends StatefulWidget {
 
 class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   final ServicesRepository _servicesRepository = AppProviders.servicesRepository;
+  final BookingRepository _bookingRepository = AppProviders.bookingRepository;
+  final PaymentRepository _paymentRepository = AppProviders.paymentRepository;
+  final NotificationRepository _notificationRepository =
+      AppProviders.notificationRepository;
   final UserRepository _userRepository = AppProviders.userRepository;
 
   String _cityFilter = 'Tum Sehirler';
@@ -104,13 +111,40 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       tod.minute,
     );
 
-    await _servicesRepository.createWalkRequest(
+    final walkerId = walker['id'] as String? ?? '';
+    final hasConflict = await _bookingRepository.hasWalkConflict(
+      walkerId: walkerId,
+      preferredAt: preferredAt,
+    );
+    if (hasConflict) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bu saat icin gezdirici musait gorunmuyor.')),
+      );
+      return;
+    }
+
+    final requestId = await _servicesRepository.createWalkRequest(
       requesterUserId: user.uid,
       requesterDogId: myDog.id,
-      walkerId: walker['id'] as String? ?? '',
+      walkerId: walkerId,
       walkerName: walker['name'] as String? ?? '',
       preferredAt: preferredAt,
       note: noteController.text.trim(),
+    );
+    final amount = (walker['pricePerHour'] as num?)?.toInt() ?? 0;
+    await _paymentRepository.createPaymentIntent(
+      userId: user.uid,
+      requestId: requestId,
+      module: 'walk',
+      amountTry: amount,
+    );
+    await _notificationRepository.createInAppNotification(
+      userId: user.uid,
+      title: 'Gezdirme talebi alindi',
+      body: 'Talebin olusturuldu. Odeme adimi bekleniyor.',
+      type: 'walk_request_created',
+      payload: <String, dynamic>{'requestId': requestId},
     );
 
     if (!mounted) return;

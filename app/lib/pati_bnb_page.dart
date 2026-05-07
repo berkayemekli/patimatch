@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 import 'app_strings.dart';
 import 'data/app_providers.dart';
+import 'data/booking_repository.dart';
+import 'data/notification_repository.dart';
+import 'data/payment_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 
@@ -15,6 +18,10 @@ class PatiBnbPage extends StatefulWidget {
 
 class _PatiBnbPageState extends State<PatiBnbPage> {
   final ServicesRepository _servicesRepository = AppProviders.servicesRepository;
+  final BookingRepository _bookingRepository = AppProviders.bookingRepository;
+  final PaymentRepository _paymentRepository = AppProviders.paymentRepository;
+  final NotificationRepository _notificationRepository =
+      AppProviders.notificationRepository;
   final UserRepository _userRepository = AppProviders.userRepository;
 
   DateTimeRange? _dateRange;
@@ -87,14 +94,43 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     );
     if (approved != true) return;
 
-    await _servicesRepository.createBnbRequest(
+    final hostId = host['id'] as String? ?? '';
+    final hasConflict = await _bookingRepository.hasBnbConflict(
+      hostId: hostId,
+      checkIn: _dateRange!.start,
+      checkOut: _dateRange!.end,
+    );
+    if (hasConflict) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Secilen tarihlerde bakici musait gorunmuyor.')),
+      );
+      return;
+    }
+
+    final requestId = await _servicesRepository.createBnbRequest(
       requesterUserId: user.uid,
       requesterDogId: myDog.id,
-      hostId: host['id'] as String? ?? '',
+      hostId: hostId,
       hostName: host['name'] as String? ?? '',
       checkIn: _dateRange!.start,
       checkOut: _dateRange!.end,
       note: noteController.text.trim(),
+    );
+    final nightly = (host['nightlyPrice'] as num?)?.toInt() ?? 0;
+    final nights = _dateRange!.duration.inDays.clamp(1, 365);
+    await _paymentRepository.createPaymentIntent(
+      userId: user.uid,
+      requestId: requestId,
+      module: 'bnb',
+      amountTry: nightly * nights,
+    );
+    await _notificationRepository.createInAppNotification(
+      userId: user.uid,
+      title: 'Konaklama talebi alindi',
+      body: 'Talebin olusturuldu. Odeme adimi bekleniyor.',
+      type: 'bnb_request_created',
+      payload: <String, dynamic>{'requestId': requestId},
     );
 
     if (!mounted) return;
