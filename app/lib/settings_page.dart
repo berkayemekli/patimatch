@@ -5,6 +5,7 @@ import 'app_strings.dart';
 import 'blocked_users_page.dart';
 import 'dog_profile_page.dart';
 import 'login_page.dart';
+import 'payments_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -41,6 +42,16 @@ class SettingsPage extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const BlockedUsersPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.account_balance_wallet_outlined),
+            title: const Text(AppStrings.settingsPayments),
+            subtitle: const Text(AppStrings.settingsPaymentsSub),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const PaymentsPage()),
               );
             },
           ),

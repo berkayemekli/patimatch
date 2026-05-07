@@ -74,6 +74,8 @@ class AppStrings {
   static const settingsEditProfileSub = 'Kopek profil ekranina don';
   static const settingsBlocked = 'Engellenenler';
   static const settingsBlockedSub = 'Engellenen kullanicilari yonet';
+  static const settingsPayments = 'Odemelerim';
+  static const settingsPaymentsSub = 'Bekleyen ve tamamlanan odemeleri gor';
   static const settingsSignOut = 'Cikis Yap';
 
   static const walkRequestSent = 'Gezdirme talebi gonderildi.';

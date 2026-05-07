@@ -28,4 +28,37 @@ class PaymentRepository {
     }, SetOptions(merge: true));
     return ref.id;
   }
+
+  Stream<List<Map<String, dynamic>>> watchPaymentsForUser(String userId) {
+    return _db
+        .collection('payments')
+        .where('userId', isEqualTo: userId)
+        .snapshots()
+        .map(
+          (snap) => snap.docs
+              .map((doc) => <String, dynamic>{'id': doc.id, ...doc.data()})
+              .toList()
+            ..sort((a, b) {
+              final aTs = a['createdAt'];
+              final bTs = b['createdAt'];
+              if (aTs is! Timestamp && bTs is! Timestamp) return 0;
+              if (aTs is! Timestamp) return 1;
+              if (bTs is! Timestamp) return -1;
+              return bTs.compareTo(aTs);
+            }),
+        );
+  }
+
+  Future<void> markPaymentCompleted({
+    required String paymentId,
+    required String userId,
+  }) async {
+    final ref = _db.collection('payments').doc(paymentId);
+    await ref.set(<String, dynamic>{
+      'status': 'paid',
+      'paidAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
+      'updatedBy': userId,
+    }, SetOptions(merge: true));
+  }
 }
