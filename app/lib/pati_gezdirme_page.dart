@@ -18,6 +18,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       children: [
         _Hero(city: _city),
         const SizedBox(height: 14),
+        const _TrustLayer(),
+        const SizedBox(height: 14),
         _FilterBar(
           city: _city,
           filters: _filters,
@@ -149,6 +151,70 @@ class _FilterBar extends StatelessWidget {
               );
             }).toList(),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrustLayer extends StatelessWidget {
+  const _TrustLayer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: const [
+        Expanded(
+          child: _TrustCard(
+            icon: Icons.verified_user_outlined,
+            title: 'Verified Walkers',
+            subtitle: 'Kimlik ve profil dogrulama',
+          ),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: _TrustCard(
+            icon: Icons.location_searching_outlined,
+            title: 'Live Tracking',
+            subtitle: 'Canli rota ve durum takibi',
+          ),
+        ),
+        SizedBox(width: 8),
+        Expanded(
+          child: _TrustCard(
+            icon: Icons.health_and_safety_outlined,
+            title: 'Emergency Support',
+            subtitle: 'Acil destek protokolu',
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrustCard extends StatelessWidget {
+  const _TrustCard({required this.icon, required this.title, required this.subtitle});
+  final IconData icon;
+  final String title;
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 18, color: const Color(0xFF0A84FF)),
+          const SizedBox(height: 8),
+          Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 12)),
+          const SizedBox(height: 3),
+          Text(subtitle, style: const TextStyle(fontSize: 11, color: Color(0xFF64748B))),
         ],
       ),
     );

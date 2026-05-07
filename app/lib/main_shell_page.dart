@@ -149,10 +149,29 @@ class _MainShellPageState extends State<MainShellPage> {
                             const SizedBox(height: 8),
                             Text(
                               selectedModule.title,
-                              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
+                              style: const TextStyle(fontSize: 44, fontWeight: FontWeight.w600, color: Color(0xFF111827), height: 1.08),
                             ),
                             const SizedBox(height: 4),
                             Text(selectedModule.subtitle, style: const TextStyle(color: Color(0xFF475569))),
+                            const SizedBox(height: 14),
+                            Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: () {},
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF111827),
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child: const Text('Guvenli Basla'),
+                                ),
+                                OutlinedButton(
+                                  onPressed: () {},
+                                  child: const Text('Nasil Calisir'),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
