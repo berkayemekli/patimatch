@@ -48,10 +48,19 @@ class _DiscoverPageState extends State<DiscoverPage> {
   DismissDirection _swipeDirection = DismissDirection.none;
   final SwipeRepository _swipeRepository = AppProviders.swipeRepository;
   final UserRepository _userRepository = AppProviders.userRepository;
+  bool _bootTimeoutFired = false;
 
   @override
   void initState() {
     super.initState();
+    Future<void>.delayed(const Duration(seconds: 8), () {
+      if (!mounted || !_loading) return;
+      setState(() {
+        _bootTimeoutFired = true;
+        _loading = false;
+        _status = 'Yukleme uzadi. Giris yaparak devam edebilirsin.';
+      });
+    });
     _initFiltersAndLoad();
   }
 
@@ -817,7 +826,7 @@ class _DiscoverPageState extends State<DiscoverPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_loading && _myOwnerId == null) {
+    if ((!_loading || _bootTimeoutFired) && _myOwnerId == null) {
       final guestFallback = Center(
         child: Padding(
           padding: const EdgeInsets.all(24),
