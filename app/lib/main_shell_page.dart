@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'discover_page.dart';
+import 'login_page.dart';
 import 'matches_page.dart';
 import 'notifications_page.dart';
 import 'pati_bnb_page.dart';
@@ -53,21 +54,23 @@ class _MainShellPageState extends State<MainShellPage> {
   @override
   Widget build(BuildContext context) {
     final selectedModule = _modules[_selectedModuleIndex];
-    final user = widget.guestMode ? null : FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
+    final isGuest = widget.guestMode && user == null;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('PatiParent'),
-        actions: widget.guestMode
+        actions: isGuest
             ? [
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: Center(
-                    child: Text(
-                      'Misafir Modu',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
+                TextButton.icon(
+                  onPressed: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LoginPage()),
+                    );
+                    if (mounted) setState(() {});
+                  },
+                  icon: const Icon(Icons.login),
+                  label: const Text('Giris Yap'),
                 ),
               ]
             : [

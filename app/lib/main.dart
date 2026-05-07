@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-import 'app_entry_page.dart';
 import 'firebase_options.dart';
+import 'main_shell_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
               ),
             );
           }
-          return const AppEntryPage();
+          return const MainShellPage(guestMode: true);
         },
       ),
     );
