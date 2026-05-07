@@ -54,6 +54,90 @@ class _PatiParentPageState extends State<PatiParentPage> {
 
     final myDog = await _userRepository.fetchMyDogDoc(user.uid);
     if (myDog == null) return;
+    if (!mounted) return;
+
+    String homeType = 'Apartment';
+    String experience = 'First time';
+    final noteController = TextEditingController();
+    final approved = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Sahiplenme Basvurusu'),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    DropdownButtonFormField<String>(
+                      initialValue: homeType,
+                      decoration: const InputDecoration(
+                        labelText: 'Ev Tipi',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: 'Apartment', child: Text('Apartment')),
+                        DropdownMenuItem(value: 'House', child: Text('House')),
+                      ],
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setDialogState(() => homeType = value);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    DropdownButtonFormField<String>(
+                      initialValue: experience,
+                      decoration: const InputDecoration(
+                        labelText: 'Kopek Deneyimi',
+                        border: OutlineInputBorder(),
+                        isDense: true,
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: 'First time', child: Text('First time')),
+                        DropdownMenuItem(value: 'Experienced', child: Text('Experienced')),
+                      ],
+                      onChanged: (value) {
+                        if (value == null) return;
+                        setDialogState(() => experience = value);
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: noteController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                        hintText: 'Kendinden kisa bahset (opsiyonel)',
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: const Text('Vazgec'),
+                ),
+                ElevatedButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: const Text('Gonder'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+    if (approved != true) return;
+    if (!mounted) return;
+
+    final note = [
+      'homeType=$homeType',
+      'experience=$experience',
+      noteController.text.trim(),
+    ].where((e) => e.isNotEmpty).join(' | ');
 
     await _servicesRepository.createAdoptionApplication(
       requesterUserId: user.uid,
@@ -61,12 +145,68 @@ class _PatiParentPageState extends State<PatiParentPage> {
       postId: post['id'] as String? ?? '',
       dogName: post['dogName'] as String? ?? '',
       ownerUserId: post['ownerUserId'] as String? ?? '',
-      note: 'In-app quick adoption application',
+      note: note,
     );
 
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text(AppStrings.adoptionApplicationSent)),
+    );
+  }
+
+  Future<void> _showPostDetails(Map<String, dynamic> post) async {
+    final dogName = post['dogName'] as String? ?? '-';
+    final city = post['city'] as String? ?? '-';
+    final ageMonths = (post['ageMonths'] as num?)?.toInt() ?? 0;
+    final size = post['size'] as String? ?? '-';
+    final vaccinated = post['vaccinated'] == true;
+    final bio = post['bio'] as String? ?? '';
+    final ownerNote = post['ownerNote'] as String? ?? '';
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                dogName,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 8),
+              Text('$city - $ageMonths ay - $size'),
+              const SizedBox(height: 10),
+              Text(bio),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  if (vaccinated) _tag('Asili', Colors.green.shade100),
+                  _tag('Sahiplendirme', Colors.purple.shade100),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text('Sahip Notu: $ownerNote'),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    await _applyForAdoption(post);
+                  },
+                  child: const Text('Basvuru Yap'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -216,9 +356,18 @@ class _PatiParentPageState extends State<PatiParentPage> {
                                     const SizedBox(height: 12),
                                     Align(
                                       alignment: Alignment.centerRight,
-                                      child: ElevatedButton(
-                                        onPressed: () => _applyForAdoption(post),
-                                        child: const Text('Sahiplenme Basvurusu'),
+                                      child: Wrap(
+                                        spacing: 8,
+                                        children: [
+                                          OutlinedButton(
+                                            onPressed: () => _showPostDetails(post),
+                                            child: const Text('Ilan Detayi'),
+                                          ),
+                                          ElevatedButton(
+                                            onPressed: () => _applyForAdoption(post),
+                                            child: const Text('Sahiplenme Basvurusu'),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ],
