@@ -790,53 +790,33 @@ class _DiscoverPageState extends State<DiscoverPage> {
                 Expanded(
                   child: _buildStackedCards(),
                 ),
-                const SizedBox(height: 12),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _cityFilter == 'my_city'
-                        ? 'Filtre: Benim Sehir (${_myCity.isEmpty ? '-' : _myCity})'
-                        : 'Filtre: Tum Sehirler',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _verifiedOnly ? 'Dogrulanmis Profiller: Acik' : 'Dogrulanmis Profiller: Kapali',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _vaccinatedOnly ? 'Sadece Asili: Acik' : 'Sadece Asili: Kapali',
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _activityFilter == 'all'
-                        ? 'Aktivite: Tum Seviyeler'
-                        : 'Aktivite: $_activityFilter',
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Row(
+                const SizedBox(height: 10),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
                   children: [
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: _swiping ? null : () => _swipe(false),
-                        child: const Text('Gec'),
-                      ),
+                    _miniFilterChip(_cityFilter == 'my_city' ? 'Sehir: $_myCity' : 'Tum Sehirler'),
+                    _miniFilterChip(_verifiedOnly ? 'Verified' : 'All Profiles'),
+                    _miniFilterChip(_vaccinatedOnly ? 'Asili' : 'Asi Serbest'),
+                    _miniFilterChip(_activityFilter == 'all' ? 'Aktivite: Tum' : 'Aktivite: $_activityFilter'),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _roundActionButton(
+                      onTap: _swiping ? null : () => _swipe(false),
+                      icon: Icons.close_rounded,
+                      bg: const Color(0xFFF3F4F6),
+                      fg: const Color(0xFF111827),
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: _swiping ? null : () => _swipe(true),
-                        child: const Text('Begen'),
-                      ),
+                    const SizedBox(width: 18),
+                    _roundActionButton(
+                      onTap: _swiping ? null : () => _swipe(true),
+                      icon: Icons.favorite_rounded,
+                      bg: const Color(0xFF111827),
+                      fg: Colors.white,
                     ),
                   ],
                 ),
@@ -1033,6 +1013,43 @@ class _DiscoverPageState extends State<DiscoverPage> {
         ],
       ),
       body: body,
+    );
+  }
+
+  Widget _miniFilterChip(String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF374151)),
+      ),
+    );
+  }
+
+  Widget _roundActionButton({
+    required VoidCallback? onTap,
+    required IconData icon,
+    required Color bg,
+    required Color fg,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(999),
+      child: Container(
+        width: 62,
+        height: 62,
+        decoration: BoxDecoration(
+          color: bg,
+          shape: BoxShape.circle,
+          boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 14, offset: Offset(0, 7))],
+        ),
+        child: Icon(icon, color: fg, size: 30),
+      ),
     );
   }
 }
