@@ -696,29 +696,34 @@ class _DiscoverPageState extends State<DiscoverPage> {
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.lock_outline, size: 42, color: Color(0xFF64748B)),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Misafir Onizleme',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+              ),
               const SizedBox(height: 10),
-              const Text(
-                'PatiMatch icin giris yapman gerekiyor.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.w700),
+              Expanded(
+                child: ListView(
+                  children: const [
+                    _GuestMatchCard(name: 'Luna', breed: 'Golden Retriever', city: 'Istanbul', ageMonths: '18'),
+                    SizedBox(height: 10),
+                    _GuestMatchCard(name: 'Pasa', breed: 'Labrador', city: 'Ankara', ageMonths: '24'),
+                    SizedBox(height: 10),
+                    _GuestMatchCard(name: 'Maya', breed: 'Poodle', city: 'Izmir', ageMonths: '16'),
+                  ],
+                ),
               ),
-              const SizedBox(height: 6),
-              const Text(
-                'Giris yaptiginda profiline gore eslesmeleri gosterecegiz.',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Color(0xFF64748B)),
-              ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: () {
                   Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                    MaterialPageRoute(builder: (_) => const LoginPage()),
                   );
                 },
-                child: const Text('Giris / Profil Ayarlari'),
+                child: const Text('Tam Eslesmeler Icin Giris Yap'),
               ),
             ],
           ),
@@ -1142,6 +1147,48 @@ class _DiscoverPageState extends State<DiscoverPage> {
           boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 14, offset: Offset(0, 7))],
         ),
         child: Icon(icon, color: fg, size: 30),
+      ),
+    );
+  }
+}
+
+class _GuestMatchCard extends StatelessWidget {
+  const _GuestMatchCard({
+    required this.name,
+    required this.breed,
+    required this.city,
+    required this.ageMonths,
+  });
+
+  final String name;
+  final String breed;
+  final String city;
+  final String ageMonths;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Row(
+        children: [
+          const CircleAvatar(radius: 24, child: Icon(Icons.pets)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('$name · $ageMonths ay', style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text('$breed · $city', style: const TextStyle(color: Color(0xFF6B7280))),
+              ],
+            ),
+          ),
+          const Icon(Icons.favorite_border),
+        ],
       ),
     );
   }

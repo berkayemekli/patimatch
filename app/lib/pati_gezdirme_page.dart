@@ -295,7 +295,7 @@ class _WalkerCard extends StatelessWidget {
                 disabledBackgroundColor: const Color(0xFF111827),
                 disabledForegroundColor: Colors.white,
               ),
-              child: const Text('Talep Gonder'),
+              child: const Text('Guvenli Yuruyus Planla'),
             ),
           ),
         ],
