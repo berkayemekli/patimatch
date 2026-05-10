@@ -97,11 +97,6 @@ class _LoginPageState extends State<LoginPage> {
       ..setCustomParameters(<String, String>{'prompt': 'select_account'});
 
     try {
-      if (kIsWeb) {
-        await FirebaseAuth.instance.signInWithRedirect(provider);
-        return;
-      }
-
       final credential = await FirebaseAuth.instance
           .signInWithPopup(provider)
           .timeout(const Duration(seconds: 25));
@@ -116,10 +111,13 @@ class _LoginPageState extends State<LoginPage> {
       await _finishSignedInUser(user);
     } on TimeoutException {
       setState(
-        () => _status =
-            'Google y\u00f6nlendirmesi ba\u015flat\u0131l\u0131yor...',
+        () => _status = kIsWeb
+            ? 'Google penceresi zaman asimina ugradi. Tarayicida popup iznini kontrol edip tekrar dene.'
+            : 'Google yonlendirmesi baslatiliyor...',
       );
-      await FirebaseAuth.instance.signInWithRedirect(provider);
+      if (!kIsWeb) {
+        await FirebaseAuth.instance.signInWithRedirect(provider);
+      }
     } on FirebaseAuthException catch (e) {
       setState(() => _status = _friendlyAuthError(e));
     } catch (e) {
