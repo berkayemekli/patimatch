@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'app_strings.dart';
@@ -89,31 +90,42 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _signInWithGoogle() async {
     setState(() {
       _loading = true;
-      _status = 'Google penceresi açılıyor...';
+      _status = 'Google giri\u015fi ba\u015flat\u0131l\u0131yor...';
     });
 
     final provider = GoogleAuthProvider()
       ..setCustomParameters(<String, String>{'prompt': 'select_account'});
 
     try {
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithRedirect(provider);
+        return;
+      }
+
       final credential = await FirebaseAuth.instance
           .signInWithPopup(provider)
           .timeout(const Duration(seconds: 25));
       final user = credential.user ?? FirebaseAuth.instance.currentUser;
       if (user == null) {
         setState(
-          () => _status = 'Google hesabı alınamadı. Lütfen tekrar dene.',
+          () => _status =
+              'Google hesab\u0131 al\u0131namad\u0131. L\u00fctfen tekrar dene.',
         );
         return;
       }
       await _finishSignedInUser(user);
     } on TimeoutException {
-      setState(() => _status = 'Google yönlendirmesi başlatılıyor...');
+      setState(
+        () => _status =
+            'Google y\u00f6nlendirmesi ba\u015flat\u0131l\u0131yor...',
+      );
       await FirebaseAuth.instance.signInWithRedirect(provider);
     } on FirebaseAuthException catch (e) {
       setState(() => _status = _friendlyAuthError(e));
     } catch (e) {
-      setState(() => _status = 'Google girişi başlatılamadı: $e');
+      setState(
+        () => _status = 'Google giri\u015fi ba\u015flat\u0131lamad\u0131: $e',
+      );
     } finally {
       if (mounted) setState(() => _loading = false);
     }
