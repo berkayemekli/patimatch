@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,9 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       await _finishSignedInUser(user);
+    } on TimeoutException {
+      setState(() => _status = 'Google yönlendirmesi başlatılıyor...');
+      await FirebaseAuth.instance.signInWithRedirect(provider);
     } on FirebaseAuthException catch (e) {
       setState(() => _status = _friendlyAuthError(e));
     } catch (e) {
@@ -273,17 +277,21 @@ class _LoginPageState extends State<LoginPage> {
                 : 'Google ile devam et',
             fg: const Color(0xFF111827),
             bg: Colors.white,
-            border: const Color(0xFFBFC5CE),
-            iconWidget: const _GoogleWordMark(),
+            border: const Color(0xFF747775),
+            iconWidget: const _GoogleLogo(size: 20),
             onTap: _signInWithGoogle,
           ),
           const SizedBox(height: 12),
           _brandAuthButton(
             label: 'Apple ile devam et',
             fg: Colors.white,
-            bg: const Color(0xFF252525),
-            border: const Color(0xFF252525),
-            iconWidget: const Icon(Icons.apple_rounded, size: 22),
+            bg: const Color(0xFF1F1F1F),
+            border: const Color(0xFF1F1F1F),
+            iconWidget: const Icon(
+              Icons.apple_rounded,
+              size: 24,
+              color: Colors.white,
+            ),
             onTap: () => _comingSoon('Apple'),
           ),
           const SizedBox(height: 12),
@@ -652,20 +660,53 @@ class _InlineFeedback extends StatelessWidget {
   }
 }
 
-class _GoogleWordMark extends StatelessWidget {
-  const _GoogleWordMark();
+class _GoogleLogo extends StatelessWidget {
+  const _GoogleLogo({required this.size});
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'G',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 20,
-        height: 1,
-        fontWeight: FontWeight.w900,
-        color: Color(0xFF4285F4),
-      ),
+    return CustomPaint(size: Size.square(size), painter: _GoogleLogoPainter());
+  }
+}
+
+class _GoogleLogoPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final stroke = size.width * 0.18;
+    final rect = Offset.zero & size;
+    final arcRect = rect.deflate(stroke / 2);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.round;
+
+    paint.color = const Color(0xFF4285F4);
+    canvas.drawArc(arcRect, -0.12, 1.55, false, paint);
+
+    paint.color = const Color(0xFF34A853);
+    canvas.drawArc(arcRect, 1.43, 1.35, false, paint);
+
+    paint.color = const Color(0xFFFBBC05);
+    canvas.drawArc(arcRect, 2.78, 1.18, false, paint);
+
+    paint.color = const Color(0xFFEA4335);
+    canvas.drawArc(arcRect, 3.96, 1.45, false, paint);
+
+    final barPaint = Paint()
+      ..color = const Color(0xFF4285F4)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = stroke
+      ..strokeCap = StrokeCap.square;
+    final y = size.height * 0.52;
+    canvas.drawLine(
+      Offset(size.width * 0.52, y),
+      Offset(size.width * 0.86, y),
+      barPaint,
     );
   }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
