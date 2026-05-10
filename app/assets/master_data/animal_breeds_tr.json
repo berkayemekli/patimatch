@@ -1,0 +1,29 @@
+﻿{
+  "animalCategories": [
+    {
+      "key": "kopek",
+      "label": "Köpek",
+      "mixOptions": ["Kırma", "Melez", "Sokak kırması", "Belirsiz kırma"],
+      "breeds": [
+        "Golden Retriever","Labrador Retriever","Alman Çoban Köpeği","Kangal","Akbaş","Border Collie","Beagle","Poodle","French Bulldog","English Bulldog","Pug","Shih Tzu","Chihuahua","Maltese","Pomeranian","Samoyed","Siberian Husky","Rottweiler","Doberman","Boxer","Cane Corso","Jack Russell Terrier","Cocker Spaniel","Dachshund","Great Dane","Dalmaçyalı","Boston Terrier","Bichon Frise","Yorkshire Terrier","Australian Shepherd","Belçika Malinois","Basset Hound","Bernese Mountain Dog","Cavalier King Charles Spaniel","Chow Chow","English Cocker Spaniel","Irish Setter","Lhasa Apso","Mastiff","Miniature Pinscher","Papillon","Pekingese","Pointer","Saint Bernard","Shar Pei","Weimaraner","Whippet"
+      ]
+    },
+    {
+      "key": "kedi",
+      "label": "Kedi",
+      "mixOptions": ["Kırma", "Melez", "Tekir", "Sokak kedisi"],
+      "breeds": [
+        "Van Kedisi","Ankara Kedisi","British Shorthair","Scottish Fold","Scottish Straight","Siamese","Persian","Maine Coon","Bengal","Sphynx","Ragdoll","Russian Blue","Norwegian Forest Cat","Abyssinian","American Shorthair","Birman","Bombay","Burmese","Cornish Rex","Devon Rex","Egyptian Mau","Exotic Shorthair","Himalayan","Oriental Shorthair","Savannah","Selkirk Rex","Somali","Tonkinese","Turkish Angora","Turkish Van"
+      ]
+    }
+  ],
+  "vaccines": {
+    "kopek": [
+      "Karma (DHPPi)","Kuduz","Bronşin (Bordetella)","Leptospirosis","Koronavirüs","Lyme","Parainfluenza","Canine Influenza"
+    ],
+    "kedi": [
+      "Karma (FVRCP)","Kuduz","Lösemi (FeLV)","Klamidya","Bordetella"
+    ],
+    "statusOptions": ["Tam", "Eksik", "Bilinmiyor", "Planlandı"]
+  }
+}

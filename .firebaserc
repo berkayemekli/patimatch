@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "patimatch-app-2026-berkay"
+    "default": "patimatch-app-2026-berkay",
+    "prod": "patimatch-app-2026-berkay",
+    "staging": "patimatch-staging"
   }
 }

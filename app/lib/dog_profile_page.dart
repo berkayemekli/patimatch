@@ -6,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'app_strings.dart';
+import 'data/master_data/master_data_repository.dart';
 import 'main_shell_page.dart';
+import 'pet_taxonomy.dart';
 
 class DogProfilePage extends StatefulWidget {
   const DogProfilePage({super.key});
@@ -29,6 +31,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
   final _colorController = TextEditingController();
   final _temperamentController = TextEditingController();
   final _healthNotesController = TextEditingController();
+  String _animalCategory = 'Kopek';
+  bool _manualDistrict = false;
   String _sex = 'female';
   String _activityLevel = 'medium';
   bool _isNeutered = false;
@@ -41,9 +45,17 @@ class _DogProfilePageState extends State<DogProfilePage> {
   bool _loading = true;
   String? _existingDogId;
   String? _existingPhotoUrl;
-  final List<String> _cityOptions = const <String>[
-    'Istanbul', 'Ankara', 'Izmir', 'Bursa', 'Antalya', 'Kocaeli', 'Mugla', 'Adana'
-  ];
+  final List<String> _cityOptions = PetTaxonomy.turkiyeSehirleri;
+  List<String> _dynamicCityOptions = <String>[];
+  List<String> _dynamicDistrictOptions = <String>[];
+  final TextEditingController _citySearchController = TextEditingController();
+  final TextEditingController _districtSearchController = TextEditingController();
+  Map<String, List<String>> _dynamicBreeds = <String, List<String>>{};
+  Map<String, List<String>> _vaccines = <String, List<String>>{};
+  final Set<String> _selectedVaccines = <String>{};
+  String _vaccineStatus = 'Bilinmiyor';
+  String _normalizeCategory(String input) =>
+      input == 'Kopek' ? 'Köpek' : (input == 'Kedi' ? 'Kedi' : input);
   final Set<String> _selectedTraits = <String>{};
   final List<String> _traitOptions = const <String>[
     'Oyuncu', 'Sakin', 'Sosyal', 'Egitilebilir', 'Koruyucu', 'Enerjik'
@@ -82,7 +94,20 @@ class _DogProfilePageState extends State<DogProfilePage> {
   @override
   void initState() {
     super.initState();
+    _loadMasterData();
     _loadExistingDogProfile();
+  }
+
+  Future<void> _loadMasterData() async {
+    final cities = await MasterDataRepository.loadCities();
+    final breeds = await MasterDataRepository.loadAnimalBreeds();
+    final vaccines = await MasterDataRepository.loadVaccines();
+    if (!mounted) return;
+    setState(() {
+      _dynamicCityOptions = cities;
+      _dynamicBreeds = breeds;
+      _vaccines = vaccines;
+    });
   }
 
   @override
@@ -100,6 +125,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
     _colorController.dispose();
     _temperamentController.dispose();
     _healthNotesController.dispose();
+    _citySearchController.dispose();
+    _districtSearchController.dispose();
     super.dispose();
   }
 
@@ -129,6 +156,11 @@ class _DogProfilePageState extends State<DogProfilePage> {
         _ageController.text = (data['ageMonths']?.toString() ?? '');
         _weightController.text = (data['weightKg']?.toString() ?? '');
         _cityController.text = data['city'] as String? ?? '';
+        _animalCategory = data['animalCategory'] as String? ?? 'Kopek';
+        _vaccineStatus = data['vaccineStatus'] as String? ?? 'Bilinmiyor';
+        _selectedVaccines
+          ..clear()
+          ..addAll((data['vaccines'] as List<dynamic>? ?? <dynamic>[]).whereType<String>());
         _districtController.text = data['district'] as String? ?? '';
         final loc = data['location'] as Map<String, dynamic>?;
         _latController.text = (loc?['lat']?.toString() ?? '');
@@ -242,6 +274,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
         'dogId': docRef.id,
         'ownerId': user.uid,
         'name': name,
+        'animalCategory': _animalCategory,
         'breed': breed,
         'passportCode': passportCode,
         'ageMonths': ageMonths,
@@ -254,6 +287,8 @@ class _DogProfilePageState extends State<DogProfilePage> {
         'healthNotes': healthNotes,
         'isNeutered': _isNeutered,
         'isVaccinated': _isVaccinated,
+        'vaccines': _selectedVaccines.toList(),
+        'vaccineStatus': _vaccineStatus,
         'friendlyWithDogs': _friendlyWithDogs,
         'friendlyWithKids': _friendlyWithKids,
         'bio': healthNotes,
@@ -359,9 +394,32 @@ class _DogProfilePageState extends State<DogProfilePage> {
               ),
             ),
             const SizedBox(height: 12),
-            TextField(
-              controller: _breedController,
-              onChanged: (_) => setState(() {}),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              initialValue: _animalCategory,
+              items: (_dynamicBreeds.keys.isEmpty ? PetTaxonomy.animalCategories : _dynamicBreeds.keys.toList())
+                  .map((c) => DropdownMenuItem<String>(value: c, child: Text(c)))
+                  .toList(),
+              onChanged: (value) {
+                if (value == null) return;
+                setState(() {
+                  _animalCategory = value;
+                  _breedController.text = '';
+                });
+              },
+              decoration: const InputDecoration(
+                labelText: 'Hayvan Türü',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 12),
+            DropdownButtonFormField<String>(
+              initialValue: _breedController.text.isEmpty ? null : _breedController.text,
+              items: ((_dynamicBreeds[_animalCategory] ??
+                      (_animalCategory == 'Köpek' ? PetTaxonomy.kopekIrklari : PetTaxonomy.kediIrklari)))
+                  .map((b) => DropdownMenuItem<String>(value: b, child: Text(b)))
+                  .toList(),
+              onChanged: (value) => setState(() => _breedController.text = value ?? ''),
               decoration: const InputDecoration(
                 labelText: AppStrings.profileBreedLabel,
                 border: OutlineInputBorder(),
@@ -389,23 +447,119 @@ class _DogProfilePageState extends State<DogProfilePage> {
             ),
             const SizedBox(height: 12),
             TextField(
-              controller: _districtController,
-              onChanged: (_) => setState(() {}),
+              controller: _citySearchController,
               decoration: const InputDecoration(
-                labelText: 'Ilce',
+                labelText: 'Şehir Ara',
                 border: OutlineInputBorder(),
               ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _cityController,
               onChanged: (_) => setState(() {}),
-              decoration: const InputDecoration(
-                labelText: 'Sehir',
-                border: OutlineInputBorder(),
-              ),
             ),
             const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: (_dynamicCityOptions.isEmpty ? _cityOptions : _dynamicCityOptions)
+                  .where((c) => _citySearchController.text.trim().isEmpty
+                      ? false
+                      : c.toLowerCase().contains(_citySearchController.text.trim().toLowerCase()))
+                  .take(8)
+                  .map((c) => ActionChip(
+                        label: Text(c),
+                        onPressed: () async {
+                          final districts = await MasterDataRepository.loadDistricts(c);
+                          if (!mounted) return;
+                          setState(() {
+                            _cityController.text = c;
+                            _districtController.text = '';
+                            _manualDistrict = false;
+                            _dynamicDistrictOptions = districts;
+                            _districtSearchController.clear();
+                          });
+                        },
+                      ))
+                  .toList(),
+            ),
+            if (_cityController.text.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text('Seçilen şehir: ${_cityController.text}'),
+              ),
+            const SizedBox(height: 8),
+            Builder(
+              builder: (context) {
+                final ilceler = _dynamicDistrictOptions.isNotEmpty
+                    ? _dynamicDistrictOptions
+                    : (PetTaxonomy.ilceMap[_cityController.text] ?? const <String>[]);
+                if (ilceler.isNotEmpty && !_manualDistrict) {
+                  final q = _districtSearchController.text.trim().toLowerCase();
+                  final filtered = q.isEmpty
+                      ? <String>[]
+                      : ilceler.where((d) => d.toLowerCase().contains(q)).take(8).toList();
+                  return Column(
+                    children: [
+                      TextField(
+                        controller: _districtSearchController,
+                        decoration: const InputDecoration(
+                          labelText: 'İlçe Ara',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (_) => setState(() {}),
+                      ),
+                      const SizedBox(height: 8),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: filtered
+                            .map((d) => ActionChip(
+                                  label: Text(d),
+                                  onPressed: () => setState(() => _districtController.text = d),
+                                ))
+                            .toList(),
+                      ),
+                      if (_districtController.text.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text('Seçilen ilçe: ${_districtController.text}'),
+                        ),
+                    ],
+                  );
+                }
+                if (_manualDistrict || ilceler.isEmpty) {
+                  return TextField(
+                    controller: _districtController,
+                    onChanged: (_) => setState(() {}),
+                    decoration: InputDecoration(
+                      labelText: 'Ilce',
+                      border: const OutlineInputBorder(),
+                      suffixIcon: ilceler.isNotEmpty
+                          ? IconButton(
+                              tooltip: 'Listeden sec',
+                              onPressed: () => setState(() => _manualDistrict = false),
+                              icon: const Icon(Icons.list),
+                            )
+                          : null,
+                    ),
+                  );
+                }
+                return DropdownButtonFormField<String>(
+                  initialValue: _districtController.text.isEmpty ? null : _districtController.text,
+                  items: ilceler
+                      .map((d) => DropdownMenuItem<String>(value: d, child: Text(d)))
+                      .toList(),
+                  onChanged: (v) => setState(() => _districtController.text = v ?? ''),
+                  decoration: InputDecoration(
+                    labelText: 'Ilce',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      tooltip: 'Elle gir',
+                      onPressed: () => setState(() => _manualDistrict = true),
+                      icon: const Icon(Icons.edit),
+                    ),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               children: _cityOptions.map((c) {
@@ -520,6 +674,38 @@ class _DogProfilePageState extends State<DogProfilePage> {
               value: _isVaccinated,
               title: const Text(AppStrings.profileVaccinated),
               onChanged: (v) => setState(() => _isVaccinated = v),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              initialValue: _vaccineStatus,
+              decoration: const InputDecoration(
+                labelText: 'Aşı Durumu',
+                border: OutlineInputBorder(),
+              ),
+              items: (_vaccines['Durum'] ?? const <String>['Bilinmiyor'])
+                  .map((s) => DropdownMenuItem<String>(value: s, child: Text(s)))
+                  .toList(),
+              onChanged: (v) => setState(() => _vaccineStatus = v ?? 'Bilinmiyor'),
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: (_vaccines[_normalizeCategory(_animalCategory)] ?? const <String>[])
+                  .map((a) => FilterChip(
+                        label: Text(a),
+                        selected: _selectedVaccines.contains(a),
+                        onSelected: (v) {
+                          setState(() {
+                            if (v) {
+                              _selectedVaccines.add(a);
+                            } else {
+                              _selectedVaccines.remove(a);
+                            }
+                          });
+                        },
+                      ))
+                  .toList(),
             ),
             SwitchListTile(
               value: _friendlyWithDogs,

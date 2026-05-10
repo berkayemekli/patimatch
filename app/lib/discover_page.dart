@@ -856,16 +856,16 @@ class _DiscoverPageState extends State<DiscoverPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.favorite_border, size: 44, color: Color(0xFF64748B)),
+                  const Icon(Icons.favorite, size: 44, color: Color(0xFFEF4444)),
                   const SizedBox(height: 10),
                   const Text(
-                    'PatiMatch icin giris gerekli',
+                    'PatiMatch Misafir Onizleme',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'Eslesmeleri gorebilmek icin once hesabina giris yap.',
+                    'Kartlari gorebilir, profilleri kesfedebilirsin. Giris yaptiginda tam eslesme aktif olur.',
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Color(0xFF6B7280)),
                   ),

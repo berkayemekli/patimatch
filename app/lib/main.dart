@@ -1,16 +1,41 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'app_entry_page.dart';
 
+import 'app_env.dart';
 import 'firebase_options.dart';
-import 'main_shell_page.dart';
+import 'firebase_options_staging.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  var firebaseReady = false;
+  try {
+    final options = AppEnvConfig.isStaging
+        ? StagingFirebaseOptions.currentPlatform
+        : DefaultFirebaseOptions.currentPlatform;
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(options: options);
+    }
+    if (kIsWeb) {
+      await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
+    }
+    firebaseReady = true;
+  } catch (_) {
+    firebaseReady = Firebase.apps.isNotEmpty;
+  }
+  runApp(MyApp(firebaseReady: firebaseReady));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.firebaseReady});
+
+  final bool firebaseReady;
+  static const buildLabel = String.fromEnvironment(
+    'BUILD_LABEL',
+    defaultValue: '',
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +52,16 @@ class MyApp extends StatelessWidget {
           surface: Colors.white,
         ),
         textTheme: const TextTheme(
-          headlineMedium: TextStyle(fontSize: 34, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
-          titleLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: Color(0xFF111827)),
+          headlineMedium: TextStyle(
+            fontSize: 34,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF111827),
+          ),
+          titleLarge: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF111827),
+          ),
           bodyLarge: TextStyle(fontSize: 16, color: Color(0xFF374151)),
           bodyMedium: TextStyle(fontSize: 14, color: Color(0xFF4B5563)),
         ),
@@ -47,46 +80,41 @@ class MyApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(999),
             side: const BorderSide(color: Color(0xFFD1D5DB)),
           ),
-          labelStyle: const TextStyle(color: Color(0xFF111827), fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle(
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ),
-      home: FutureBuilder<FirebaseApp>(
-        future: Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text(
-                        'Baglanti baslatilamadi. Lutfen tekrar deneyin.',
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 12),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => const MyApp()),
-                          );
-                        },
-                        child: const Text('Tekrar Dene'),
-                      ),
-                    ],
+      home: Stack(
+        children: [
+          const AppEntryPage(),
+          if (AppEnvConfig.isStaging)
+            Positioned(
+              left: 10,
+              bottom: 10,
+              child: IgnorePointer(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0x99111827),
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    buildLabel.isEmpty ? 'STAGING' : 'STAGING $buildLabel',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 9,
+                    ),
                   ),
                 ),
               ),
-            );
-          }
-          return const MainShellPage(guestMode: true);
-        },
+            ),
+        ],
       ),
     );
   }

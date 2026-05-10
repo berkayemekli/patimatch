@@ -22,18 +22,69 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final photoUrl = user?.photoURL;
+    final title = user?.displayName?.trim().isNotEmpty == true
+        ? user!.displayName!.trim()
+        : 'PatiParent hesabı';
+    final subtitle = user?.email ?? user?.phoneNumber ?? 'Oturum açık';
+
     return Scaffold(
       appBar: AppBar(title: const Text(AppStrings.settingsTitle)),
       body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFE5E7EB)),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: const Color(0xFFEAF2FF),
+                  backgroundImage: photoUrl == null || photoUrl.isEmpty
+                      ? null
+                      : NetworkImage(photoUrl),
+                  child: photoUrl == null || photoUrl.isEmpty
+                      ? const Icon(Icons.person_rounded)
+                      : null,
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w800,
+                          fontSize: 17,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(color: Color(0xFF64748B)),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
           ListTile(
             leading: const Icon(Icons.pets),
             title: const Text(AppStrings.settingsEditProfile),
             subtitle: const Text(AppStrings.settingsEditProfileSub),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const DogProfilePage()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const DogProfilePage()));
             },
           ),
           ListTile(
@@ -51,9 +102,9 @@ class SettingsPage extends StatelessWidget {
             title: const Text(AppStrings.settingsPayments),
             subtitle: const Text(AppStrings.settingsPaymentsSub),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const PaymentsPage()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const PaymentsPage()));
             },
           ),
           ListTile(
