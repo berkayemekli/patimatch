@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -26,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _completePendingGoogleRedirect();
   }
 
   @override
@@ -90,52 +88,33 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _signInWithGoogle() async {
     setState(() {
       _loading = true;
-      _status = 'Google giri\u015fi ba\u015flat\u0131l\u0131yor...';
+      _status = 'Google girisi baslatiliyor...';
     });
 
     final provider = GoogleAuthProvider()
       ..setCustomParameters(<String, String>{'prompt': 'select_account'});
 
     try {
-      final credential = await FirebaseAuth.instance
-          .signInWithPopup(provider)
-          .timeout(const Duration(seconds: 25));
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithRedirect(provider);
+        return;
+      }
+
+      final credential = await FirebaseAuth.instance.signInWithPopup(provider);
       final user = credential.user ?? FirebaseAuth.instance.currentUser;
       if (user == null) {
         setState(
-          () => _status =
-              'Google hesab\u0131 al\u0131namad\u0131. L\u00fctfen tekrar dene.',
+          () => _status = 'Google hesabi alinamadi. Lutfen tekrar dene.',
         );
         return;
       }
       await _finishSignedInUser(user);
-    } on TimeoutException {
-      setState(
-        () => _status = kIsWeb
-            ? 'Google penceresi zaman asimina ugradi. Tarayicida popup iznini kontrol edip tekrar dene.'
-            : 'Google yonlendirmesi baslatiliyor...',
-      );
-      if (!kIsWeb) {
-        await FirebaseAuth.instance.signInWithRedirect(provider);
-      }
     } on FirebaseAuthException catch (e) {
       setState(() => _status = _friendlyAuthError(e));
     } catch (e) {
-      setState(
-        () => _status = 'Google giri\u015fi ba\u015flat\u0131lamad\u0131: $e',
-      );
+      setState(() => _status = 'Google girisi baslatilamadi: $e');
     } finally {
       if (mounted) setState(() => _loading = false);
-    }
-  }
-
-  Future<void> _completePendingGoogleRedirect() async {
-    try {
-      final credential = await FirebaseAuth.instance.getRedirectResult();
-      final user = credential.user ?? FirebaseAuth.instance.currentUser;
-      if (user != null) await _finishSignedInUser(user);
-    } catch (_) {
-      // Normal sayfa açılışlarında bekleyen yönlendirme olmayabilir.
     }
   }
 

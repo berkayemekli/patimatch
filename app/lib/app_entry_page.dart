@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'main_shell_page.dart';
 
@@ -15,10 +16,14 @@ class _AppEntryPageState extends State<AppEntryPage> {
 
   Future<String?> _completeRedirectResult() async {
     try {
-      await FirebaseAuth.instance.getRedirectResult();
+      await FirebaseAuth.instance.getRedirectResult().timeout(
+        const Duration(seconds: 8),
+      );
+      return null;
+    } on TimeoutException {
       return null;
     } on FirebaseAuthException catch (e) {
-      return 'Google girişi tamamlanamadı: ${e.message ?? e.code}';
+      return 'Google girisi tamamlanamadi: ${e.message ?? e.code}';
     } catch (_) {
       // No pending redirect is a normal app start condition.
       return null;
