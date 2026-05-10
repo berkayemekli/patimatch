@@ -422,7 +422,7 @@ class _LoginPageState extends State<LoginPage> {
     required VoidCallback onTap,
   }) {
     return OutlinedButton(
-      onPressed: _loading ? null : onTap,
+      onPressed: onTap,
       style:
           OutlinedButton.styleFrom(
             minimumSize: const Size.fromHeight(54),
