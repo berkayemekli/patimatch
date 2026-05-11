@@ -549,7 +549,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const Spacer(),
               const Text(
-                'Rony gibi evin kalbinde olan dostlar için daha güvenli, daha sakin ve daha insani bir deneyim.',
+                'Pet bakımını daha güvenli, daha sakin ve daha insani hale getiriyoruz.',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 42,
@@ -560,7 +560,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Gezdirme, konaklama, eşleşme ve aile olma süreçleri tek bir güven katmanında birleşir.',
+                'Gezdirme, konaklama, eşleşme ve sahiplenme süreçleri tek bir güven katmanında birleşir.',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.78),
                   fontSize: 16,
