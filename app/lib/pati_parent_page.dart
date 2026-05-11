@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'data/master_data/master_data_repository.dart';
+
 class PatiParentPage extends StatefulWidget {
   const PatiParentPage({super.key});
 
@@ -11,11 +13,52 @@ class _PatiParentPageState extends State<PatiParentPage> {
   bool _filtersOpen = false;
   String _city = 'Istanbul';
   String _district = 'Tum ilceler';
+  String _animalType = 'K?pek';
   String _breed = 'Tum cinsler';
   String _ageRange = 'Tum yaslar';
   String _sex = 'Fark etmez';
   String _vaccineStatus = 'Fark etmez';
   String _size = 'Tum boyutlar';
+  List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
+  List<String> _districts = const [];
+  Map<String, List<String>> _breedsByType = const {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFilterData();
+  }
+
+  Future<void> _loadFilterData() async {
+    final cities = await MasterDataRepository.loadCities();
+    final breeds = await MasterDataRepository.loadAnimalBreeds();
+    final districts = await MasterDataRepository.loadDistricts(_city);
+    if (!mounted) return;
+    setState(() {
+      _cities = cities;
+      _breedsByType = breeds;
+      _districts = districts;
+    });
+  }
+
+  Future<void> _setCity(String city) async {
+    final districts = city == 'All'
+        ? <String>[]
+        : await MasterDataRepository.loadDistricts(city);
+    if (!mounted) return;
+    setState(() {
+      _city = city;
+      _district = 'Tum ilceler';
+      _districts = districts;
+    });
+  }
+
+  void _setAnimalType(String type) {
+    setState(() {
+      _animalType = type;
+      _breed = 'Tum cinsler';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +71,19 @@ class _PatiParentPageState extends State<PatiParentPage> {
             filtersOpen: _filtersOpen,
             city: _city,
             district: _district,
+            animalType: _animalType,
             breed: _breed,
             ageRange: _ageRange,
             sex: _sex,
             vaccineStatus: _vaccineStatus,
             size: _size,
+            cities: _cities,
+            districts: _districts,
+            breeds: _breedsByType[_animalType] ?? const <String>[],
             onToggle: () => setState(() => _filtersOpen = !_filtersOpen),
-            onCityChanged: (v) => setState(() => _city = v),
+            onCityChanged: _setCity,
             onDistrictChanged: (v) => setState(() => _district = v),
+            onAnimalTypeChanged: _setAnimalType,
             onBreedChanged: (v) => setState(() => _breed = v),
             onAgeChanged: (v) => setState(() => _ageRange = v),
             onSexChanged: (v) => setState(() => _sex = v),
@@ -82,14 +130,19 @@ class _FamilyFilterBar extends StatelessWidget {
     required this.filtersOpen,
     required this.city,
     required this.district,
+    required this.animalType,
     required this.breed,
     required this.ageRange,
     required this.sex,
     required this.vaccineStatus,
     required this.size,
+    required this.cities,
+    required this.districts,
+    required this.breeds,
     required this.onToggle,
     required this.onCityChanged,
     required this.onDistrictChanged,
+    required this.onAnimalTypeChanged,
     required this.onBreedChanged,
     required this.onAgeChanged,
     required this.onSexChanged,
@@ -100,14 +153,19 @@ class _FamilyFilterBar extends StatelessWidget {
   final bool filtersOpen;
   final String city;
   final String district;
+  final String animalType;
   final String breed;
   final String ageRange;
   final String sex;
   final String vaccineStatus;
   final String size;
+  final List<String> cities;
+  final List<String> districts;
+  final List<String> breeds;
   final VoidCallback onToggle;
   final ValueChanged<String> onCityChanged;
   final ValueChanged<String> onDistrictChanged;
+  final ValueChanged<String> onAnimalTypeChanged;
   final ValueChanged<String> onBreedChanged;
   final ValueChanged<String> onAgeChanged;
   final ValueChanged<String> onSexChanged;
@@ -153,31 +211,27 @@ class _FamilyFilterBar extends StatelessWidget {
                 _FamilyDrop(
                   label: 'Il',
                   value: city,
-                  items: const ['Istanbul', 'Ankara', 'Izmir'],
+                  items: ['All', ...cities],
                   onChanged: onCityChanged,
                 ),
                 _FamilyDrop(
                   label: 'Ilce',
-                  value: district,
-                  items: const [
-                    'Tum ilceler',
-                    'Kadikoy',
-                    'Besiktas',
-                    'Cankaya',
-                    'Konak',
-                  ],
+                  value: districts.contains(district)
+                      ? district
+                      : 'Tum ilceler',
+                  items: ['Tum ilceler', ...districts],
                   onChanged: onDistrictChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Cins',
-                  value: breed,
-                  items: const [
-                    'Tum cinsler',
-                    'Golden Retriever',
-                    'Labrador',
-                    'Tekir',
-                    'British Shorthair',
-                  ],
+                  label: 'Kedi / K?pek',
+                  value: animalType,
+                  items: const ['K?pek', 'Kedi'],
+                  onChanged: onAnimalTypeChanged,
+                ),
+                _FamilyDrop(
+                  label: '$animalType cinsi',
+                  value: breeds.contains(breed) ? breed : 'Tum cinsler',
+                  items: ['Tum cinsler', ...breeds],
                   onChanged: onBreedChanged,
                 ),
                 _FamilyDrop(

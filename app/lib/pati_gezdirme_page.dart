@@ -142,7 +142,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             size: _size,
             cities: _cities,
             districts: _districts,
-            breeds: _breedsByType['Kopek'] ?? const <String>[],
+            breeds: _breedsByType['Köpek'] ?? const <String>[],
             onToggle: () => setState(() => _filtersOpen = !_filtersOpen),
             onCityChanged: _setCity,
             onDistrictChanged: (v) => setState(() => _district = v),
@@ -327,7 +327,7 @@ class _TopFilter extends StatelessWidget {
                   onChanged: onCityChanged,
                 ),
                 _FilterDropdown(
-                  label: 'Kopek cinsi',
+                  label: 'Köpek cinsi',
                   value: breeds.contains(breed) ? breed : 'Tum cinsler',
                   items: ['Tum cinsler', ...breeds],
                   onChanged: onBreedChanged,
