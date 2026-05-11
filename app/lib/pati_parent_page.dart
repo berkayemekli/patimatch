@@ -13,7 +13,7 @@ class _PatiParentPageState extends State<PatiParentPage> {
   bool _filtersOpen = false;
   String _city = 'Istanbul';
   String _district = 'Tum ilceler';
-  String _animalType = 'K?pek';
+  String _animalType = 'K\u00f6pek';
   String _breed = 'Tum cinsler';
   String _ageRange = 'Tum yaslar';
   String _sex = 'Fark etmez';
@@ -223,9 +223,9 @@ class _FamilyFilterBar extends StatelessWidget {
                   onChanged: onDistrictChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Kedi / K?pek',
+                  label: 'Kedi / K\u00f6pek',
                   value: animalType,
-                  items: const ['K?pek', 'Kedi'],
+                  items: const ['K\u00f6pek', 'Kedi'],
                   onChanged: onAnimalTypeChanged,
                 ),
                 _FamilyDrop(
@@ -291,6 +291,7 @@ class _FamilyDrop extends StatelessWidget {
     return SizedBox(
       width: 220,
       child: DropdownButtonFormField<String>(
+        key: ValueKey('$label-$value-${items.length}'),
         initialValue: items.contains(value) ? value : items.first,
         decoration: InputDecoration(
           labelText: label,
