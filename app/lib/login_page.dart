@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'app_strings.dart';
 import 'main_shell_page.dart';
@@ -86,21 +87,41 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _signInWithGoogle() async {
+    if (_loading) return;
     setState(() {
       _loading = true;
-      _status = 'Google girisi baslatiliyor...';
+      _status = 'Google ile baglaniyor...';
     });
 
     final provider = GoogleAuthProvider()
+      ..addScope('email')
+      ..addScope('profile')
       ..setCustomParameters(<String, String>{'prompt': 'select_account'});
 
     try {
+      UserCredential credential;
       if (kIsWeb) {
-        await FirebaseAuth.instance.signInWithRedirect(provider);
-        return;
+        try {
+          credential = await FirebaseAuth.instance
+              .signInWithPopup(provider)
+              .timeout(const Duration(seconds: 45));
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'popup-blocked' ||
+              e.code == 'popup-closed-by-user' ||
+              e.code == 'cancelled-popup-request') {
+            setState(() {
+              _status =
+                  'Popup tamamlanamadi, Google sayfasina yonlendiriliyor...';
+            });
+            await FirebaseAuth.instance.signInWithRedirect(provider);
+            return;
+          }
+          rethrow;
+        }
+      } else {
+        credential = await FirebaseAuth.instance.signInWithProvider(provider);
       }
 
-      final credential = await FirebaseAuth.instance.signInWithPopup(provider);
       final user = credential.user ?? FirebaseAuth.instance.currentUser;
       if (user == null) {
         setState(
@@ -111,6 +132,11 @@ class _LoginPageState extends State<LoginPage> {
       await _finishSignedInUser(user);
     } on FirebaseAuthException catch (e) {
       setState(() => _status = _friendlyAuthError(e));
+    } on TimeoutException {
+      setState(() {
+        _status =
+            'Google girisi zaman asimina ugradi. Popup acildiysa kapatip tekrar dene.';
+      });
     } catch (e) {
       setState(() => _status = 'Google girisi baslatilamadi: $e');
     } finally {
