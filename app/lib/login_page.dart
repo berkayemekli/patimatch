@@ -267,7 +267,11 @@ class _LoginPageState extends State<LoginPage> {
             fg: const Color(0xFF111827),
             bg: Colors.white,
             border: const Color(0xFF747775),
-            iconWidget: const _GoogleLogo(size: 20),
+            iconWidget: Image.asset(
+              'assets/images/google_g.png',
+              width: 20,
+              height: 20,
+            ),
             onTap: _signInWithGoogle,
           ),
           const SizedBox(height: 12),
@@ -647,55 +651,4 @@ class _InlineFeedback extends StatelessWidget {
       ),
     );
   }
-}
-
-class _GoogleLogo extends StatelessWidget {
-  const _GoogleLogo({required this.size});
-
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(size: Size.square(size), painter: _GoogleLogoPainter());
-  }
-}
-
-class _GoogleLogoPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final stroke = size.width * 0.18;
-    final rect = Offset.zero & size;
-    final arcRect = rect.deflate(stroke / 2);
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..strokeCap = StrokeCap.round;
-
-    paint.color = const Color(0xFF4285F4);
-    canvas.drawArc(arcRect, -0.12, 1.55, false, paint);
-
-    paint.color = const Color(0xFF34A853);
-    canvas.drawArc(arcRect, 1.43, 1.35, false, paint);
-
-    paint.color = const Color(0xFFFBBC05);
-    canvas.drawArc(arcRect, 2.78, 1.18, false, paint);
-
-    paint.color = const Color(0xFFEA4335);
-    canvas.drawArc(arcRect, 3.96, 1.45, false, paint);
-
-    final barPaint = Paint()
-      ..color = const Color(0xFF4285F4)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..strokeCap = StrokeCap.square;
-    final y = size.height * 0.52;
-    canvas.drawLine(
-      Offset(size.width * 0.52, y),
-      Offset(size.width * 0.86, y),
-      barPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
