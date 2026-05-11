@@ -45,7 +45,7 @@ class DefaultFirebaseOptions {
     appId: '1:506242188849:web:6d3c5b2b4e0e065ef43710',
     messagingSenderId: '506242188849',
     projectId: 'patimatch-app-2026-berkay',
-    authDomain: 'patiparent.com',
+    authDomain: 'patimatch-app-2026-berkay.firebaseapp.com',
     storageBucket: 'patimatch-app-2026-berkay.firebasestorage.app',
     measurementId: 'G-BX254LTEK3',
   );

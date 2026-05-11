@@ -108,7 +108,8 @@ class _LoginPageState extends State<LoginPage> {
         } on FirebaseAuthException catch (e) {
           if (e.code == 'popup-blocked' ||
               e.code == 'popup-closed-by-user' ||
-              e.code == 'cancelled-popup-request') {
+              e.code == 'cancelled-popup-request' ||
+              e.code == 'network-request-failed') {
             setState(() {
               _status =
                   'Popup tamamlanamadi, Google sayfasina yonlendiriliyor...';
