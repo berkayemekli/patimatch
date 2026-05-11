@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'discover_page.dart';
+import 'pati_match_page.dart';
 import 'login_page.dart';
 import 'matches_page.dart';
 import 'notifications_page.dart';
@@ -213,7 +213,7 @@ class _ModuleBody extends StatelessWidget {
       case 1:
         return const PatiBnbPage();
       case 2:
-        return const SizedBox(height: 720, child: DiscoverPage(embedded: true));
+        return const PatiMatchPage();
       case 3:
         return const PatiParentPage();
       default:
