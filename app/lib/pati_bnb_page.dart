@@ -22,6 +22,154 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
 
+  static const List<Map<String, dynamic>> _stays = [
+    {
+      'host': 'Can B.',
+      'city': 'Istanbul',
+      'nightlyPrice': 850,
+      'rating': 4.93,
+      'reviews': 128,
+      'type': 'Bahceli Ev',
+      'badge': 'Super Host',
+      'petTypes': ['K\u00f6pek', 'Kedi'],
+      'breeds': [
+        'Golden Retriever',
+        'Labrador Retriever',
+        'British Shorthair',
+        'Tekir',
+      ],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Aylin S.',
+      'city': 'Ankara',
+      'nightlyPrice': 620,
+      'rating': 4.81,
+      'reviews': 96,
+      'type': 'Modern Daire',
+      'badge': 'Verified',
+      'petTypes': ['Kedi'],
+      'breeds': [
+        'British Shorthair',
+        'Scottish Fold',
+        'Tekir',
+        'Sarman',
+        'Van Kedisi',
+      ],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Nisa Y.',
+      'city': 'Bursa',
+      'nightlyPrice': 780,
+      'rating': 4.97,
+      'reviews': 154,
+      'type': 'Premium Home',
+      'badge': 'Top Rated',
+      'petTypes': ['K\u00f6pek'],
+      'breeds': ['Poodle', 'Maltese', 'Pomeranian', 'Cocker Spaniel'],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Deniz K.',
+      'city': 'Izmir',
+      'nightlyPrice': 690,
+      'rating': 4.88,
+      'reviews': 110,
+      'type': 'Loft Daire',
+      'badge': 'Verified',
+      'petTypes': ['Kedi'],
+      'breeds': [
+        'Siamese',
+        'Persian',
+        'Maine Coon',
+        'Ragdoll',
+        'Scottish Straight',
+      ],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Pelin A.',
+      'city': 'Antalya',
+      'nightlyPrice': 920,
+      'rating': 4.95,
+      'reviews': 182,
+      'type': 'Deniz Manzarali Ev',
+      'badge': 'Top Rated',
+      'petTypes': ['K\u00f6pek', 'Kedi'],
+      'breeds': [
+        'Kangal',
+        'Border Collie',
+        'Golden Retriever',
+        'Maine Coon',
+        'Bengal',
+      ],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Emre T.',
+      'city': 'Istanbul',
+      'nightlyPrice': 740,
+      'rating': 4.84,
+      'reviews': 99,
+      'type': 'Sehir Evi',
+      'badge': 'Super Host',
+      'petTypes': ['K\u00f6pek'],
+      'breeds': ['Beagle', 'French Bulldog', 'Pug', 'Shih Tzu'],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Sibel N.',
+      'city': 'Mugla',
+      'nightlyPrice': 980,
+      'rating': 4.96,
+      'reviews': 205,
+      'type': 'Tas Villa',
+      'badge': 'Top Rated',
+      'petTypes': ['Kedi'],
+      'breeds': [
+        'Van Kedisi',
+        'Ankara Kedisi',
+        'Russian Blue',
+        'Norwegian Forest Cat',
+      ],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Baris L.',
+      'city': 'Izmir',
+      'nightlyPrice': 670,
+      'rating': 4.79,
+      'reviews': 88,
+      'type': 'Bahce Kat',
+      'badge': 'Verified',
+      'petTypes': ['K\u00f6pek', 'Kedi'],
+      'breeds': ['K\u0131rma', 'Melez', 'Sokak kedisi', 'Tekir'],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1572120360610-d971b9b63956?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      'host': 'Cansu P.',
+      'city': 'Istanbul',
+      'nightlyPrice': 810,
+      'rating': 4.91,
+      'reviews': 141,
+      'type': 'Terasli Ev',
+      'badge': 'Super Host',
+      'petTypes': ['Kedi'],
+      'breeds': ['Sphynx', 'Bengal', 'Scottish Fold', 'Domestic Shorthair'],
+      'imageUrl':
+          'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=80',
+    },
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -63,6 +211,14 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
+    final filteredStays = _stays.where((stay) {
+      final petTypes = (stay['petTypes'] as List<dynamic>).cast<String>();
+      final breeds = (stay['breeds'] as List<dynamic>).cast<String>();
+      final cityOk = _city == 'All' || stay['city'] == _city;
+      final animalOk = petTypes.contains(_animalType);
+      final breedOk = _breed == 'Tum cinsler' || breeds.contains(_breed);
+      return cityOk && animalOk && breedOk;
+    }).toList();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
@@ -91,115 +247,35 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             onVaccineChanged: (v) => setState(() => _vaccineStatus = v),
           ),
           const SizedBox(height: 24),
-          GridView.count(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            childAspectRatio: 1.04,
-            children: const [
-              _StayCard(
-                host: 'Can B.',
-                city: 'Istanbul',
-                nightlyPrice: 850,
-                rating: 4.93,
-                reviews: 128,
-                type: 'Bahceli Ev',
-                badge: 'Super Host',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1449844908441-8829872d2607?auto=format&fit=crop&w=1400&q=80',
+          if (filteredStays.isEmpty)
+            const _EmptyStayState()
+          else
+            GridView.builder(
+              itemCount: filteredStays.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+                childAspectRatio: 1.04,
               ),
-              _StayCard(
-                host: 'Aylin S.',
-                city: 'Ankara',
-                nightlyPrice: 620,
-                rating: 4.81,
-                reviews: 96,
-                type: 'Modern Daire',
-                badge: 'Verified',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Nisa Y.',
-                city: 'Bursa',
-                nightlyPrice: 780,
-                rating: 4.97,
-                reviews: 154,
-                type: 'Premium Home',
-                badge: 'Top Rated',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Deniz K.',
-                city: 'Izmir',
-                nightlyPrice: 690,
-                rating: 4.88,
-                reviews: 110,
-                type: 'Loft Daire',
-                badge: 'Verified',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Pelin A.',
-                city: 'Antalya',
-                nightlyPrice: 920,
-                rating: 4.95,
-                reviews: 182,
-                type: 'Deniz Manzarali Ev',
-                badge: 'Top Rated',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Emre T.',
-                city: 'Istanbul',
-                nightlyPrice: 740,
-                rating: 4.84,
-                reviews: 99,
-                type: 'Sehir Evi',
-                badge: 'Super Host',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Sibel N.',
-                city: 'Mugla',
-                nightlyPrice: 980,
-                rating: 4.96,
-                reviews: 205,
-                type: 'Tas Villa',
-                badge: 'Top Rated',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Baris L.',
-                city: 'Izmir',
-                nightlyPrice: 670,
-                rating: 4.79,
-                reviews: 88,
-                type: 'Bahce Kat',
-                badge: 'Verified',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1572120360610-d971b9b63956?auto=format&fit=crop&w=1400&q=80',
-              ),
-              _StayCard(
-                host: 'Cansu P.',
-                city: 'Istanbul',
-                nightlyPrice: 810,
-                rating: 4.91,
-                reviews: 141,
-                type: 'Terasli Ev',
-                badge: 'Super Host',
-                imageUrl:
-                    'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=80',
-              ),
-            ],
-          ),
+              itemBuilder: (context, index) {
+                final stay = filteredStays[index];
+                return _StayCard(
+                  host: stay['host'] as String,
+                  city: stay['city'] as String,
+                  nightlyPrice: stay['nightlyPrice'] as int,
+                  rating: stay['rating'] as double,
+                  reviews: stay['reviews'] as int,
+                  type: stay['type'] as String,
+                  badge: stay['badge'] as String,
+                  petTypes: (stay['petTypes'] as List<dynamic>).cast<String>(),
+                  breeds: (stay['breeds'] as List<dynamic>).cast<String>(),
+                  imageUrl: stay['imageUrl'] as String,
+                );
+              },
+            ),
         ],
       ),
     );
@@ -376,6 +452,27 @@ class _BnbDrop extends StatelessWidget {
   }
 }
 
+class _EmptyStayState extends StatelessWidget {
+  const _EmptyStayState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE7ECF3)),
+      ),
+      child: const Text(
+        'Bu filtreye uygun konaklama henuz yok. Farkli cins veya sehir deneyebilirsin.',
+        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+      ),
+    );
+  }
+}
+
 class _StayCard extends StatelessWidget {
   const _StayCard({
     required this.host,
@@ -385,6 +482,8 @@ class _StayCard extends StatelessWidget {
     required this.reviews,
     required this.type,
     required this.badge,
+    required this.petTypes,
+    required this.breeds,
     required this.imageUrl,
   });
   final String host;
@@ -394,6 +493,8 @@ class _StayCard extends StatelessWidget {
   final int reviews;
   final String type;
   final String badge;
+  final List<String> petTypes;
+  final List<String> breeds;
   final String imageUrl;
 
   @override
