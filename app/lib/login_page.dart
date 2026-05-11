@@ -504,11 +504,11 @@ class _StoryPanel extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     Color(0xD9172430),
-                    Color(0x80173B3C),
-                    Color(0x8C6B4A31),
+                    Color(0x99173B3C),
+                    Color(0x226B4A31),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
               ),
             ),
