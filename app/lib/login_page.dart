@@ -505,7 +505,7 @@ class _StoryPanel extends StatelessWidget {
                   colors: [
                     Color(0xD9172430),
                     Color(0x99173B3C),
-                    Color(0x226B4A31),
+                    Color(0x006B4A31),
                   ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
