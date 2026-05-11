@@ -480,12 +480,13 @@ class _StoryPanel extends StatelessWidget {
       constraints: const BoxConstraints(minHeight: 620),
       margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(34),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-        gradient: const LinearGradient(
-          colors: [Color(0xFF172033), Color(0xFF214A52), Color(0xFFD8B99B)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        image: const DecorationImage(
+          image: AssetImage('assets/images/rony_login_story.jpg'),
+          fit: BoxFit.cover,
+          alignment: Alignment(0.78, 0.72),
         ),
         boxShadow: const [
           BoxShadow(
@@ -497,15 +498,30 @@ class _StoryPanel extends StatelessWidget {
       ),
       child: Stack(
         children: [
+          const Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xD9172430),
+                    Color(0x80173B3C),
+                    Color(0x8C6B4A31),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
+          ),
           Positioned(
             right: -44,
             top: -38,
-            child: _BlurOrb(size: 180, color: const Color(0x55FFFFFF)),
+            child: _BlurOrb(size: 180, color: const Color(0x33FFFFFF)),
           ),
           Positioned(
             left: -56,
             bottom: -60,
-            child: _BlurOrb(size: 220, color: const Color(0x33FAD7A0)),
+            child: _BlurOrb(size: 220, color: const Color(0x22FAD7A0)),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -533,7 +549,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const Spacer(),
               const Text(
-                'Pet bakımını daha güvenli, daha sakin ve daha insani hale getiriyoruz.',
+                'Rony gibi evin kalbinde olan dostlar için daha güvenli, daha sakin ve daha insani bir deneyim.',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 42,
@@ -544,7 +560,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Gezdirme, konaklama, eşleşme ve sahiplenme süreçleri tek bir güven katmanında birleşir.',
+                'Gezdirme, konaklama, eşleşme ve aile olma süreçleri tek bir güven katmanında birleşir.',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.78),
                   fontSize: 16,
