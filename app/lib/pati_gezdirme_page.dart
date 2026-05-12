@@ -28,6 +28,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Ece Aras',
       'city': 'Istanbul',
+      'district': 'Kadikoy',
+      'breeds': ['Golden Retriever', 'Labrador Retriever', 'Kirma'],
+      'ageRange': '1-3 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Tam',
+      'size': 'Orta',
       'rating': 4.9,
       'walks': 312,
       'price': 290,
@@ -38,6 +44,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Mert Kaya',
       'city': 'Istanbul',
+      'district': 'Besiktas',
+      'breeds': ['Poodle', 'Maltese', 'Pomeranian'],
+      'ageRange': '0-1 yas',
+      'sex': 'Erkek',
+      'vaccineStatus': 'Tam',
+      'size': 'Kucuk',
       'rating': 4.8,
       'walks': 188,
       'price': 250,
@@ -48,6 +60,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Sena Demir',
       'city': 'Ankara',
+      'district': 'Cankaya',
+      'breeds': ['Kangal', 'Golden Retriever', 'Melez'],
+      'ageRange': '3-7 yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Fark etmez',
+      'size': 'Buyuk',
       'rating': 4.7,
       'walks': 140,
       'price': 220,
@@ -58,6 +76,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Bora Tunc',
       'city': 'Izmir',
+      'district': 'Karsiyaka',
+      'breeds': ['Beagle', 'Cocker Spaniel', 'French Bulldog'],
+      'ageRange': '1-3 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Tam',
+      'size': 'Orta',
       'rating': 4.9,
       'walks': 276,
       'price': 300,
@@ -68,6 +92,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Duru Acar',
       'city': 'Istanbul',
+      'district': 'Sisli',
+      'breeds': ['Shih Tzu', 'Pug', 'Yorkshire Terrier'],
+      'ageRange': '7+ yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Tam',
+      'size': 'Kucuk',
       'rating': 4.8,
       'walks': 221,
       'price': 270,
@@ -78,6 +108,12 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Kaan Yilmaz',
       'city': 'Ankara',
+      'district': 'Kecioren',
+      'breeds': ['Border Collie', 'Labrador Retriever', 'Melez'],
+      'ageRange': '3-7 yas',
+      'sex': 'Erkek',
+      'vaccineStatus': 'Eksik',
+      'size': 'Buyuk',
       'rating': 4.7,
       'walks': 169,
       'price': 240,
@@ -122,7 +158,18 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     final width = MediaQuery.of(context).size.width;
     final crossCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
     final filtered = _walkers.where((walker) {
+      final breeds = (walker['breeds'] as List<dynamic>).cast<String>();
       final cityOk = _city == 'All' || walker['city'] == _city;
+      final districtOk =
+          _district == 'Tum ilceler' || walker['district'] == _district;
+      final breedOk = _breed == 'Tum cinsler' || breeds.contains(_breed);
+      final ageOk =
+          _ageRange == 'Tum yaslar' || walker['ageRange'] == _ageRange;
+      final sexOk = _sex == 'Fark etmez' || walker['sex'] == _sex;
+      final vaccineOk =
+          _vaccineStatus == 'Fark etmez' ||
+          walker['vaccineStatus'] == _vaccineStatus;
+      final sizeOk = _size == 'Tum boyutlar' || walker['size'] == _size;
       final badgeOk = _badgeFilter == 'All' || walker['badge'] == _badgeFilter;
       final query = _searchQuery.trim().toLowerCase();
       final searchOk =
@@ -130,11 +177,25 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           [
             walker['name'],
             walker['city'],
+            walker['district'],
             walker['badge'],
+            walker['ageRange'],
+            walker['sex'],
+            walker['vaccineStatus'],
+            walker['size'],
             walker['price'],
             walker['walks'],
+            ...breeds,
           ].any((value) => value.toString().toLowerCase().contains(query));
-      return cityOk && badgeOk && searchOk;
+      return cityOk &&
+          districtOk &&
+          breedOk &&
+          ageOk &&
+          sexOk &&
+          vaccineOk &&
+          sizeOk &&
+          badgeOk &&
+          searchOk;
     }).toList();
 
     return Padding(
@@ -185,29 +246,32 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             style: TextStyle(color: Color(0xFF64748B)),
           ),
           const SizedBox(height: 14),
-          GridView.builder(
-            itemCount: filtered.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: crossCount,
-              crossAxisSpacing: 14,
-              mainAxisSpacing: 14,
-              childAspectRatio: 0.9,
+          if (filtered.isEmpty)
+            const _EmptyWalkerState()
+          else
+            GridView.builder(
+              itemCount: filtered.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossCount,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: 0.9,
+              ),
+              itemBuilder: (context, index) {
+                final walker = filtered[index];
+                return _WalkerCard(
+                  name: walker['name'] as String,
+                  city: walker['city'] as String,
+                  price: walker['price'] as int,
+                  rating: walker['rating'] as double,
+                  walks: walker['walks'] as int,
+                  badge: walker['badge'] as String,
+                  imageUrl: walker['imageUrl'] as String,
+                );
+              },
             ),
-            itemBuilder: (context, index) {
-              final walker = filtered[index];
-              return _WalkerCard(
-                name: walker['name'] as String,
-                city: walker['city'] as String,
-                price: walker['price'] as int,
-                rating: walker['rating'] as double,
-                walks: walker['walks'] as int,
-                badge: walker['badge'] as String,
-                imageUrl: walker['imageUrl'] as String,
-              );
-            },
-          ),
         ],
       ),
     );
@@ -350,18 +414,18 @@ class _TopFilter extends StatelessWidget {
                   onChanged: onCityChanged,
                 ),
                 _FilterDropdown(
-                  label: 'Köpek cinsi',
-                  value: breeds.contains(breed) ? breed : 'Tum cinsler',
-                  items: ['Tum cinsler', ...breeds],
-                  onChanged: onBreedChanged,
-                ),
-                _FilterDropdown(
                   label: 'Ilce',
                   value: districts.contains(district)
                       ? district
                       : 'Tum ilceler',
                   items: ['Tum ilceler', ...districts],
                   onChanged: onDistrictChanged,
+                ),
+                _FilterDropdown(
+                  label: 'Kopek cinsi',
+                  value: breeds.contains(breed) ? breed : 'Tum cinsler',
+                  items: ['Tum cinsler', ...breeds],
+                  onChanged: onBreedChanged,
                 ),
                 _FilterDropdown(
                   label: 'Yas',
@@ -416,7 +480,7 @@ class _FilterSearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      key: ValueKey('filter-search-$value'),
+      key: const ValueKey('filter-search'),
       initialValue: value,
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
@@ -481,6 +545,27 @@ class _FilterDropdown extends StatelessWidget {
         onChanged: (v) {
           if (v != null) onChanged(v);
         },
+      ),
+    );
+  }
+}
+
+class _EmptyWalkerState extends StatelessWidget {
+  const _EmptyWalkerState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE7ECF3)),
+      ),
+      child: const Text(
+        'Bu filtrelere uygun gezdirici henuz yok. Sehir, ilce veya cinsi degistirerek tekrar deneyebilirsin.',
+        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
       ),
     );
   }

@@ -29,21 +29,53 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'title': 'Mavi - Istanbul',
       'subtitle': '10 ay - Kucuk - Asili - Oyuncu karakter',
       'badge': 'Acil Yuva',
+      'city': 'Istanbul',
+      'district': 'Kadikoy',
+      'animalType': 'Köpek',
+      'breed': 'Maltese',
+      'ageRange': '0-1 yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Tam',
+      'size': 'Kucuk',
     },
     {
       'title': 'Tarcin - Ankara',
       'subtitle': '18 ay - Orta - Asili - Cocuklarla uyumlu',
       'badge': 'Dogrulanmis',
+      'city': 'Ankara',
+      'district': 'Cankaya',
+      'animalType': 'Köpek',
+      'breed': 'Golden Retriever',
+      'ageRange': '1-3 yas',
+      'sex': 'Erkek',
+      'vaccineStatus': 'Tam',
+      'size': 'Orta',
     },
     {
       'title': 'Boncuk - Bursa',
       'subtitle': '14 ay - Kucuk - Sakin ev ortami sever',
       'badge': 'Yeni',
+      'city': 'Bursa',
+      'district': 'Nilufer',
+      'animalType': 'Kedi',
+      'breed': 'Tekir',
+      'ageRange': '1-3 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Bilinmiyor',
+      'size': 'Kucuk',
     },
     {
       'title': 'Luna - Izmir',
       'subtitle': '2 yas - Orta - Tuvalet egitimli',
       'badge': 'Uygun',
+      'city': 'Izmir',
+      'district': 'Karsiyaka',
+      'animalType': 'Kedi',
+      'breed': 'Scottish Fold',
+      'ageRange': '1-3 yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Eksik',
+      'size': 'Orta',
     },
   ];
 
@@ -88,8 +120,29 @@ class _PatiParentPageState extends State<PatiParentPage> {
   Widget build(BuildContext context) {
     final query = _searchQuery.trim().toLowerCase();
     final filteredPets = _familyPets.where((pet) {
-      if (query.isEmpty) return true;
-      return pet.values.any((value) => value.toLowerCase().contains(query));
+      final cityOk = _city == 'All' || pet['city'] == _city;
+      final districtOk =
+          _district == 'Tum ilceler' || pet['district'] == _district;
+      final animalOk = pet['animalType'] == _animalType;
+      final breedOk = _breed == 'Tum cinsler' || pet['breed'] == _breed;
+      final ageOk = _ageRange == 'Tum yaslar' || pet['ageRange'] == _ageRange;
+      final sexOk = _sex == 'Fark etmez' || pet['sex'] == _sex;
+      final vaccineOk =
+          _vaccineStatus == 'Fark etmez' ||
+          pet['vaccineStatus'] == _vaccineStatus;
+      final sizeOk = _size == 'Tum boyutlar' || pet['size'] == _size;
+      final searchOk =
+          query.isEmpty ||
+          pet.values.any((value) => value.toLowerCase().contains(query));
+      return cityOk &&
+          districtOk &&
+          animalOk &&
+          breedOk &&
+          ageOk &&
+          sexOk &&
+          vaccineOk &&
+          sizeOk &&
+          searchOk;
     }).toList();
 
     return Padding(
@@ -128,14 +181,17 @@ class _PatiParentPageState extends State<PatiParentPage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 12),
-          for (final pet in filteredPets) ...[
-            _SimpleCard(
-              title: pet['title']!,
-              subtitle: pet['subtitle']!,
-              badge: pet['badge']!,
-            ),
-            const SizedBox(height: 10),
-          ],
+          if (filteredPets.isEmpty)
+            const _EmptyFamilyState()
+          else
+            for (final pet in filteredPets) ...[
+              _SimpleCard(
+                title: pet['title']!,
+                subtitle: pet['subtitle']!,
+                badge: pet['badge']!,
+              ),
+              const SizedBox(height: 10),
+            ],
         ],
       ),
     );
@@ -314,7 +370,7 @@ class _FamilySearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      key: ValueKey('family-filter-search-$value'),
+      key: const ValueKey('family-filter-search'),
       initialValue: value,
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
@@ -370,6 +426,27 @@ class _FamilyDrop extends StatelessWidget {
         onChanged: (value) {
           if (value != null) onChanged(value);
         },
+      ),
+    );
+  }
+}
+
+class _EmptyFamilyState extends StatelessWidget {
+  const _EmptyFamilyState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE7ECF3)),
+      ),
+      child: const Text(
+        'Bu filtrelere uygun ilan henuz yok. Tur, cins veya konum filtresini degistirebilirsin.',
+        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
       ),
     );
   }

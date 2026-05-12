@@ -27,6 +27,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Can B.',
       'city': 'Istanbul',
+      'district': 'Kadikoy',
+      'ageRange': '1-3 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 850,
       'rating': 4.93,
       'reviews': 128,
@@ -45,6 +49,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Aylin S.',
       'city': 'Ankara',
+      'district': 'Cankaya',
+      'ageRange': '0-1 yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 620,
       'rating': 4.81,
       'reviews': 96,
@@ -64,6 +72,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Nisa Y.',
       'city': 'Bursa',
+      'district': 'Nilufer',
+      'ageRange': '1-3 yas',
+      'sex': 'Erkek',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 780,
       'rating': 4.97,
       'reviews': 154,
@@ -77,6 +89,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Deniz K.',
       'city': 'Izmir',
+      'district': 'Karsiyaka',
+      'ageRange': '3-7 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 690,
       'rating': 4.88,
       'reviews': 110,
@@ -96,6 +112,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Pelin A.',
       'city': 'Antalya',
+      'district': 'Muratpasa',
+      'ageRange': '3-7 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 920,
       'rating': 4.95,
       'reviews': 182,
@@ -115,6 +135,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Emre T.',
       'city': 'Istanbul',
+      'district': 'Besiktas',
+      'ageRange': '0-1 yas',
+      'sex': 'Erkek',
+      'vaccineStatus': 'Eksik',
       'nightlyPrice': 740,
       'rating': 4.84,
       'reviews': 99,
@@ -128,6 +152,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Sibel N.',
       'city': 'Mugla',
+      'district': 'Bodrum',
+      'ageRange': '7+ yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Fark etmez',
       'nightlyPrice': 980,
       'rating': 4.96,
       'reviews': 205,
@@ -146,6 +174,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Baris L.',
       'city': 'Izmir',
+      'district': 'Bornova',
+      'ageRange': '1-3 yas',
+      'sex': 'Fark etmez',
+      'vaccineStatus': 'Bilinmiyor',
       'nightlyPrice': 670,
       'rating': 4.79,
       'reviews': 88,
@@ -159,6 +191,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Cansu P.',
       'city': 'Istanbul',
+      'district': 'Sisli',
+      'ageRange': '3-7 yas',
+      'sex': 'Disi',
+      'vaccineStatus': 'Tam',
       'nightlyPrice': 810,
       'rating': 4.91,
       'reviews': 141,
@@ -216,21 +252,39 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       final petTypes = (stay['petTypes'] as List<dynamic>).cast<String>();
       final breeds = (stay['breeds'] as List<dynamic>).cast<String>();
       final cityOk = _city == 'All' || stay['city'] == _city;
+      final districtOk =
+          _district == 'Tum ilceler' || stay['district'] == _district;
       final animalOk = petTypes.contains(_animalType);
       final breedOk = _breed == 'Tum cinsler' || breeds.contains(_breed);
+      final ageOk = _ageRange == 'Tum yaslar' || stay['ageRange'] == _ageRange;
+      final sexOk = _sex == 'Fark etmez' || stay['sex'] == _sex;
+      final vaccineOk =
+          _vaccineStatus == 'Fark etmez' ||
+          stay['vaccineStatus'] == _vaccineStatus;
       final query = _searchQuery.trim().toLowerCase();
       final searchOk =
           query.isEmpty ||
           [
             stay['host'],
             stay['city'],
+            stay['district'],
             stay['type'],
             stay['badge'],
+            stay['ageRange'],
+            stay['sex'],
+            stay['vaccineStatus'],
             stay['nightlyPrice'],
             ...petTypes,
             ...breeds,
           ].any((value) => value.toString().toLowerCase().contains(query));
-      return cityOk && animalOk && breedOk && searchOk;
+      return cityOk &&
+          districtOk &&
+          animalOk &&
+          breedOk &&
+          ageOk &&
+          sexOk &&
+          vaccineOk &&
+          searchOk;
     }).toList();
 
     return Padding(
@@ -458,7 +512,7 @@ class _BnbSearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      key: ValueKey('bnb-filter-search-$value'),
+      key: const ValueKey('bnb-filter-search'),
       initialValue: value,
       onChanged: onChanged,
       textInputAction: TextInputAction.search,
