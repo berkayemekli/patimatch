@@ -1,0 +1,39 @@
+﻿{
+  "onboardingPaths": [
+    {
+      "key": "need_service",
+      "label": "Hizmet almak istiyorum",
+      "steps": [
+        {"key": "pet_profile", "title": "Petini tanitalim", "fields": ["tur", "cins", "yas", "cinsiyet", "boyut", "asi", "karakter"]},
+        {"key": "location", "title": "Konumunu sec", "fields": ["il", "ilce", "mahalle", "mesafe tercihi"]},
+        {"key": "need", "title": "Ihtiyacini netlestir", "fields": ["modul", "tarih", "sure", "butce", "ozel not"]},
+        {"key": "trust", "title": "Guven tercihleri", "fields": ["dogrulanmis profil", "yorumlu profil", "canli takip", "belge gerekli"]}
+      ]
+    },
+    {
+      "key": "provide_service",
+      "label": "Hizmet vermek istiyorum",
+      "steps": [
+        {"key": "identity", "title": "Profil ve dogrulama", "fields": ["ad soyad", "telefon", "profil fotografi", "kimlik dogrulama"]},
+        {"key": "services", "title": "Hizmetlerini sec", "fields": ["gezdirme", "konaklama", "bakim", "sahiplendirme destek"]},
+        {"key": "coverage", "title": "Bolge ve uygunluk", "fields": ["il", "ilce", "mahalle", "gunler", "saatler"]},
+        {"key": "pricing", "title": "Fiyat ve kurallar", "fields": ["saatlik ucret", "gecelik ucret", "iptal politikasi", "kabul edilen petler"]}
+      ]
+    },
+    {
+      "key": "both",
+      "label": "Ikisini de kullanacagim",
+      "steps": ["need_service", "provide_service"]
+    }
+  ],
+  "profileCompletionWeights": {
+    "pet_photo": 10,
+    "pet_health": 15,
+    "location": 10,
+    "identity": 20,
+    "phone": 10,
+    "service_preferences": 15,
+    "reviews_or_references": 10,
+    "emergency_contact": 10
+  }
+}

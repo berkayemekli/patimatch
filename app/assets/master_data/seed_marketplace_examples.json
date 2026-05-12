@@ -1,0 +1,20 @@
+﻿{
+  "walkers": [
+    {"name": "Ece Aras", "city": "Istanbul", "district": "Kadikoy", "badges": ["Kimlik dogrulandi", "Canli takip"], "specialties": ["orta boy kopek", "duzenli yuruyus"], "price": 290},
+    {"name": "Mert Kaya", "city": "Istanbul", "district": "Besiktas", "badges": ["Top rated", "Telefon dogrulandi"], "specialties": ["kucuk irklar", "aksam yuruyusu"], "price": 250},
+    {"name": "Sena Demir", "city": "Ankara", "district": "Cankaya", "badges": ["Yeni", "Veteriner referansi"], "specialties": ["buyuk irklar", "enerjik kopek"], "price": 220}
+  ],
+  "stays": [
+    {"host": "Can B.", "city": "Istanbul", "district": "Kadikoy", "homeType": "Bahceli ev", "accepts": ["Kopek", "Kedi"], "badges": ["Super host", "Konum dogrulandi"], "nightlyPrice": 850},
+    {"host": "Aylin S.", "city": "Ankara", "district": "Cankaya", "homeType": "Modern daire", "accepts": ["Kedi"], "badges": ["Kimlik dogrulandi"], "nightlyPrice": 620},
+    {"host": "Pelin A.", "city": "Antalya", "district": "Muratpasa", "homeType": "Bahceli villa", "accepts": ["Kopek", "Kedi"], "badges": ["Top rated"], "nightlyPrice": 920}
+  ],
+  "matches": [
+    {"petName": "Loki", "type": "Kopek", "breed": "Golden Retriever", "city": "Istanbul", "matchGoal": "oyun arkadasi", "trust": ["Asi karti", "Sahip dogrulandi"]},
+    {"petName": "Mia", "type": "Kedi", "breed": "British Shorthair", "city": "Izmir", "matchGoal": "sosyal tanisma", "trust": ["Asi karti"]}
+  ],
+  "familyListings": [
+    {"petName": "Mavi", "type": "Kopek", "breed": "Maltese", "city": "Istanbul", "urgency": "Acil yuva", "badges": ["Asili", "Kimlik dogrulandi"]},
+    {"petName": "Boncuk", "type": "Kedi", "breed": "Tekir", "city": "Bursa", "urgency": "Gecici yuva", "badges": ["Yeni", "Sahiplendirme formu"]}
+  ]
+}

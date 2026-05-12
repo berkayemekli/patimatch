@@ -1,0 +1,41 @@
+﻿{
+  "careProfiles": {
+    "dog": {
+      "label": "Kopek",
+      "coreVaccines": [
+        {"key": "dhpp", "label": "Karma DHPP/DAPP", "whyItMatters": "Temel viral hastaliklara karsi koruyucu ana asi grubudur."},
+        {"key": "rabies", "label": "Kuduz", "whyItMatters": "Halk sagligi ve yasal gereklilikler acisindan kritik kabul edilir."}
+      ],
+      "lifestyleVaccines": [
+        "Bordetella/bronchiseptica",
+        "Leptospirosis",
+        "Lyme",
+        "Canine influenza",
+        "Parainfluenza"
+      ],
+      "healthDocuments": ["asi karnesi", "mikrocip numarasi", "kisirlik bilgisi", "son veteriner kontrol tarihi", "alerji/ilac notu"],
+      "behaviorFields": ["enerji seviyesi", "sosyallik", "yalniz kalma toleransi", "tasma davranisi", "diger kopeklerle uyum", "cocuklarla uyum"],
+      "sizeOptions": ["Mini", "Kucuk", "Orta", "Buyuk", "Dev"],
+      "ageBands": ["0-6 ay", "6-12 ay", "1-3 yas", "3-7 yas", "7+ yas"]
+    },
+    "cat": {
+      "label": "Kedi",
+      "coreVaccines": [
+        {"key": "fvrcp", "label": "Karma FVRCP", "whyItMatters": "Kedilerde temel viral hastaliklara karsi ana asi grubudur."},
+        {"key": "rabies", "label": "Kuduz", "whyItMatters": "Bolgesel/yasal gerekliliklere gore kritik olabilir."}
+      ],
+      "lifestyleVaccines": ["FeLV", "Chlamydia", "Bordetella"],
+      "healthDocuments": ["asi karnesi", "mikrocip numarasi", "kisirlik bilgisi", "son veteriner kontrol tarihi", "alerji/ilac notu"],
+      "behaviorFields": ["ev ici uyum", "diger kedilerle uyum", "kopeklerle uyum", "cocuklarla uyum", "kum egitimi", "saklanma/stres hassasiyeti"],
+      "coatOptions": ["Kisa tuylu", "Orta tuylu", "Uzun tuylu", "Tuy dokmeyen/dusuk tuy"],
+      "ageBands": ["0-6 ay", "6-12 ay", "1-3 yas", "3-7 yas", "7+ yas"]
+    }
+  },
+  "disclaimer": "Bu veriler urun formu ve bilgilendirme tasarimi icindir; asi takvimi ve saglik kararlari veteriner hekimle netlestirilmelidir.",
+  "sourceNotes": [
+    "WSAVA core/non-core asi yaklasimi",
+    "AAHA kopek asi rehberi",
+    "AAHA/AAFP kedi asi rehberi",
+    "AVMA sorumlu pet sahipligi yaklasimi"
+  ]
+}

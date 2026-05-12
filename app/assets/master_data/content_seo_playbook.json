@@ -1,0 +1,52 @@
+﻿{
+  "seoClusters": [
+    {
+      "module": "PatiGezdirme",
+      "primaryKeywords": ["kopek gezdirici", "guvenilir kopek gezdirme", "Istanbul kopek gezdirici", "saatlik kopek gezdirme"],
+      "landingHeadlines": [
+        "Guvenilir gezdiricilerle her yuruyus daha sakin.",
+        "Petinin rutini bozulmadan, senin gunun aksamasin."
+      ],
+      "faq": [
+        {"question": "Gezdirici nasil dogrulaniyor?", "answer": "Telefon, profil bilgileri, yorumlar ve tamamlanan hizmet gecmisiyle guven sinyalleri olusturulur."},
+        {"question": "Yuruyus sirasinda takip olacak mi?", "answer": "Urun yol haritasinda canli takip ve yuruyus sonrasi rapor ana guven ozellikleri olarak planlandi."}
+      ]
+    },
+    {
+      "module": "PatiBnB",
+      "primaryKeywords": ["kopek oteli alternatifi", "evde pet bakimi", "kedi emanet", "guvenilir pet konaklama"],
+      "landingHeadlines": [
+        "Petin icin otel degil, guvenli bir ev hissi.",
+        "Seyahatte aklin evde kalmasin."
+      ],
+      "faq": [
+        {"question": "Ev sahipleri hangi bilgileri girer?", "answer": "Ev tipi, pet alani, kabul edilen turler, ev kurallari, fiyat, uygunluk ve guven rozetleri temel alanlardir."},
+        {"question": "Kedi ve kopek ayrimi var mi?", "answer": "Evet, filtre ve ilan alanlari tur/cins/boyut/davranis ihtiyacina gore ayrilir."}
+      ]
+    },
+    {
+      "module": "PatiMatch",
+      "primaryKeywords": ["kopek eslestirme", "pet sosyal eslesme", "kedi kopek arkadas bul", "guvenli pet eslesme"],
+      "landingHeadlines": [
+        "Sadece eslesme degil, guvenli tanisma.",
+        "Petlerin uyumunu veriye ve guvene dayandir."
+      ],
+      "faq": [
+        {"question": "Eslestirme hangi verilere bakar?", "answer": "Tur, cins, yas, cinsiyet, kisirlik, asi, enerji, sosyallik ve konum temel sinyallerdir."},
+        {"question": "Guvenlik nasil saglanir?", "answer": "Belge rozetleri, raporlama, bloklama ve guvenli bulusma checklistleri kullanilir."}
+      ]
+    },
+    {
+      "module": "PatiFamily",
+      "primaryKeywords": ["sahiplendirme", "kedi sahiplendirme", "kopek sahiplendirme", "gecici yuva"],
+      "landingHeadlines": [
+        "Yeni bir yuva, dogru bilgi ve guvenle baslar.",
+        "Sahiplendirmeyi daha seffaf ve sorumlu hale getiriyoruz."
+      ],
+      "faq": [
+        {"question": "Sahiplendirme ilaninda neler olmali?", "answer": "Saglik, asi, kisirlik, karakter, uyum, konum ve sahiplendirme kosullari net olmalidir."},
+        {"question": "Sahte ilanlar nasil azaltilir?", "answer": "Kimlik/telefon dogrulama, belge yukleme, raporla/blokla ve takip gorusmesi sinyalleriyle."}
+      ]
+    }
+  ]
+}
