@@ -1,0 +1,40 @@
+﻿{
+  "verificationLevels": [
+    {"key": "basic", "label": "Temel dogrulama", "requirements": ["e-posta", "telefon"]},
+    {"key": "trusted", "label": "Guvenilir profil", "requirements": ["kimlik", "profil fotografi", "adres/konum dogrulama"]},
+    {"key": "premium", "label": "Premium dogrulama", "requirements": ["kimlik", "referans", "tamamlanan is", "ortalama puan", "belge kontrolu"]}
+  ],
+  "reviewDimensions": [
+    "guven",
+    "iletisim",
+    "zamanlama",
+    "pet ile uyum",
+    "temizlik",
+    "fotograf/rapor kalitesi",
+    "tekrar tercih ederim"
+  ],
+  "safetyChecklists": {
+    "walk": ["tasma kontrolu", "acil iletisim", "rota bilgisi", "su molasi", "canli takip"],
+    "bnb": ["ev kurallari", "beslenme talimati", "ilac talimati", "veteriner plani", "teslim formu"],
+    "match": ["asi karti", "kisirlik bilgisi", "saglik gecmisi", "guvenli bulusma yeri", "sahip onayi"],
+    "family": ["sahiplendirme formu", "kimlik dogrulama", "veteriner belgesi", "takip gorusmesi", "raporlama"]
+  },
+  "fraudSignals": [
+    "cok yeni hesap ve yuksek talep",
+    "dis platforma odeme/iletisim yonlendirme",
+    "tutarsiz fotograf veya adres",
+    "asiri dusuk fiyat",
+    "belgesiz saglik iddiasi",
+    "yorum ve profil bilgisi eksikligi"
+  ],
+  "trustBadges": [
+    "Kimlik dogrulandi",
+    "Telefon dogrulandi",
+    "Konum dogrulandi",
+    "Veteriner belgesi",
+    "Asi karti yuklendi",
+    "Tamamlanan hizmet",
+    "Tekrar tercih edildi",
+    "Acil destek hazir"
+  ]
+}
