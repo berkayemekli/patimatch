@@ -168,7 +168,10 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     if (!mounted) return;
-    setState(() => _status = 'Giriş başarılı, yönlendiriliyor...');
+    setState(
+      () => _status =
+          'Giri\u015f ba\u015far\u0131l\u0131, y\u00f6nlendiriliyor...',
+    );
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (_) => const MainShellPage()),
       (route) => false,
@@ -178,13 +181,13 @@ class _LoginPageState extends State<LoginPage> {
   String _friendlyAuthError(FirebaseAuthException e) {
     switch (e.code) {
       case 'unauthorized-domain':
-        return 'Bu domain Google girişi için yetkili değil. Firebase Authentication > Authorized domains alanına eklenmeli.';
+        return 'Bu domain Google giri\u015fi i\u00e7in yetkili de\u011fil. Firebase Authentication > Authorized domains alan\u0131na eklenmeli.';
       case 'operation-not-allowed':
-        return 'Google girişi Firebase tarafında aktif değil.';
+        return 'Google giri\u015fi Firebase taraf\u0131nda aktif de\u011fil.';
       case 'account-exists-with-different-credential':
-        return 'Bu e-posta farklı bir giriş yöntemiyle kayıtlı görünüyor.';
+        return 'Bu e-posta farkl\u0131 bir giri\u015f y\u00f6ntemiyle kay\u0131tl\u0131 g\u00f6r\u00fcn\u00fcyor.';
       default:
-        return 'Google girişi tamamlanamadı: ${e.message ?? e.code}';
+        return 'Google giri\u015fi tamamlanamad\u0131: ${e.message ?? e.code}';
     }
   }
 
@@ -268,7 +271,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           const SizedBox(height: 28),
           const Text(
-            'Güvenli şekilde devam et.',
+            'G\u00fcvenli \u015fekilde devam et.',
             style: TextStyle(
               fontSize: 34,
               height: 1.05,
@@ -279,7 +282,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           const SizedBox(height: 10),
           const Text(
-            'Google, Apple, e-posta veya telefon ile hesabına giriş yap. Profilini sonra tamamlayabilirsin.',
+            'Google, Apple, e-posta veya telefon ile hesab\u0131na giri\u015f yap. Profilini sonra tamamlayabilirsin.',
             style: TextStyle(
               color: Color(0xFF64748B),
               fontSize: 15,
@@ -289,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 24),
           _brandAuthButton(
             label: _loading
-                ? 'Google ile bağlanıyor...'
+                ? 'Google ile ba\u011flan\u0131yor...'
                 : 'Google ile devam et',
             fg: const Color(0xFF111827),
             bg: Colors.white,
@@ -468,7 +471,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _comingSoon(String provider) {
     setState(() {
-      _status = '$provider girişi sonraki adımda aktif edilecek.';
+      _status = '$provider giri\u015fi sonraki ad\u0131mda aktif edilecek.';
     });
   }
 }
@@ -539,7 +542,7 @@ class _StoryPanel extends StatelessWidget {
                   ),
                 ),
                 child: const Text(
-                  'Güvenli pet ebeveynliği',
+                  'G\u00fcvenli pet ebeveynli\u011fi',
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w700,
@@ -549,7 +552,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const Spacer(),
               const Text(
-                'Pet bakımını daha güvenli, daha sakin ve daha insani hale getiriyoruz.',
+                'Pet bak\u0131m\u0131n\u0131 daha g\u00fcvenli, daha sakin ve daha insani hale getiriyoruz.',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 42,
@@ -560,7 +563,7 @@ class _StoryPanel extends StatelessWidget {
               ),
               const SizedBox(height: 18),
               Text(
-                'Gezdirme, konaklama, eşleşme ve sahiplenme süreçleri tek bir güven katmanında birleşir.',
+                'Gezdirme, konaklama, e\u015fle\u015fme ve sahiplenme s\u00fcre\u00e7leri tek bir g\u00fcven katman\u0131nda birle\u015fir.',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.78),
                   fontSize: 16,
@@ -586,10 +589,10 @@ class _TrustRow extends StatelessWidget {
       children: const [
         _TrustPill(
           icon: Icons.verified_rounded,
-          label: 'Doğrulanmış profiller',
+          label: 'Do\u011frulanm\u0131\u015f profiller',
         ),
         SizedBox(width: 10),
-        _TrustPill(icon: Icons.lock_rounded, label: 'Güvenli giriş'),
+        _TrustPill(icon: Icons.lock_rounded, label: 'G\u00fcvenli giri\u015f'),
       ],
     );
   }
