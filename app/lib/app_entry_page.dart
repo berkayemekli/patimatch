@@ -17,7 +17,7 @@ class _AppEntryPageState extends State<AppEntryPage> {
   Future<String?> _completeRedirectResult() async {
     try {
       await FirebaseAuth.instance.getRedirectResult().timeout(
-        const Duration(seconds: 8),
+        const Duration(seconds: 20),
       );
       return null;
     } on TimeoutException {

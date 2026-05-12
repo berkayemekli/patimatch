@@ -101,24 +101,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       UserCredential credential;
       if (kIsWeb) {
-        try {
-          credential = await FirebaseAuth.instance
-              .signInWithPopup(provider)
-              .timeout(const Duration(seconds: 45));
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'popup-blocked' ||
-              e.code == 'popup-closed-by-user' ||
-              e.code == 'cancelled-popup-request' ||
-              e.code == 'network-request-failed') {
-            setState(() {
-              _status =
-                  'Popup tamamlanamadi, Google sayfasina yonlendiriliyor...';
-            });
-            await FirebaseAuth.instance.signInWithRedirect(provider);
-            return;
-          }
-          rethrow;
-        }
+        setState(() => _status = 'Google sayfasina yonlendiriliyorsun...');
+        await FirebaseAuth.instance.signInWithRedirect(provider);
+        return;
       } else {
         credential = await FirebaseAuth.instance.signInWithProvider(provider);
       }
