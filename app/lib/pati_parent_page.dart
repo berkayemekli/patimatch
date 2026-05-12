@@ -19,9 +19,33 @@ class _PatiParentPageState extends State<PatiParentPage> {
   String _sex = 'Fark etmez';
   String _vaccineStatus = 'Fark etmez';
   String _size = 'Tum boyutlar';
+  String _searchQuery = '';
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+
+  static const List<Map<String, String>> _familyPets = [
+    {
+      'title': 'Mavi - Istanbul',
+      'subtitle': '10 ay - Kucuk - Asili - Oyuncu karakter',
+      'badge': 'Acil Yuva',
+    },
+    {
+      'title': 'Tarcin - Ankara',
+      'subtitle': '18 ay - Orta - Asili - Cocuklarla uyumlu',
+      'badge': 'Dogrulanmis',
+    },
+    {
+      'title': 'Boncuk - Bursa',
+      'subtitle': '14 ay - Kucuk - Sakin ev ortami sever',
+      'badge': 'Yeni',
+    },
+    {
+      'title': 'Luna - Izmir',
+      'subtitle': '2 yas - Orta - Tuvalet egitimli',
+      'badge': 'Uygun',
+    },
+  ];
 
   @override
   void initState() {
@@ -62,6 +86,12 @@ class _PatiParentPageState extends State<PatiParentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final query = _searchQuery.trim().toLowerCase();
+    final filteredPets = _familyPets.where((pet) {
+      if (query.isEmpty) return true;
+      return pet.values.any((value) => value.toLowerCase().contains(query));
+    }).toList();
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -77,6 +107,7 @@ class _PatiParentPageState extends State<PatiParentPage> {
             sex: _sex,
             vaccineStatus: _vaccineStatus,
             size: _size,
+            searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
             breeds: _breedsByType[_animalType] ?? const <String>[],
@@ -89,6 +120,7 @@ class _PatiParentPageState extends State<PatiParentPage> {
             onSexChanged: (v) => setState(() => _sex = v),
             onVaccineChanged: (v) => setState(() => _vaccineStatus = v),
             onSizeChanged: (v) => setState(() => _size = v),
+            onSearchChanged: (v) => setState(() => _searchQuery = v),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -96,29 +128,14 @@ class _PatiParentPageState extends State<PatiParentPage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           const SizedBox(height: 12),
-          const _SimpleCard(
-            title: 'Mavi - Istanbul',
-            subtitle: '10 ay - Kucuk - Asili - Oyuncu karakter',
-            badge: 'Acil Yuva',
-          ),
-          const SizedBox(height: 10),
-          const _SimpleCard(
-            title: 'Tarcin - Ankara',
-            subtitle: '18 ay - Orta - Asili - Cocuklarla uyumlu',
-            badge: 'Dogrulanmis',
-          ),
-          const SizedBox(height: 10),
-          const _SimpleCard(
-            title: 'Boncuk - Bursa',
-            subtitle: '14 ay - Kucuk - Sakin ev ortami sever',
-            badge: 'Yeni',
-          ),
-          const SizedBox(height: 10),
-          const _SimpleCard(
-            title: 'Luna - Izmir',
-            subtitle: '2 yas - Orta - Tuvalet egitimli',
-            badge: 'Uygun',
-          ),
+          for (final pet in filteredPets) ...[
+            _SimpleCard(
+              title: pet['title']!,
+              subtitle: pet['subtitle']!,
+              badge: pet['badge']!,
+            ),
+            const SizedBox(height: 10),
+          ],
         ],
       ),
     );
@@ -136,6 +153,7 @@ class _FamilyFilterBar extends StatelessWidget {
     required this.sex,
     required this.vaccineStatus,
     required this.size,
+    required this.searchQuery,
     required this.cities,
     required this.districts,
     required this.breeds,
@@ -148,6 +166,7 @@ class _FamilyFilterBar extends StatelessWidget {
     required this.onSexChanged,
     required this.onVaccineChanged,
     required this.onSizeChanged,
+    required this.onSearchChanged,
   });
 
   final bool filtersOpen;
@@ -159,6 +178,7 @@ class _FamilyFilterBar extends StatelessWidget {
   final String sex;
   final String vaccineStatus;
   final String size;
+  final String searchQuery;
   final List<String> cities;
   final List<String> districts;
   final List<String> breeds;
@@ -171,6 +191,7 @@ class _FamilyFilterBar extends StatelessWidget {
   final ValueChanged<String> onSexChanged;
   final ValueChanged<String> onVaccineChanged;
   final ValueChanged<String> onSizeChanged;
+  final ValueChanged<String> onSearchChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -203,6 +224,12 @@ class _FamilyFilterBar extends StatelessWidget {
             ),
           ),
           if (filtersOpen) ...[
+            const SizedBox(height: 12),
+            _FamilySearchField(
+              value: searchQuery,
+              hintText: 'Ilan, sehir, karakter veya durum ara',
+              onChanged: onSearchChanged,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,
@@ -268,6 +295,46 @@ class _FamilyFilterBar extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _FamilySearchField extends StatelessWidget {
+  const _FamilySearchField({
+    required this.value,
+    required this.hintText,
+    required this.onChanged,
+  });
+
+  final String value;
+  final String hintText;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: ValueKey('family-filter-search-$value'),
+      initialValue: value,
+      onChanged: onChanged,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: const Icon(Icons.search_rounded),
+        filled: true,
+        fillColor: const Color(0xFFF8FAFC),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFF0F766E), width: 1.4),
+        ),
       ),
     );
   }

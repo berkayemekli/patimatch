@@ -18,6 +18,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   String _ageRange = 'Tum yaslar';
   String _sex = 'Fark etmez';
   String _vaccineStatus = 'Fark etmez';
+  String _searchQuery = '';
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
@@ -217,7 +218,19 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       final cityOk = _city == 'All' || stay['city'] == _city;
       final animalOk = petTypes.contains(_animalType);
       final breedOk = _breed == 'Tum cinsler' || breeds.contains(_breed);
-      return cityOk && animalOk && breedOk;
+      final query = _searchQuery.trim().toLowerCase();
+      final searchOk =
+          query.isEmpty ||
+          [
+            stay['host'],
+            stay['city'],
+            stay['type'],
+            stay['badge'],
+            stay['nightlyPrice'],
+            ...petTypes,
+            ...breeds,
+          ].any((value) => value.toString().toLowerCase().contains(query));
+      return cityOk && animalOk && breedOk && searchOk;
     }).toList();
 
     return Padding(
@@ -234,6 +247,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             ageRange: _ageRange,
             sex: _sex,
             vaccineStatus: _vaccineStatus,
+            searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
             breeds: _breedsByType[_animalType] ?? const <String>[],
@@ -245,6 +259,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             onAgeChanged: (v) => setState(() => _ageRange = v),
             onSexChanged: (v) => setState(() => _sex = v),
             onVaccineChanged: (v) => setState(() => _vaccineStatus = v),
+            onSearchChanged: (v) => setState(() => _searchQuery = v),
           ),
           const SizedBox(height: 24),
           if (filteredStays.isEmpty)
@@ -292,6 +307,7 @@ class _BnbFilterBar extends StatelessWidget {
     required this.ageRange,
     required this.sex,
     required this.vaccineStatus,
+    required this.searchQuery,
     required this.cities,
     required this.districts,
     required this.breeds,
@@ -303,6 +319,7 @@ class _BnbFilterBar extends StatelessWidget {
     required this.onAgeChanged,
     required this.onSexChanged,
     required this.onVaccineChanged,
+    required this.onSearchChanged,
   });
   final bool filtersOpen;
   final String city;
@@ -312,6 +329,7 @@ class _BnbFilterBar extends StatelessWidget {
   final String ageRange;
   final String sex;
   final String vaccineStatus;
+  final String searchQuery;
   final List<String> cities;
   final List<String> districts;
   final List<String> breeds;
@@ -323,6 +341,7 @@ class _BnbFilterBar extends StatelessWidget {
   final ValueChanged<String> onAgeChanged;
   final ValueChanged<String> onSexChanged;
   final ValueChanged<String> onVaccineChanged;
+  final ValueChanged<String> onSearchChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -355,6 +374,12 @@ class _BnbFilterBar extends StatelessWidget {
             ),
           ),
           if (filtersOpen) ...[
+            const SizedBox(height: 12),
+            _BnbSearchField(
+              value: searchQuery,
+              hintText: 'Ev sahibi, sehir, ev tipi veya cins ara',
+              onChanged: onSearchChanged,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,
@@ -414,6 +439,46 @@ class _BnbFilterBar extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _BnbSearchField extends StatelessWidget {
+  const _BnbSearchField({
+    required this.value,
+    required this.hintText,
+    required this.onChanged,
+  });
+
+  final String value;
+  final String hintText;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: ValueKey('bnb-filter-search-$value'),
+      initialValue: value,
+      onChanged: onChanged,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: const Icon(Icons.search_rounded),
+        filled: true,
+        fillColor: const Color(0xFFF8FAFC),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFF0F766E), width: 1.4),
+        ),
       ),
     );
   }

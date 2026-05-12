@@ -19,6 +19,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   String _vaccineStatus = 'Fark etmez';
   String _size = 'Tum boyutlar';
   String _badgeFilter = 'All';
+  String _searchQuery = '';
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
@@ -123,7 +124,17 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     final filtered = _walkers.where((walker) {
       final cityOk = _city == 'All' || walker['city'] == _city;
       final badgeOk = _badgeFilter == 'All' || walker['badge'] == _badgeFilter;
-      return cityOk && badgeOk;
+      final query = _searchQuery.trim().toLowerCase();
+      final searchOk =
+          query.isEmpty ||
+          [
+            walker['name'],
+            walker['city'],
+            walker['badge'],
+            walker['price'],
+            walker['walks'],
+          ].any((value) => value.toString().toLowerCase().contains(query));
+      return cityOk && badgeOk && searchOk;
     }).toList();
 
     return Padding(
@@ -140,6 +151,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             sex: _sex,
             vaccineStatus: _vaccineStatus,
             size: _size,
+            searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
             breeds: _breedsByType['Köpek'] ?? const <String>[],
@@ -151,6 +163,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             onSexChanged: (v) => setState(() => _sex = v),
             onVaccineStatusChanged: (v) => setState(() => _vaccineStatus = v),
             onSizeChanged: (v) => setState(() => _size = v),
+            onSearchChanged: (v) => setState(() => _searchQuery = v),
           ),
           const SizedBox(height: 18),
           _BadgeFilters(
@@ -250,6 +263,7 @@ class _TopFilter extends StatelessWidget {
     required this.sex,
     required this.vaccineStatus,
     required this.size,
+    required this.searchQuery,
     required this.cities,
     required this.districts,
     required this.breeds,
@@ -261,6 +275,7 @@ class _TopFilter extends StatelessWidget {
     required this.onSexChanged,
     required this.onVaccineStatusChanged,
     required this.onSizeChanged,
+    required this.onSearchChanged,
   });
 
   final bool filtersOpen;
@@ -271,6 +286,7 @@ class _TopFilter extends StatelessWidget {
   final String sex;
   final String vaccineStatus;
   final String size;
+  final String searchQuery;
   final List<String> cities;
   final List<String> districts;
   final List<String> breeds;
@@ -282,6 +298,7 @@ class _TopFilter extends StatelessWidget {
   final ValueChanged<String> onSexChanged;
   final ValueChanged<String> onVaccineStatusChanged;
   final ValueChanged<String> onSizeChanged;
+  final ValueChanged<String> onSearchChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -314,6 +331,12 @@ class _TopFilter extends StatelessWidget {
             ),
           ),
           if (filtersOpen) ...[
+            const SizedBox(height: 12),
+            _FilterSearchField(
+              value: searchQuery,
+              hintText: 'Gezdirici, sehir, rozet veya fiyat ara',
+              onChanged: onSearchChanged,
+            ),
             const SizedBox(height: 12),
             Wrap(
               spacing: 10,
@@ -374,6 +397,46 @@ class _TopFilter extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _FilterSearchField extends StatelessWidget {
+  const _FilterSearchField({
+    required this.value,
+    required this.hintText,
+    required this.onChanged,
+  });
+
+  final String value;
+  final String hintText;
+  final ValueChanged<String> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      key: ValueKey('filter-search-$value'),
+      initialValue: value,
+      onChanged: onChanged,
+      textInputAction: TextInputAction.search,
+      decoration: InputDecoration(
+        hintText: hintText,
+        prefixIcon: const Icon(Icons.search_rounded),
+        filled: true,
+        fillColor: const Color(0xFFF8FAFC),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(18),
+          borderSide: const BorderSide(color: Color(0xFF0F766E), width: 1.4),
+        ),
       ),
     );
   }
