@@ -101,9 +101,9 @@ class _LoginPageState extends State<LoginPage> {
     try {
       UserCredential credential;
       if (kIsWeb) {
-        setState(() => _status = 'Google sayfasina yonlendiriliyorsun...');
-        await FirebaseAuth.instance.signInWithRedirect(provider);
-        return;
+        credential = await FirebaseAuth.instance
+            .signInWithPopup(provider)
+            .timeout(const Duration(seconds: 60));
       } else {
         credential = await FirebaseAuth.instance.signInWithProvider(provider);
       }
@@ -171,6 +171,12 @@ class _LoginPageState extends State<LoginPage> {
         return 'Google giri\u015fi Firebase taraf\u0131nda aktif de\u011fil.';
       case 'account-exists-with-different-credential':
         return 'Bu e-posta farkl\u0131 bir giri\u015f y\u00f6ntemiyle kay\u0131tl\u0131 g\u00f6r\u00fcn\u00fcyor.';
+      case 'popup-blocked':
+        return 'Google penceresi taray\u0131c\u0131 taraf\u0131ndan engellendi. Adres \u00e7ubu\u011fundaki popup iznine izin verip tekrar dene.';
+      case 'popup-closed-by-user':
+        return 'Google penceresi tamamlanmadan kapand\u0131. Tekrar deneyebilirsin.';
+      case 'cancelled-popup-request':
+        return 'Bir Google giri\u015fi zaten a\u00e7\u0131lm\u0131\u015f g\u00f6r\u00fcn\u00fcyor. A\u00e7\u0131k pencereyi kapat\u0131p tekrar dene.';
       default:
         return 'Google giri\u015fi tamamlanamad\u0131: ${e.message ?? e.code}';
     }
