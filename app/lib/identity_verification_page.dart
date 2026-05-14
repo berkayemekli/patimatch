@@ -70,16 +70,23 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
       final data = result.data;
       final verificationUrl = data['verificationUrl']?.toString();
       if (verificationUrl != null && verificationUrl.isNotEmpty) {
-        await launchUrl(
+        final opened = await launchUrl(
           Uri.parse(verificationUrl),
           webOnlyWindowName: '_blank',
           mode: LaunchMode.externalApplication,
         );
+        if (!opened && mounted) {
+          await _showVerificationInfoDialog(
+            title: 'Doğrulama ekranı açılamadı',
+            message:
+                'Tarayıcı yeni pencereyi engellemiş olabilir. Gerçek sağlayıcı aktif olduğunda bu buton kimlik ve yüz doğrulama ekranını açacak.',
+          );
+        }
       }
       if (!mounted) return;
       setState(() {
         _status =
-            'Dogrulama oturumu olusturuldu. Provider secilince bu link kimlik + yuz/liveness ekranina gidecek.';
+            'Doğrulama oturumu oluşturuldu. Gerçek sağlayıcı aktif olduğunda bu akış kimlik ve yüz/liveness ekranına gidecek.';
       });
     } on FirebaseFunctionsException catch (e) {
       await _createLocalPendingSession(
@@ -121,10 +128,35 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
       setState(() {
         _status = message;
       });
+      await _showVerificationInfoDialog(
+        title: 'Talep kaydedildi',
+        message:
+            'Şu an gerçek kimlik tarama ekranı açılmıyor çünkü Firebase Functions için Blaze plan ve KYC sağlayıcı entegrasyonu bekliyor. Talebini pending olarak kaydettim; Veriff/Sumsub gibi sağlayıcı bağlanınca aynı buton gerçek doğrulama ekranını açacak.',
+      );
     } catch (e) {
       if (!mounted) return;
-      setState(() => _status = 'Dogrulama talebi olusturulamadi: $e');
+      setState(() => _status = 'Doğrulama talebi oluşturulamadı: $e');
     }
+  }
+
+  Future<void> _showVerificationInfoDialog({
+    required String title,
+    required String message,
+  }) async {
+    if (!mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Tamam'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -140,7 +172,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 _HeroCard(user: user),
                 const SizedBox(height: 14),
                 _InfoCard(
-                  title: 'Mavi tik nasil calisacak?',
+                  title: 'Mavi tik nasıl çalışacak?',
                   icon: Icons.verified_user_rounded,
                   children: _principles
                       .map((text) => _BulletLine(text: text))
@@ -148,7 +180,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 ),
                 const SizedBox(height: 14),
                 _InfoCard(
-                  title: 'Dogrulama seviyeleri',
+                  title: 'Doğrulama seviyeleri',
                   icon: Icons.workspace_premium_rounded,
                   children: _levels
                       .map(
@@ -164,7 +196,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 ),
                 const SizedBox(height: 14),
                 _InfoCard(
-                  title: 'Degerlendirilecek saglayicilar',
+                  title: 'Değerlendirilecek sağlayıcılar',
                   icon: Icons.shield_rounded,
                   children: _providers
                       .map(
@@ -192,7 +224,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                   label: Text(
                     user == null
                         ? 'Giris yaparak dogrulama baslat'
-                        : 'Dogrulama talebi olustur',
+                        : 'Doğrulama talebi oluştur',
                   ),
                 ),
                 if (_status.isNotEmpty) ...[
@@ -243,14 +275,14 @@ class _HeroCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Mavi tikli guven profili',
+                  'Mavi tikli güven profili',
                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   user == null
-                      ? 'Kimlik dogrulama icin once hesaba giris yapmalisin.'
-                      : 'Hizmet verenler, hostlar ve ilan sahipleri icin guven sinyali.',
+                      ? 'Kimlik doğrulama için önce hesaba giriş yapmalısın.'
+                      : 'Hizmet verenler, hostlar ve ilan sahipleri için güven sinyali.',
                   style: const TextStyle(
                     color: Color(0xFF64748B),
                     height: 1.35,
