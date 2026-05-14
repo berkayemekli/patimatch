@@ -1,10 +1,14 @@
-name: Deploy Flutter Web To Firebase Hosting
+﻿name: Deploy Flutter Web To Firebase Hosting
 
 on:
   push:
     branches:
       - main
   workflow_dispatch:
+
+concurrency:
+  group: firebase-hosting-prod
+  cancel-in-progress: true
 
 jobs:
   build_and_deploy:
@@ -18,14 +22,44 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - name: Flutter Pub Get
         working-directory: app
         run: flutter pub get
 
-      - name: Build Web
+      - name: Analyze
         working-directory: app
-        run: flutter build web
+        run: flutter analyze lib
+
+      - name: Build Web Prod
+        working-directory: app
+        run: flutter build web --release --dart-define=APP_ENV=prod --pwa-strategy=none
+
+      - name: Disable stale Flutter service worker cache
+        shell: bash
+        run: |
+          cat > app/build/web/flutter_service_worker.js <<'EOF'
+          self.addEventListener('install', (event) => {
+            self.skipWaiting();
+          });
+
+          self.addEventListener('activate', (event) => {
+            event.waitUntil((async () => {
+              const keys = await caches.keys();
+              await Promise.all(keys.map((key) => caches.delete(key)));
+              if (self.registration && self.registration.unregister) {
+                await self.registration.unregister();
+              }
+              const clientsList = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+              for (const client of clientsList) {
+                client.navigate(client.url);
+              }
+            })());
+          });
+
+          self.addEventListener('fetch', () => {});
+          EOF
 
       - name: Deploy To Firebase Hosting
         uses: FirebaseExtended/action-hosting-deploy@v0
