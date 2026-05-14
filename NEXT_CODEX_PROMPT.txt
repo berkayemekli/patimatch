@@ -1,0 +1,5 @@
+C:\AI\Dog_Date icindeki PROJECT_CONTEXT.md dosyasini oku.
+Bu Flutter + Firebase PatiParent projesinde son durumu, deploy komutlarini ve acik isleri oradan al.
+Once git status ve flutter analyze lib calistir.
+Sonra master data dosyalarini UI/onboarding/filtrelere baglayarak devam et.
+Google login icin PROJECT_CONTEXT.md icindeki notlari dikkate al.
