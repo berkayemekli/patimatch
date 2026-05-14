@@ -65,10 +65,11 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
         region: 'europe-west1',
       ).httpsCallable('createVerificationSession');
       final result = await callable.call<Map<String, dynamic>>({
-        'provider': 'demo',
+        'provider': 'veriff',
       });
       final data = result.data;
       final verificationUrl = data['verificationUrl']?.toString();
+      final sdkToken = data['sdkToken']?.toString();
       if (verificationUrl != null && verificationUrl.isNotEmpty) {
         final opened = await launchUrl(
           Uri.parse(verificationUrl),
@@ -79,9 +80,15 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
           await _showVerificationInfoDialog(
             title: 'Doğrulama ekranı açılamadı',
             message:
-                'Tarayıcı yeni pencereyi engellemiş olabilir. Gerçek sağlayıcı aktif olduğunda bu buton kimlik ve yüz doğrulama ekranını açacak.',
+              'Tarayıcı yeni pencereyi engellemiş olabilir. Gerçek sağlayıcı aktif olduğunda bu buton kimlik ve yüz doğrulama ekranını açacak.',
           );
         }
+      } else if (sdkToken != null && sdkToken.isNotEmpty && mounted) {
+        await _showVerificationInfoDialog(
+          title: 'SDK oturumu hazır',
+          message:
+              'Sağlayıcı doğrulama tokenı üretildi. Sumsub/SDK ekranı bağlandığında aynı akış kimlik ve yüz doğrulamayı uygulama içinde açacak.',
+        );
       }
       if (!mounted) return;
       setState(() {

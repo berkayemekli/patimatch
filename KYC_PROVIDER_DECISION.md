@@ -17,16 +17,18 @@ MVP icin provider-agnostic backend kuruldu. Ilk gercek entegrasyon icin iki prat
 
 Stripe Identity daha hizli baslatilabilir ama PatiParent icin pet marketplace KYC baglaminda Veriff/Sumsub daha dogal adaylar gibi duruyor. Stripe Identity alternatif olarak kalmali.
 
-## Implemented scaffold
+## Implemented integration
 
 Functions eklendi:
 
 - `createVerificationSession` callable function
 - `kycWebhook` HTTP function
+- Veriff hosted verification session adapter
+- Sumsub applicant + SDK access token adapter
 
 UI eklendi:
 
-- `IdentityVerificationPage` once callable function'i cagirir.
+- `IdentityVerificationPage` once Veriff provider ile callable function'i cagirir.
 - Function deploy edilmemisse guvenli local pending request fallback'e duser.
 - Gercek mavi tik sadece backend/provider webhook ile `users/{uid}` dokumanina yazilacak.
 
@@ -44,16 +46,36 @@ Required API artifactregistry.googleapis.com can't be enabled until the upgrade 
 ## To activate real KYC
 
 1. Firebase project'i Blaze plana gecir.
-2. Bir KYC provider sec.
+2. Veriff dashboard'da API key olustur.
 3. Secret/config ekle:
-   - provider API key
-   - provider webhook secret
-   - default provider
-4. Provider adapter'i `functions/index.js` icinde demo yerine bagla.
+   - `VERIFF_API_KEY`
+   - `KYC_WEBHOOK_SECRET`
+   - opsiyonel `APP_BASE_URL=https://patiparent.com`
+   - Sumsub kullanilacaksa `SUMSUB_APP_TOKEN`, `SUMSUB_SECRET_KEY`, `SUMSUB_LEVEL_NAME`
+4. Adapter zaten `functions/index.js` icinde baglandi. Uygulama ilk olarak Veriff'i cagiriyor.
 5. `firebase deploy --only functions --project prod` calistir.
 6. Provider dashboard'da webhook URL tanimla:
    - `https://europe-west1-patimatch-app-2026-berkay.cloudfunctions.net/kycWebhook?provider=<provider>`
 7. Test kullanicisiyle verified/rejected/needs_review akisini dene.
+
+## Firebase secret commands
+
+Blaze plan sonrasi:
+
+```powershell
+firebase functions:secrets:set VERIFF_API_KEY --project prod
+firebase functions:secrets:set KYC_WEBHOOK_SECRET --project prod
+firebase deploy --only functions --project prod
+```
+
+Sumsub denenirse:
+
+```powershell
+firebase functions:secrets:set SUMSUB_APP_TOKEN --project prod
+firebase functions:secrets:set SUMSUB_SECRET_KEY --project prod
+firebase functions:config:set sumsub.level_name=\"basic-kyc-level\" --project prod
+firebase deploy --only functions --project prod
+```
 
 ## Security rule
 
