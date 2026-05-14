@@ -29,6 +29,23 @@ flutter analyze lib
 ```
 
 
+
+## Iki PC icin en pratik kisa yol
+
+Iki PC'de de root klasorde su dosyalar var:
+
+- `BASLAMADAN_ONCE_GITHUBDAN_CEK.bat`
+- `KAPATMADAN_ONCE_GITHUBA_YUKLE.bat`
+- `MASAUSTUNE_KISAYOL_KOPYALA.bat`
+
+Kullanim:
+
+1. Calismaya baslamadan once `BASLAMADAN_ONCE_GITHUBDAN_CEK.bat` calistir.
+2. Hangi PC'de en son calistiysan kapatmadan once `KAPATMADAN_ONCE_GITHUBA_YUKLE.bat` calistir.
+3. Bu dosyalari masaustune almak icin bir kere `MASAUSTUNE_KISAYOL_KOPYALA.bat` calistir.
+
+Bu akista siteye deploy yapilmaz; sadece GitHub senkronu yapilir. Siteye deploy icin ayrica `FINISH_SYNC_AND_DEPLOY_PROD.bat` vardir.
+
 ## Manuel yapmak istemiyorsan
 
 Root klasorde cift tiklanabilir dosyalar var:
