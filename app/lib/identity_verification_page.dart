@@ -138,7 +138,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
       await _showVerificationInfoDialog(
         title: 'Talep kaydedildi',
         message:
-            'Şu an gerçek kimlik tarama ekranı açılmıyor çünkü Firebase Functions için Blaze plan ve KYC sağlayıcı entegrasyonu bekliyor. Talebini pending olarak kaydettim; Veriff/Sumsub gibi sağlayıcı bağlanınca aynı buton gerçek doğrulama ekranını açacak.',
+            'Güven profili ön kaydını aldık. Kimlik ve yüz doğrulama ekranı aktif olduğunda bu sayfadan güvenli şekilde devam edebileceksin. Ham kimlik veya yüz verini PatiParent içinde saklamayacağız.',
       );
     } catch (e) {
       if (!mounted) return;
@@ -231,7 +231,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                   label: Text(
                     user == null
                         ? 'Giris yaparak dogrulama baslat'
-                        : 'Doğrulama talebi oluştur',
+                        : 'Güven profili ön kaydı oluştur',
                   ),
                 ),
                 if (_status.isNotEmpty) ...[
