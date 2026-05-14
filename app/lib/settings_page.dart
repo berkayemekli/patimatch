@@ -8,6 +8,7 @@ import 'identity_verification_page.dart';
 import 'login_page.dart';
 import 'notifications_page.dart';
 import 'payments_page.dart';
+import 'role_selection_page.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -117,6 +118,16 @@ class SettingsPage extends StatelessWidget {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const DogProfilePage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.tune_rounded),
+            title: const Text('Kullanım rolüm'),
+            subtitle: const Text('Hizmet almak, hizmet vermek veya ikisini birlikte seç'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
+              );
             },
           ),
           ListTile(
