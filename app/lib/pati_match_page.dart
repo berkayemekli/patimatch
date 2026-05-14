@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'data/master_data/master_data_repository.dart';
+
 class PatiMatchPage extends StatefulWidget {
   const PatiMatchPage({super.key});
 
@@ -11,6 +13,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
   int _activeProfile = 0;
   int _activeIntent = 0;
   String _lastAction = 'Bugunun uyumlu profillerini kesfedebilirsin.';
+  List<_PetMatchProfile> _profiles = _defaultProfiles;
 
   static const List<_MatchIntent> _intents = <_MatchIntent>[
     _MatchIntent('Tum eslesmeler', Icons.auto_awesome_rounded),
@@ -19,7 +22,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
     _MatchIntent('Yakin cevre', Icons.near_me_rounded),
   ];
 
-  static const List<_PetMatchProfile> _profiles = <_PetMatchProfile>[
+  static const List<_PetMatchProfile> _defaultProfiles = <_PetMatchProfile>[
     _PetMatchProfile(
       name: 'Luna',
       type: 'Golden Retriever',
@@ -81,6 +84,52 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
       firstMessage: 'Pamuk oyuncakla tanismayi sever mi?',
     ),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSeedProfiles();
+  }
+
+  Future<void> _loadSeedProfiles() async {
+    final examples = await MasterDataRepository.loadMarketplaceExamples();
+    final seedMatches = (examples['matches'] as List<dynamic>? ?? const [])
+        .cast<Map<String, dynamic>>();
+    if (seedMatches.isEmpty) return;
+
+    final seededProfiles = seedMatches.asMap().entries.map((entry) {
+      final index = entry.key;
+      final match = entry.value;
+      final fallback = _defaultProfiles[index % _defaultProfiles.length];
+      final trust = (match['trust'] as List<dynamic>? ?? const [])
+          .map((item) => item.toString())
+          .toList();
+      return _PetMatchProfile(
+        name: match['petName'] as String? ?? fallback.name,
+        type: [
+          match['type'] as String? ?? '',
+          match['breed'] as String? ?? '',
+        ].where((part) => part.isNotEmpty).join(' - '),
+        age: fallback.age,
+        city: match['city'] as String? ?? fallback.city,
+        distance: fallback.distance,
+        score: fallback.score,
+        photo: fallback.photo,
+        owner: fallback.owner,
+        note:
+            '${match['matchGoal'] as String? ?? 'guvenli tanisma'} icin uygun, dogrulanmis profil.',
+        tags: trust.isEmpty ? fallback.tags : trust,
+        vibe: fallback.vibe,
+        firstMessage: fallback.firstMessage,
+      );
+    }).toList();
+
+    if (!mounted) return;
+    setState(() {
+      _profiles = <_PetMatchProfile>[...seededProfiles, ..._defaultProfiles];
+      _activeProfile = 0;
+    });
+  }
 
   void _nextProfile(String action) {
     final current = _profiles[_activeProfile];

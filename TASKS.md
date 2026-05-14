@@ -62,6 +62,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Filtrelere arama eklendi.
 - Filtrelerin listeleri gercekten etkilemesi saglandi.
 - Google web login redirect yerine popup akisine alindi.
+- PatiMatch kart kuyrugu `seed_marketplace_examples.json` verisinden beslenmeye basladi.
 
 ## Ownership Template
 
