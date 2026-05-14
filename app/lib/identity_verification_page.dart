@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'data/master_data/master_data_repository.dart';
 import 'login_page.dart';
@@ -43,7 +45,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
     });
   }
 
-  Future<void> _startDemoVerification() async {
+  Future<void> _startVerification() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       if (!mounted) return;
@@ -58,6 +60,48 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
       _status = '';
     });
 
+    try {
+      final callable = FirebaseFunctions.instanceFor(
+        region: 'europe-west1',
+      ).httpsCallable('createVerificationSession');
+      final result = await callable.call<Map<String, dynamic>>({
+        'provider': 'demo',
+      });
+      final data = result.data;
+      final verificationUrl = data['verificationUrl']?.toString();
+      if (verificationUrl != null && verificationUrl.isNotEmpty) {
+        await launchUrl(
+          Uri.parse(verificationUrl),
+          webOnlyWindowName: '_blank',
+          mode: LaunchMode.externalApplication,
+        );
+      }
+      if (!mounted) return;
+      setState(() {
+        _status =
+            'Dogrulama oturumu olusturuldu. Provider secilince bu link kimlik + yuz/liveness ekranina gidecek.';
+      });
+    } on FirebaseFunctionsException catch (e) {
+      await _createLocalPendingSession(
+        user: user,
+        message:
+            'Backend function henuz aktif degil (${e.code}). Gecici dogrulama talebi olusturuldu.',
+      );
+    } catch (e) {
+      await _createLocalPendingSession(
+        user: user,
+        message:
+            'Backend function henuz aktif degil. Gecici dogrulama talebi olusturuldu.',
+      );
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _createLocalPendingSession({
+    required User user,
+    required String message,
+  }) async {
     try {
       final sessionRef = FirebaseFirestore.instance
           .collection('verificationSessions')
@@ -75,14 +119,11 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
       });
       if (!mounted) return;
       setState(() {
-        _status =
-            'Dogrulama talebi olusturuldu. Mavi tik sonucu daha sonra guvenli backend/provider webhook ile profile islenecek.';
+        _status = message;
       });
     } catch (e) {
       if (!mounted) return;
       setState(() => _status = 'Dogrulama talebi olusturulamadi: $e');
-    } finally {
-      if (mounted) setState(() => _saving = false);
     }
   }
 
@@ -140,7 +181,7 @@ class _IdentityVerificationPageState extends State<IdentityVerificationPage> {
                 ),
                 const SizedBox(height: 18),
                 FilledButton.icon(
-                  onPressed: _saving ? null : _startDemoVerification,
+                  onPressed: _saving ? null : _startVerification,
                   icon: _saving
                       ? const SizedBox(
                           width: 18,
