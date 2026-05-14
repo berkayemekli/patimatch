@@ -1,95 +1,72 @@
-# PatiMatch Setup (Windows)
+﻿# PatiParent / PatiMatch
 
-Bu klasörden ilerle:
+Flutter + Firebase tabanli PatiParent pet super app projesi.
 
-```powershell
-cd C:\AI\Invest
-```
+Prod site: https://patiparent.com
+GitHub repo: https://github.com/berkayemekli/patimatch
 
-## 1) Gerekli araçlar
+## Yeni laptop / yeni Codex baslangici
 
-1. Node.js LTS (18+)
-2. Flutter SDK (stable)
-3. Firebase CLI
-
-Kurulum kontrolü:
+Yeni laptopta once repo'yu cek:
 
 ```powershell
-node -v
-npm -v
-flutter --version
-firebase --version
+git clone https://github.com/berkayemekli/patimatch.git C:\AI\Dog_Date
+cd C:\AI\Dog_Date
 ```
 
-Firebase CLI yoksa:
+Sonra Codex'e GitHub/repo icindeki su dosyayi okut:
+
+- `CODEX_START_HERE.txt`
+
+Kopyalamak istersen komut su:
+
+```text
+C:\AI\Dog_Date icindeki PROJECT_CONTEXT.md dosyasini oku.
+Sonra SYNC_WORKFLOW.md ve TASKS.md dosyalarini oku.
+Once git pull origin main, git status --short ve flutter analyze lib calistir.
+Bana sormadan TASKS.md icindeki en yuksek oncelikli isi secip uygula.
+Is bitince TASKS.md ve PROJECT_CONTEXT.md gerekiyorsa guncelle, commit ve push yap.
+Google login icin PROJECT_CONTEXT.md icindeki notlari dikkate al.
+```
+
+## Baglam dosyalari
+
+- `PROJECT_CONTEXT.md`: proje ozeti, teknik durum, Google login notlari, deploy komutlari.
+- `SYNC_WORKFLOW.md`: iki laptop / iki Codex senkron calisma kurallari.
+- `TASKS.md`: ortak is tahtasi.
+- `DEPLOY_ENVIRONMENTS.md`: staging/prod deploy komutlari.
+- `NEXT_CODEX_PROMPT.txt`: eski kisa baslangic promptu.
+- `CODEX_START_HERE.txt`: yeni laptopta okutulacak en net baslangic dosyasi.
+
+## Temel komutlar
 
 ```powershell
-npm install -g firebase-tools
+cd C:\AI\Dog_Date
+git pull origin main
+git status --short
+cd app
+flutter pub get
+flutter analyze lib
 ```
 
-## 2) Firebase proje bağlama
+Prod build/deploy:
 
 ```powershell
-firebase login
-firebase use --add
+cd C:\AI\Dog_Date\app
+flutter build web --release --dart-define=APP_ENV=prod --pwa-strategy=none
+cd C:\AI\Dog_Date
+firebase.cmd deploy --only hosting --project prod
 ```
 
-Komut, projeyi seçip bu klasöre alias yazar.
-
-## 3) Firestore kuralları ve indexleri deploy et
+Staging build/deploy:
 
 ```powershell
-firebase deploy --only firestore:rules
-firebase deploy --only firestore:indexes
+cd C:\AI\Dog_Date\app
+flutter build web --release --dart-define=APP_ENV=staging --pwa-strategy=none
+cd C:\AI\Dog_Date
+firebase.cmd deploy --only hosting --project staging
 ```
 
-## 4) Örnek veri seed et (opsiyonel)
+## Not
 
-```powershell
-npm install
-node scripts/seed.js
-```
-
-Not:
-- `scripts/seed.js` için service account gerekir.
-- `GOOGLE_APPLICATION_CREDENTIALS` ortam değişkenine JSON path ver.
-
-Örnek:
-
-```powershell
-$env:GOOGLE_APPLICATION_CREDENTIALS="C:\path\to\serviceAccountKey.json"
-node scripts/seed.js
-```
-
-## 5) Flutter app başlatma (MVP iskelet)
-
-Yeni Flutter app oluştur:
-
-```powershell
-flutter create patimatch_app
-cd patimatch_app
-flutter pub add firebase_core firebase_auth cloud_firestore firebase_storage
-```
-
-Firebase bağlantısı:
-
-```powershell
-dart pub global activate flutterfire_cli
-flutterfire configure
-```
-
-Çalıştır:
-
-```powershell
-flutter run
-```
-
-## 6) İlk geliştirme sırası
-
-1. OTP login ekranı
-2. `users` yazma
-3. `dogs` profil oluşturma
-4. keşfet ekranı (dummy + Firestore query)
-5. swipe write (`swipes`)
-6. çift taraflı like -> `matches`
-
+Eski README icerigi ilk MVP kurulumundan kalmaydi. Guncel calisma duzeni artik bu dosya ve baglam dosyalari uzerinden takip edilir.

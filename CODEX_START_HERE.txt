@@ -1,0 +1,6 @@
+﻿C:\AI\Dog_Date icindeki PROJECT_CONTEXT.md dosyasini oku.
+Sonra SYNC_WORKFLOW.md ve TASKS.md dosyalarini oku.
+Once git pull origin main, git status --short ve flutter analyze lib calistir.
+Bana sormadan TASKS.md icindeki en yuksek oncelikli isi secip uygula.
+Is bitince TASKS.md ve PROJECT_CONTEXT.md gerekiyorsa guncelle, commit ve push yap.
+Google login icin PROJECT_CONTEXT.md icindeki notlari dikkate al.
