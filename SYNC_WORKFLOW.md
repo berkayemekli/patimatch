@@ -28,6 +28,30 @@ flutter pub get
 flutter analyze lib
 ```
 
+
+## Manuel yapmak istemiyorsan
+
+Root klasorde cift tiklanabilir dosyalar var:
+
+- `START_SYNC.bat`: ise baslarken calistir. `git pull`, `flutter pub get`, `flutter analyze lib` yapar.
+- `FINISH_SYNC.bat`: isi bitirirken calistir. `flutter analyze lib`, `git add -A`, otomatik checkpoint commit ve `git push` yapar.
+- `FINISH_SYNC_AND_DEPLOY_PROD.bat`: isi bitirirken prod'a da basar. Build, cache-killer, Firebase deploy, commit ve push yapar.
+
+PowerShell ile ayni scriptler:
+
+```powershell
+cd C:\AI\Dog_Date
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\sync_start.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\sync_finish.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\sync_finish.ps1 -DeployProd
+```
+
+Ozel commit mesaji vermek istersen:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\sync_finish.ps1 -Message "Refine PatiBnB filters"
+```
+
 ## Her yeni Codex sohbetine verilecek komut
 
 ```text
