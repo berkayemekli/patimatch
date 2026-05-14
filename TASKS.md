@@ -1,0 +1,75 @@
+﻿# PatiParent Tasks
+
+Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `git pull origin main` yap ve bu dosyayi oku.
+
+## In Progress
+
+- Yok.
+
+## Blocked / Needs External Action
+
+- Google login: Firebase Google provider acildiysa popup akisi kullaniliyor. Hala calismazsa Chrome popup izni ve Firebase Authentication > Sign-in method > Google ayarlari kontrol edilmeli.
+- Apple login: Simdilik aktif edilmeyecek. Apple Developer, Service ID, Team ID, Key ID ve private key gerektirir.
+
+## Next Up
+
+1. Master data dosyalarini UI'a bagla.
+   - `seed_marketplace_examples.json` PatiGezdirme/PatiBnB/PatiFamily kartlarina kaynak olsun.
+   - `marketplace_product_taxonomy.json` filtre ve form alanlarini beslesin.
+   - `trust_safety_framework.json` rozet/checklist alanlarini beslesin.
+
+2. Onboarding akisini kur.
+   - Hizmet almak istiyorum.
+   - Hizmet vermek istiyorum.
+   - Ikisini de kullanacagim.
+   - Baslangicta zorunlu modal olmasin; ana sayfa gorulsun, login/profil tamamlama sonraya aksin.
+
+3. E-posta ile giris/kayit ekle.
+   - Google takilirsa MVP icin daha stabil fallback olur.
+   - Login ekrani mevcut premium tasarimi korusun.
+
+4. PatiMatch guest preview guclendir.
+   - Uye olmadan kartlar gorulsun.
+   - Bumble benzeri swipe hissi.
+   - Guvenli eslesme/aciklama katmani.
+
+5. PatiBnB Airbnb benzeri listing derinlestirme.
+   - Ev tipi, bahce, baska pet var mi, ev kurallari, fiyat, uygunluk.
+   - Daha gercekci ve yerel fotograf/icerik hissi.
+
+6. PatiFamily sahiplendirme akisini derinlestir.
+   - Acil yuva, gecici yuva, sahiplendirme formu, veteriner belgesi, takip gorusmesi.
+
+7. Profil tamamlama skoru ekle.
+   - `onboarding_playbook.json` icindeki weight modeli kullanilabilir.
+   - Eksik alanlari yumuşak CTA olarak goster.
+
+8. Staging/prod akisini pratiklestir.
+   - `DEPLOY_ENVIRONMENTS.md` guncel.
+   - Riskli isleri staging'e deploy et, onaydan sonra prod.
+
+## Done Recently
+
+- Proje baglami icin `PROJECT_CONTEXT.md` eklendi.
+- Yeni Codex baslangic komutu icin `NEXT_CODEX_PROMPT.txt` eklendi.
+- Data paketleri eklendi:
+  - `marketplace_product_taxonomy.json`
+  - `trust_safety_framework.json`
+  - `pet_care_reference.json`
+  - `content_seo_playbook.json`
+  - `onboarding_playbook.json`
+  - `seed_marketplace_examples.json`
+- Filtrelere arama eklendi.
+- Filtrelerin listeleri gercekten etkilemesi saglandi.
+- Google web login redirect yerine popup akisine alindi.
+
+## Ownership Template
+
+Is baslarken buraya ekle:
+
+```text
+IN PROGRESS
+- <task> - <device/codex> - files: <file list>
+```
+
+Is bitince `Done Recently` altina tasi ve commit hash'i ekle.
