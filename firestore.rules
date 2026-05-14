@@ -13,10 +13,43 @@ service cloud.firestore {
       return data.keys().hasAll(keys);
     }
 
+    function hasNoProtectedVerificationChanges() {
+      return !request.resource.data.diff(resource.data).affectedKeys().hasAny([
+        'verificationStatus',
+        'verificationLevel',
+        'verificationProvider',
+        'verificationSessionId',
+        'verifiedAt',
+        'verificationExpiresAt',
+        'blueBadge',
+        'trustBadges'
+      ]);
+    }
+
     match /users/{userId} {
       allow read: if isSignedIn();
-      allow create, update: if isOwner(userId);
+      allow create: if isOwner(userId)
+        && !request.resource.data.keys().hasAny([
+          'verificationStatus',
+          'verificationLevel',
+          'verificationProvider',
+          'verificationSessionId',
+          'verifiedAt',
+          'verificationExpiresAt',
+          'blueBadge',
+          'trustBadges'
+        ]);
+      allow update: if isOwner(userId) && hasNoProtectedVerificationChanges();
       allow delete: if false;
+    }
+
+    match /verificationSessions/{sessionId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && hasKeys(request.resource.data, ['userId', 'provider', 'status', 'providerReference'])
+        && request.resource.data.status == 'pending';
+      allow update, delete: if false;
     }
 
     match /dogs/{dogId} {

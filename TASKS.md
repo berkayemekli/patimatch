@@ -71,6 +71,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Google web login redirect yerine popup akisine alindi.
 - PatiMatch kart kuyrugu `seed_marketplace_examples.json` verisinden beslenmeye basladi.
 - Mavi tik / kimlik dogrulama icin `IDENTITY_VERIFICATION_PLAN.md` ve `identity_verification_blue_badge.json` eklendi.
+- Ayarlar altina Profil ve Guven dogrulamasi sayfasi eklendi; Firestore rules mavi tik alanlarini koruyacak sekilde deploy edildi.
 
 ## Ownership Template
 

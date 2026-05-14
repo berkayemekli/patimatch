@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'app_strings.dart';
 import 'blocked_users_page.dart';
 import 'dog_profile_page.dart';
+import 'identity_verification_page.dart';
 import 'login_page.dart';
 import 'notifications_page.dart';
 import 'payments_page.dart';
@@ -74,6 +75,37 @@ class SettingsPage extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEFF6FF),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFD8E7FF)),
+            ),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.verified_rounded, color: Color(0xFF0A84FF)),
+              ),
+              title: const Text(
+                'Profil ve guven dogrulamasi',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              subtitle: const Text(
+                'Mavi tik, kimlik dogrulama ve guven rozetleri',
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const IdentityVerificationPage(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 12),
