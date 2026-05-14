@@ -73,4 +73,11 @@ class MasterDataRepository {
     final json = jsonDecode(raw) as Map<String, dynamic>;
     return (json['trustBadges'] as List<dynamic>).cast<String>();
   }
+
+  static Future<Map<String, dynamic>> loadIdentityVerificationPlan() async {
+    final raw = await rootBundle.loadString(
+      'assets/master_data/identity_verification_blue_badge.json',
+    );
+    return jsonDecode(raw) as Map<String, dynamic>;
+  }
 }

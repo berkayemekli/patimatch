@@ -1,0 +1,105 @@
+﻿{
+  "verificationProduct": {
+    "goal": "PatiParent icinde mavi tikli, guvenilir hizmet veren ve ilan sahibi profilleri yaratmak.",
+    "principles": [
+      "Ham kimlik veya yuz fotografi uygulama veritabaninda saklanmaz.",
+      "Biyometrik eslestirme ucuncu parti KYC/IDV saglayici tarafinda yapilir.",
+      "Firestore'da sadece sonuc, seviye, saglayici referansi ve zaman damgasi tutulur.",
+      "Kullaniciya acik riza, aydinlatma metni ve veri saklama bilgisi gosterilir.",
+      "Manuel inceleme ve itiraz akisi tasarlanir."
+    ],
+    "recommendedProvidersToEvaluate": [
+      {
+        "key": "veriff",
+        "label": "Veriff",
+        "strengths": ["dokuman dogrulama", "yuz eslestirme", "liveness", "global dokuman kapsami", "web/mobile SDK"]
+      },
+      {
+        "key": "sumsub",
+        "label": "Sumsub",
+        "strengths": ["custom KYC flow", "liveness", "face match", "webhook/API", "AML opsiyonlari"]
+      },
+      {
+        "key": "persona",
+        "label": "Persona",
+        "strengths": ["moduler verification flow", "government ID", "selfie/liveness", "workflow builder"]
+      },
+      {
+        "key": "onfido",
+        "label": "Onfido",
+        "strengths": ["ID document check", "face biometrics", "OCR", "fraud signals"]
+      }
+    ],
+    "verificationLevels": [
+      {
+        "key": "none",
+        "label": "Dogrulanmamis",
+        "badge": "Yok",
+        "visibleToUsers": true
+      },
+      {
+        "key": "phone_email",
+        "label": "Temel dogrulama",
+        "badge": "Temel",
+        "requirements": ["e-posta", "telefon"]
+      },
+      {
+        "key": "identity",
+        "label": "Kimlik dogrulandi",
+        "badge": "Mavi tik",
+        "requirements": ["resmi kimlik", "selfie/liveness", "face match"]
+      },
+      {
+        "key": "trusted_provider",
+        "label": "Guvenilir hizmet veren",
+        "badge": "Mavi tik + hizmet rozeti",
+        "requirements": ["kimlik dogrulandi", "adres/konum", "tamamlanan hizmet", "yorum ortalamasi"]
+      }
+    ],
+    "firestoreShape": {
+      "users/{userId}": {
+        "verificationStatus": "none | pending | verified | rejected | needs_review | expired",
+        "verificationLevel": "none | phone_email | identity | trusted_provider",
+        "verificationProvider": "veriff | sumsub | persona | onfido | manual",
+        "verificationSessionId": "provider-side opaque id",
+        "verifiedAt": "timestamp | null",
+        "verificationExpiresAt": "timestamp | null",
+        "blueBadge": "boolean",
+        "trustBadges": ["Kimlik dogrulandi", "Telefon dogrulandi"]
+      },
+      "verificationSessions/{sessionId}": {
+        "userId": "string",
+        "provider": "string",
+        "status": "created | pending | verified | rejected | needs_review | expired",
+        "providerReference": "string",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp",
+        "decisionReason": "safe summary, no raw biometric data"
+      }
+    },
+    "userFlow": [
+      "Kullanici profil/giris sonrasi Guven Merkezi'ne girer.",
+      "Kimlik dogrulama avantajlari ve KVKK aydinlatmasi gosterilir.",
+      "Kullanici acik riza verir.",
+      "Backend provider session yaratir.",
+      "Kullanici provider hosted/SDK ekraninda kimlik + selfie/liveness tamamlar.",
+      "Provider webhook sonucu backend'e gonderir.",
+      "Backend users/{userId} icinde verificationStatus ve blueBadge alanlarini gunceller.",
+      "UI profil kartlarinda mavi tik ve guven rozetlerini gosterir."
+    ],
+    "minimumMvp": [
+      "Guven Merkezi sayfasi",
+      "Dogrulama baslat butonu",
+      "pending/verified/rejected UI state",
+      "Firestore verification alanlari",
+      "provider secimi icin config placeholder",
+      "mavi tik badge componenti"
+    ],
+    "legalSafetyNotes": [
+      "KVKK kapsaminda biyometrik veri ozel nitelikli kisisel veridir.",
+      "Ham kimlik/yuz gorseli uygulamada saklanmamalidir.",
+      "Aydinlatma metni, acik riza, saklama suresi ve silme/itiraz sureci tasarlanmalidir.",
+      "Saglayici ile veri isleyen sozlesmesi ve yurt disi aktarim kosullari degerlendirilmelidir."
+    ]
+  }
+}

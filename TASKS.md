@@ -48,6 +48,13 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - `DEPLOY_ENVIRONMENTS.md` guncel.
    - Riskli isleri staging'e deploy et, onaydan sonra prod.
 
+9. Mavi tik / kimlik dogrulama altyapisini kur.
+   - Ucuncu parti KYC/IDV saglayici sec: Veriff, Sumsub, Persona, Onfido veya Stripe Identity.
+   - Ham kimlik/yuz gorseli saklama; sadece verification sonucu ve provider reference tut.
+   - Guven Merkezi UI: dogrulama baslat, pending, verified, rejected state.
+   - Firestore rules: kullanici kendi `blueBadge` veya `verificationStatus` alanlarini dogrudan yazamasin.
+   - Backend webhook: provider sonucuyla `users/{userId}` guncellensin.
+
 ## Done Recently
 
 - Proje baglami icin `PROJECT_CONTEXT.md` eklendi.
@@ -63,6 +70,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Filtrelerin listeleri gercekten etkilemesi saglandi.
 - Google web login redirect yerine popup akisine alindi.
 - PatiMatch kart kuyrugu `seed_marketplace_examples.json` verisinden beslenmeye basladi.
+- Mavi tik / kimlik dogrulama icin `IDENTITY_VERIFICATION_PLAN.md` ve `identity_verification_blue_badge.json` eklendi.
 
 ## Ownership Template
 
