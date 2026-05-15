@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -85,16 +85,6 @@ class _SettingsPageState extends State<SettingsPage> {
       _cities = cities;
       _districts = districts;
       _loadingProfile = false;
-    });
-  }
-
-  Future<void> _setCity(String city) async {
-    final districts = await MasterDataRepository.loadDistricts(city);
-    if (!mounted) return;
-    setState(() {
-      _city = city;
-      _district = '';
-      _districts = districts;
     });
   }
 
@@ -348,8 +338,8 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             leading: const Icon(Icons.tune_rounded),
-            title: const Text('Kullanım rolüm'),
-            subtitle: const Text('Hizmet almak, hizmet vermek veya ikisini birlikte seç'),
+            title: const Text('KullanÄ±m rolÃ¼m'),
+            subtitle: const Text('Hizmet almak, hizmet vermek veya ikisini birlikte seÃ§'),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
@@ -396,3 +386,4 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
