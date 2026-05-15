@@ -17,10 +17,15 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _phoneController = TextEditingController();
   final _codeController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nameController = TextEditingController();
 
   ConfirmationResult? _confirmationResult;
   bool _loading = false;
   bool _showPhoneOtp = false;
+  bool _showEmailAuth = false;
+  bool _emailRegisterMode = true;
   String _status = '';
 
   @override
@@ -32,6 +37,9 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     _phoneController.dispose();
     _codeController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
@@ -130,13 +138,75 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _finishSignedInUser(User user) async {
+  Future<void> _submitEmailAuth() async {
+    if (_loading) return;
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+    final displayName = _nameController.text.trim();
+
+    if (!email.contains('@') || !email.contains('.')) {
+      setState(() => _status = 'Gecerli bir e-posta adresi gir.');
+      return;
+    }
+    if (password.length < 6) {
+      setState(() => _status = 'Sifre en az 6 karakter olmali.');
+      return;
+    }
+    if (_emailRegisterMode && displayName.length < 2) {
+      setState(() => _status = 'Adini en az 2 karakter olacak sekilde yaz.');
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+      _status = _emailRegisterMode
+          ? 'Hesabin olusturuluyor...'
+          : 'Giris yapiliyor...';
+    });
+
+    try {
+      final credential = _emailRegisterMode
+          ? await FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: email,
+              password: password,
+            )
+          : await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            );
+      final user = credential.user ?? FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        setState(() => _status = 'Hesap bilgisi alinamadi. Tekrar dene.');
+        return;
+      }
+      if (_emailRegisterMode && displayName.isNotEmpty) {
+        await user.updateDisplayName(displayName);
+      }
+      await _finishSignedInUser(
+        user,
+        displayNameOverride: _emailRegisterMode ? displayName : '',
+      );
+    } on FirebaseAuthException catch (e) {
+      setState(() => _status = _friendlyEmailError(e));
+    } catch (e) {
+      setState(() => _status = 'E-posta islemi tamamlanamadi: $e');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _finishSignedInUser(
+    User user, {
+    String displayNameOverride = '',
+  }) async {
     try {
       await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
         'userId': user.uid,
         'phone': user.phoneNumber,
         'email': user.email,
-        'displayName': user.displayName ?? '',
+        'displayName': displayNameOverride.isNotEmpty
+            ? displayNameOverride
+            : (user.displayName ?? ''),
         'city': '',
         'district': '',
         'experienceLevel': 'first_time',
@@ -179,6 +249,25 @@ class _LoginPageState extends State<LoginPage> {
         return 'Bir Google giri\u015fi zaten a\u00e7\u0131lm\u0131\u015f g\u00f6r\u00fcn\u00fcyor. A\u00e7\u0131k pencereyi kapat\u0131p tekrar dene.';
       default:
         return 'Google giri\u015fi tamamlanamad\u0131: ${e.message ?? e.code}';
+    }
+  }
+
+  String _friendlyEmailError(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'email-already-in-use':
+        return 'Bu e-posta ile hesap var. Giris yap sekmesine gec.';
+      case 'user-not-found':
+      case 'wrong-password':
+      case 'invalid-credential':
+        return 'E-posta veya sifre hatali.';
+      case 'weak-password':
+        return 'Daha guclu bir sifre sec.';
+      case 'invalid-email':
+        return 'E-posta formati gecersiz.';
+      case 'operation-not-allowed':
+        return 'E-posta/sifre girisi Firebase tarafinda aktif degil.';
+      default:
+        return 'E-posta islemi tamamlanamadi: ${e.message ?? e.code}';
     }
   }
 
@@ -315,8 +404,16 @@ class _LoginPageState extends State<LoginPage> {
             bg: Colors.white,
             border: const Color(0xFFD8DDE6),
             iconWidget: const Icon(Icons.mail_outline_rounded, size: 20),
-            onTap: () => _comingSoon('E-posta'),
+            onTap: () => setState(() {
+              _showEmailAuth = !_showEmailAuth;
+              if (_showEmailAuth) _showPhoneOtp = false;
+              _status = '';
+            }),
           ),
+          if (_showEmailAuth) ...[
+            const SizedBox(height: 16),
+            _emailAuthForm(),
+          ],
           const SizedBox(height: 12),
           _brandAuthButton(
             label: 'Telefon ile devam et',
@@ -324,7 +421,11 @@ class _LoginPageState extends State<LoginPage> {
             bg: Colors.white,
             border: const Color(0xFFD8DDE6),
             iconWidget: const Icon(Icons.phone_rounded, size: 20),
-            onTap: () => setState(() => _showPhoneOtp = !_showPhoneOtp),
+            onTap: () => setState(() {
+              _showPhoneOtp = !_showPhoneOtp;
+              if (_showPhoneOtp) _showEmailAuth = false;
+              _status = '';
+            }),
           ),
           if (_showPhoneOtp) ...[
             const SizedBox(height: 16),
@@ -411,6 +512,86 @@ class _LoginPageState extends State<LoginPage> {
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: const BorderSide(color: Color(0xFFE5E7EB)),
+      ),
+    );
+  }
+
+  Widget _emailAuthForm() {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          SegmentedButton<bool>(
+            segments: const [
+              ButtonSegment(value: true, label: Text('Kayit ol')),
+              ButtonSegment(value: false, label: Text('Giris yap')),
+            ],
+            selected: {_emailRegisterMode},
+            onSelectionChanged: _loading
+                ? null
+                : (value) => setState(() {
+                      _emailRegisterMode = value.first;
+                      _status = '';
+                    }),
+          ),
+          const SizedBox(height: 12),
+          if (_emailRegisterMode) ...[
+            TextField(
+              controller: _nameController,
+              textInputAction: TextInputAction.next,
+              decoration: _inputDecoration('Adin'),
+            ),
+            const SizedBox(height: 10),
+          ],
+          TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            autofillHints: const [AutofillHints.email],
+            decoration: _inputDecoration('E-posta'),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _passwordController,
+            obscureText: true,
+            textInputAction: TextInputAction.done,
+            autofillHints: const [AutofillHints.password],
+            onSubmitted: (_) => _submitEmailAuth(),
+            decoration: _inputDecoration('Sifre'),
+          ),
+          const SizedBox(height: 12),
+          FilledButton.icon(
+            onPressed: _loading ? null : _submitEmailAuth,
+            icon: Icon(
+              _emailRegisterMode
+                  ? Icons.person_add_alt_rounded
+                  : Icons.login_rounded,
+            ),
+            label: Text(_emailRegisterMode ? 'Hesap olustur' : 'Giris yap'),
+            style: FilledButton.styleFrom(
+              minimumSize: const Size.fromHeight(48),
+              backgroundColor: const Color(0xFF0F766E),
+              foregroundColor: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _emailRegisterMode
+                ? 'Profilini ve pet bilgilerini hesabi actiktan sonra tamamlayabilirsin.'
+                : 'Daha once kaydolduysan ayni e-posta ve sifreyle devam et.',
+            style: const TextStyle(
+              color: Color(0xFF64748B),
+              fontSize: 12,
+              height: 1.35,
+            ),
+          ),
+        ],
       ),
     );
   }
