@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -103,6 +103,10 @@ class _SettingsPageState extends State<SettingsPage> {
     );
     if (updated == true) {
       await _loadProfile();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Bilgilerin gÃ¼ncellendi.')),
+      );
     }
   }
 
@@ -393,7 +397,7 @@ class _SearchableSelect extends StatelessWidget {
   }
 
   Future<void> _openPicker(BuildContext context) async {
-    final selected = await showSearch<String?>(
+    final selected = await showSearch<String>(
       context: context,
       delegate: _OptionSearchDelegate(label: label, options: options),
     );
@@ -403,7 +407,7 @@ class _SearchableSelect extends StatelessWidget {
   }
 }
 
-class _OptionSearchDelegate extends SearchDelegate<String?> {
+class _OptionSearchDelegate extends SearchDelegate<String> {
   _OptionSearchDelegate({required this.label, required this.options});
 
   final String label;
@@ -428,7 +432,7 @@ class _OptionSearchDelegate extends SearchDelegate<String?> {
   Widget? buildLeading(BuildContext context) {
     return IconButton(
       tooltip: 'Geri',
-      onPressed: () => close(context, null),
+      onPressed: () => close(context, ''),
       icon: const Icon(Icons.arrow_back_rounded),
     );
   }
@@ -440,17 +444,25 @@ class _OptionSearchDelegate extends SearchDelegate<String?> {
   Widget buildSuggestions(BuildContext context) => _buildOptions(context);
 
   Widget _buildOptions(BuildContext context) {
-    final normalized = query.trim().toLowerCase();
+    final normalized = _normalizeTurkishSearch(query);
     final matches = normalized.isEmpty
         ? options
         : options
-            .where((option) => option.toLowerCase().startsWith(normalized))
+            .where(
+              (option) => _normalizeTurkishSearch(option).startsWith(normalized),
+            )
             .toList();
     final fallback = normalized.isEmpty || matches.isNotEmpty
         ? matches
         : options
-            .where((option) => option.toLowerCase().contains(normalized))
+            .where(
+              (option) => _normalizeTurkishSearch(option).contains(normalized),
+            )
             .toList();
+
+    if (fallback.isEmpty) {
+      return const Center(child: Text('SonuÃ§ bulunamadÄ±'));
+    }
 
     return ListView.builder(
       itemCount: fallback.length,
@@ -464,3 +476,17 @@ class _OptionSearchDelegate extends SearchDelegate<String?> {
     );
   }
 }
+String _normalizeTurkishSearch(String value) {
+  return value
+      .trim()
+      .toLowerCase()
+      .replaceAll('Ä±', 'i')
+      .replaceAll('Ä°', 'i')
+      .replaceAll('iÌ‡', 'i')
+      .replaceAll('ÄŸ', 'g')
+      .replaceAll('Ã¼', 'u')
+      .replaceAll('ÅŸ', 's')
+      .replaceAll('Ã¶', 'o')
+      .replaceAll('Ã§', 'c');
+}
+
