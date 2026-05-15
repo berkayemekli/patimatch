@@ -1,16 +1,38 @@
-﻿Continue from branch feature/data-downloads.
+Continue from branch feature/data-downloads.
 
 Read these files first:
 - DATA_WORKLOG.md
 - DATA_IMPORT_PLAN.md
+- scripts/README_MASTER_DATA_IMPORT.md
+- scripts/master_data_manifest.json
+- scripts/validate_master_data.js
+- scripts/import_master_data_to_firestore.js
 - app/assets/master_data/veterinary_clinics_tr.json
 - app/assets/master_data/pati_friendly_places_tr.json
-- scripts/download_veterinary_clinics_osm.ps1
-- scripts/download_pati_friendly_places_osm.ps1
+
+Data prepared:
+- veterinary_clinics_tr.json: 597 OSM-sourced clinics
+- pati_friendly_places_tr.json: 40 OSM-sourced pet-friendly place candidates
 
 Important:
 - Do not modify unrelated UI files.
-- Treat OpenStreetMap records as unverified seed data.
-- Preserve "Â© OpenStreetMap contributors" attribution.
-- Wire data through repositories/services first, then screens.
-- Suggested next task: create data repository methods for veterinary clinics and pati-friendly places with category/city/district filters.
+- Do not rewrite raw data files unless necessary.
+- Treat all OpenStreetMap records as unverified seed data.
+- Preserve "© OpenStreetMap contributors" attribution.
+- Run `node scripts/validate_master_data.js`.
+- Run `node scripts/import_master_data_to_firestore.js --dry-run`.
+- Live Firestore writes require explicit `--write --yes`.
+
+Suggested next implementation task:
+If ready to import into a real Firebase project, provide a service account path via `FIREBASE_SERVICE_ACCOUNT_PATH`, run the dry-run again, then run:
+
+```bash
+node scripts/import_master_data_to_firestore.js --write --yes
+```
+
+For scoped live import:
+
+```bash
+node scripts/import_master_data_to_firestore.js --write --yes --only=veterinaryClinics
+node scripts/import_master_data_to_firestore.js --write --yes --only=patiFriendlyPlaces
+```

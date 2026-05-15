@@ -1,59 +1,101 @@
-﻿# DATA_IMPORT_PLAN
+# DATA_IMPORT_PLAN
 
-## Scope
+## Current branch
 
-This branch prepares reusable master data for PatiParent without touching UI screens.
+`feature/data-downloads`
 
-Prepared files:
+## Prepared master data
 
-- pp/assets/master_data/veterinary_clinics_tr.json
-- pp/assets/master_data/pati_friendly_places_tr.json
-- scripts/download_veterinary_clinics_osm.ps1
-- scripts/download_pati_friendly_places_osm.ps1
+- `app/assets/master_data/veterinary_clinics_tr.json`
+  - Collection: `veterinaryClinics`
+  - Current count: 597
+  - Source: OpenStreetMap / Overpass API
+  - Status: unverified seed data
+
+- `app/assets/master_data/pati_friendly_places_tr.json`
+  - Collection: `patiFriendlyPlaces`
+  - Current count: 40
+  - Source: OpenStreetMap / Overpass API
+  - Status: unverified seed data
+
+## Import tooling
+
+- `scripts/master_data_manifest.json`
+- `scripts/validate_master_data.js`
+- `scripts/import_master_data_to_firestore.js`
+- `scripts/README_MASTER_DATA_IMPORT.md`
+
+Safety rules:
+
+- Import is dry-run by default.
+- Live Firestore writes require both `--write` and `--yes`.
+- Use `--only=veterinaryClinics` or `--only=patiFriendlyPlaces` for scoped imports.
+- OSM records remain unverified seed data during import.
+- Import adds `verificationStatus: "unverified_seed"` when source records do not include it.
+- OpenStreetMap attribution is preserved on imported documents.
+
+## Recommended flow
+
+1. Validate local JSON files:
+
+```bash
+node scripts/validate_master_data.js
+```
+
+2. Dry-run import:
+
+```bash
+node scripts/import_master_data_to_firestore.js --dry-run
+node scripts/import_master_data_to_firestore.js --dry-run --only=veterinaryClinics
+node scripts/import_master_data_to_firestore.js --dry-run --only=patiFriendlyPlaces
+```
+
+3. Run live import only in a controlled environment:
+
+```bash
+set FIREBASE_SERVICE_ACCOUNT_PATH=C:\secure\service-account.json
+node scripts/import_master_data_to_firestore.js --write --yes
+```
 
 ## Recommended Firestore collections
 
-### eterinaryClinics
-
-Use records from eterinary_clinics_tr.json.
+### `veterinaryClinics`
 
 Recommended indexes:
 
-- city
-- city + district
-- erified + city
+- `city`
+- `city + district`
+- `verified + city`
 - Later: geohash/location index for near-me search
 
-### patiFriendlyPlaces
-
-Use records from pati_friendly_places_tr.json.
+### `patiFriendlyPlaces`
 
 Recommended indexes:
 
-- category
-- category + city
-- category + city + district
-- petPolicy.status + category
-- erified + category + city
+- `category`
+- `category + city`
+- `category + city + district`
+- `petPolicy.status + category`
+- `verified + category + city`
 - Later: geohash/location index for near-me search
 
 ## Verification model
 
 All OSM seed records must start as:
 
-- erified: false
-- erificationStatus: "unverified_seed"
+- `verified: false`
+- `verificationStatus: "unverified_seed"`
 
-Do not present these as guaranteed pet-friendly places.
+Suggested user-facing wording:
+
+- "Topluluk ve açık veri kaynaklarından derlenen aday mekanlar"
+- "Gitmeden önce mekanla iletişime geçmeni öneririz"
+- "PatiParent doğrulaması bekleniyor"
 
 ## Attribution
 
-OpenStreetMap-derived data must preserve attribution:
+OpenStreetMap-derived data must preserve:
 
-- "Â© OpenStreetMap contributors"
+- `© OpenStreetMap contributors`
 
-Keep the license metadata in JSON files.
-
-## Next app task
-
-Codex should wire the prepared data into app screens/repositories without modifying the source data format unless necessary.
+Keep license metadata in JSON files and surface attribution in relevant app screens or legal/about pages.

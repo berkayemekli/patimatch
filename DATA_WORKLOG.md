@@ -12,3 +12,13 @@
 - Status: unverified seed data. Requires user confirmation and/or manual verification before strong claims.
 - Attribution to preserve: Â© OpenStreetMap contributors
 
+## 2026-05-15 - Firestore import infrastructure
+
+- Created master data manifest for `veterinaryClinics` and `patiFriendlyPlaces`.
+- Added validation for required fields, duplicate ids, minimum counts, OSM unverified status, latitude/longitude, and OpenStreetMap attribution.
+- Added warnings for missing city, address, and phone+website.
+- Added dry-run-first Firestore import script.
+- Live Firestore writes require explicit `--write --yes`.
+- Supported scoped imports with `--only=veterinaryClinics` and `--only=patiFriendlyPlaces`.
+- Validation result: OK.
+- Dry-run result: OK, no Firestore writes made.

@@ -1,0 +1,35 @@
+{
+  "version": "2026-05-15",
+  "sourceStatus": "osm_unverified_seed",
+  "collections": [
+    {
+      "name": "veterinaryClinics",
+      "collectionPath": "veterinaryClinics",
+      "file": "app/assets/master_data/veterinary_clinics_tr.json",
+      "rootKey": "clinics",
+      "idField": "id",
+      "minCount": 100,
+      "requiredFields": ["id", "source", "sourceId", "name", "category", "latitude", "longitude"],
+      "recommendedIndexes": [
+        ["city"],
+        ["city", "district"],
+        ["verified", "city"]
+      ]
+    },
+    {
+      "name": "patiFriendlyPlaces",
+      "collectionPath": "patiFriendlyPlaces",
+      "file": "app/assets/master_data/pati_friendly_places_tr.json",
+      "rootKey": "places",
+      "idField": "id",
+      "minCount": 10,
+      "requiredFields": ["id", "source", "sourceId", "name", "category", "latitude", "longitude", "petPolicy"],
+      "recommendedIndexes": [
+        ["category"],
+        ["category", "city"],
+        ["category", "city", "district"],
+        ["verified", "category", "city"]
+      ]
+    }
+  ]
+}
