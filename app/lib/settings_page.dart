@@ -1,4 +1,4 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -105,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
       await _loadProfile();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bilgilerin gÃ¼ncellendi.')),
+        const SnackBar(content: Text('Bilgilerin güncellendi.')),
       );
     }
   }
@@ -301,9 +301,6 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
       }, SetOptions(merge: true));
       if (!mounted) return;
       Navigator.of(context).pop(true);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bilgilerin güncellendi.')),
-      );
     } finally {
       if (mounted) setState(() => _saving = false);
     }
@@ -461,7 +458,7 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
             .toList();
 
     if (fallback.isEmpty) {
-      return const Center(child: Text('SonuÃ§ bulunamadÄ±'));
+      return const Center(child: Text('Sonuç bulunamadı'));
     }
 
     return ListView.builder(
@@ -480,13 +477,13 @@ String _normalizeTurkishSearch(String value) {
   return value
       .trim()
       .toLowerCase()
-      .replaceAll('Ä±', 'i')
-      .replaceAll('Ä°', 'i')
-      .replaceAll('iÌ‡', 'i')
-      .replaceAll('ÄŸ', 'g')
-      .replaceAll('Ã¼', 'u')
-      .replaceAll('ÅŸ', 's')
-      .replaceAll('Ã¶', 'o')
-      .replaceAll('Ã§', 'c');
+      .replaceAll('ı', 'i')
+      .replaceAll('İ', 'i')
+      .replaceAll('i̇', 'i')
+      .replaceAll('ğ', 'g')
+      .replaceAll('ü', 'u')
+      .replaceAll('ş', 's')
+      .replaceAll('ö', 'o')
+      .replaceAll('ç', 'c');
 }
 
