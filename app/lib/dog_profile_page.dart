@@ -1,11 +1,11 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'app_strings.dart';
+import 'data/analytics/analytics_repository.dart';
 import 'data/master_data/master_data_repository.dart';
 import 'main_shell_page.dart';
 import 'pet_taxonomy.dart';
@@ -15,6 +15,13 @@ class DogProfilePage extends StatefulWidget {
 
   @override
   State<DogProfilePage> createState() => _DogProfilePageState();
+}
+
+class _PetProfileSnapshot {
+  const _PetProfileSnapshot({required this.id, required this.data});
+
+  final String? id;
+  final Map<String, dynamic> data;
 }
 
 class _DogProfilePageState extends State<DogProfilePage> {
@@ -44,6 +51,7 @@ class _DogProfilePageState extends State<DogProfilePage> {
   bool _loading = true;
   String? _existingDogId;
   String? _existingPhotoUrl;
+  String? _starterPhotoAsset;
   String _accountEmail = '';
   final List<String> _cityOptions = PetTaxonomy.turkiyeSehirleri;
   List<String> _dynamicCityOptions = <String>[];
@@ -71,7 +79,11 @@ class _DogProfilePageState extends State<DogProfilePage> {
     if ((int.tryParse(_weightController.text.trim()) ?? 0) <= 0) missing.add('Kilo');
     if (_cityController.text.trim().isEmpty) missing.add('Sehir');
     if (_passportCodeController.text.trim().isEmpty) missing.add('Pasaport');
-    if ((_imageBytes == null) && (_existingPhotoUrl == null)) missing.add('Fotograf');
+    if ((_imageBytes == null) &&
+        (_existingPhotoUrl == null) &&
+        (_starterPhotoAsset == null)) {
+      missing.add('Fotograf');
+    }
     return missing;
   }
 
@@ -89,7 +101,11 @@ class _DogProfilePageState extends State<DogProfilePage> {
     if (_temperamentController.text.trim().isNotEmpty) filled++;
     if (_healthNotesController.text.trim().isNotEmpty) filled++;
     if (_sex.isNotEmpty) filled++;
-    if ((_imageBytes != null) || (_existingPhotoUrl != null)) filled++;
+    if ((_imageBytes != null) ||
+        (_existingPhotoUrl != null) ||
+        (_starterPhotoAsset != null)) {
+      filled++;
+    }
     return ((filled / total) * 100).round().clamp(0, 100);
   }
 
@@ -169,54 +185,13 @@ class _DogProfilePageState extends State<DogProfilePage> {
     }
 
     try {
-      final q = await FirebaseFirestore.instance
-          .collection('dogs')
-          .where('ownerId', isEqualTo: user.uid)
-          .limit(1)
-          .get();
-
-      if (q.docs.isNotEmpty) {
-        final doc = q.docs.first;
-        final data = doc.data();
-        _existingDogId = doc.id;
-        _nameController.text = data['name'] as String? ?? '';
-        _breedController.text = data['breed'] as String? ?? '';
-        _ageController.text = (data['ageMonths']?.toString() ?? '');
-        _weightController.text = (data['weightKg']?.toString() ?? '');
-        _cityController.text = data['city'] as String? ?? '';
-        _animalCategory =
-            _normalizeCategory(data['animalCategory'] as String? ?? 'Kopek');
-        _vaccineStatus = data['vaccineStatus'] as String? ?? 'Bilinmiyor';
-        _selectedVaccines
-          ..clear()
-          ..addAll((data['vaccines'] as List<dynamic>? ?? <dynamic>[]).whereType<String>());
-        _districtController.text = data['district'] as String? ?? '';
-        if (_cityController.text.isNotEmpty) {
-          _dynamicDistrictOptions =
-              await MasterDataRepository.loadDistricts(_cityController.text);
-        }
-        _passportCodeController.text = data['passportCode'] as String? ?? '';
-        _microchipController.text = data['microchipNo'] as String? ?? '';
-        _colorController.text = data['color'] as String? ?? '';
-        _sex = data['sex'] as String? ?? 'female';
-        _activityLevel = data['activityLevel'] as String? ?? 'medium';
-        _isNeutered = data['isNeutered'] == true;
-        _isVaccinated = data['isVaccinated'] == true;
-        _friendlyWithDogs = data['friendlyWithDogs'] != false;
-        _friendlyWithKids = data['friendlyWithKids'] != false;
-        final temperamentTags =
-            (data['temperamentTags'] as List<dynamic>? ?? <dynamic>[])
-                .whereType<String>()
-                .toList();
-        _temperamentController.text = temperamentTags.join(', ');
-        _selectedTraits
-          ..clear()
-          ..addAll(temperamentTags.where(_traitOptions.contains));
-        _healthNotesController.text = data['healthNotes'] as String? ?? '';
-        final photos = (data['photoUrls'] as List<dynamic>? ?? <dynamic>[])
-            .whereType<String>()
-            .toList();
-        _existingPhotoUrl = photos.isNotEmpty ? photos.first : null;
+      final existing = await _fetchExistingPetProfile(user.uid);
+      if (existing != null) {
+        await _applyExistingPetProfile(existing);
+      } else {
+        _applyRonyStarterProfile();
+        _dynamicDistrictOptions =
+            await MasterDataRepository.loadDistricts(_cityController.text);
       }
     } catch (e) {
       _status = '${AppStrings.profileLoadFailedPrefix}$e';
@@ -225,6 +200,147 @@ class _DogProfilePageState extends State<DogProfilePage> {
         setState(() => _loading = false);
       }
     }
+  }
+
+  Future<_PetProfileSnapshot?> _fetchExistingPetProfile(String userId) async {
+    final dogs = FirebaseFirestore.instance.collection('dogs');
+    final ownerQuery = await dogs
+        .where('ownerId', isEqualTo: userId)
+        .limit(1)
+        .get();
+    if (ownerQuery.docs.isNotEmpty) {
+      final doc = ownerQuery.docs.first;
+      return _PetProfileSnapshot(id: doc.id, data: doc.data());
+    }
+
+    final userQuery = await dogs.where('userId', isEqualTo: userId).limit(1).get();
+    if (userQuery.docs.isNotEmpty) {
+      final doc = userQuery.docs.first;
+      return _PetProfileSnapshot(id: doc.id, data: doc.data());
+    }
+
+    final directDogDoc = await dogs.doc(userId).get();
+    final directDogData = directDogDoc.data();
+    if (directDogDoc.exists && directDogData != null) {
+      return _PetProfileSnapshot(id: directDogDoc.id, data: directDogData);
+    }
+
+    final userDoc = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .get();
+    final userData = userDoc.data();
+    if (userData == null) return null;
+    final nestedPet = userData['dogProfile'] ?? userData['petProfile'];
+    if (nestedPet is Map<String, dynamic>) {
+      return _PetProfileSnapshot(id: null, data: nestedPet);
+    }
+    if (userData.containsKey('dogName') ||
+        userData.containsKey('petName') ||
+        userData.containsKey('dogBreed')) {
+      return _PetProfileSnapshot(id: null, data: userData);
+    }
+    return null;
+  }
+
+  Future<void> _applyExistingPetProfile(_PetProfileSnapshot profile) async {
+    final data = profile.data;
+    _existingDogId = profile.id;
+    _nameController.text = _firstText(data, const ['name', 'dogName', 'petName']);
+    _breedController.text = _firstText(data, const ['breed', 'dogBreed', 'petBreed']);
+    _ageController.text = _firstValue(data, const ['ageMonths', 'age', 'petAge']);
+    _weightController.text = _firstValue(data, const ['weightKg', 'weight', 'petWeight']);
+    _cityController.text = _firstText(data, const ['city', 'petCity']);
+    final category =
+        _firstText(data, const ['animalCategory', 'type', 'animalType', 'petType']);
+    final vaccineStatus =
+        _firstText(data, const ['vaccineStatus', 'vaccinationStatus']);
+    _animalCategory = _normalizeCategory(category.isEmpty ? 'Kopek' : category);
+    _vaccineStatus = vaccineStatus.isEmpty ? 'Bilinmiyor' : vaccineStatus;
+    _selectedVaccines
+      ..clear()
+      ..addAll((data['vaccines'] as List<dynamic>? ?? <dynamic>[]).whereType<String>());
+    _districtController.text = _firstText(data, const ['district', 'petDistrict']);
+    if (_cityController.text.isNotEmpty) {
+      _dynamicDistrictOptions =
+          await MasterDataRepository.loadDistricts(_cityController.text);
+    }
+    _passportCodeController.text = _firstText(data, const ['passportCode', 'passport']);
+    _microchipController.text = _firstText(data, const ['microchipNo', 'microchip']);
+    _colorController.text = _firstText(data, const ['color', 'petColor']);
+    final sex = _firstText(data, const ['sex', 'gender']);
+    final activityLevel = _firstText(data, const ['activityLevel', 'energyLevel']);
+    _sex = sex.isEmpty ? 'female' : sex;
+    _activityLevel = activityLevel.isEmpty ? 'medium' : activityLevel;
+    _isNeutered = data['isNeutered'] == true || data['neutered'] == true;
+    _isVaccinated = data['isVaccinated'] == true || data['vaccinated'] == true;
+    _friendlyWithDogs = data['friendlyWithDogs'] != false;
+    _friendlyWithKids = data['friendlyWithKids'] != false;
+    final rawTemperament = data['temperamentTags'] is List<dynamic>
+        ? data['temperamentTags'] as List<dynamic>
+        : data['traits'] is List<dynamic>
+            ? data['traits'] as List<dynamic>
+            : <dynamic>[];
+    final temperamentTags = rawTemperament.whereType<String>().toList();
+    _temperamentController.text = temperamentTags.join(', ');
+    _selectedTraits
+      ..clear()
+      ..addAll(temperamentTags.where(_traitOptions.contains));
+    _healthNotesController.text =
+        _firstText(data, const ['healthNotes', 'bio', 'notes']);
+    final photos = (data['photoUrls'] as List<dynamic>? ?? <dynamic>[])
+        .whereType<String>()
+        .toList();
+    _existingPhotoUrl = photos.isNotEmpty
+        ? photos.first
+        : _firstText(data, const ['photoUrl', 'imageUrl']);
+    if (_existingPhotoUrl != null && _existingPhotoUrl!.isEmpty) {
+      _existingPhotoUrl = null;
+    }
+  }
+
+  String _firstText(Map<String, dynamic> data, List<String> keys) {
+    for (final key in keys) {
+      final value = data[key];
+      if (value is String && value.trim().isNotEmpty) return value.trim();
+    }
+    return '';
+  }
+
+  String _firstValue(Map<String, dynamic> data, List<String> keys) {
+    for (final key in keys) {
+      final value = data[key];
+      if (value != null && value.toString().trim().isNotEmpty) {
+        return value.toString();
+      }
+    }
+    return '';
+  }
+
+  void _applyRonyStarterProfile() {
+    _nameController.text = 'Rony';
+    _animalCategory = 'Kopek';
+    _breedController.text = 'Maltese';
+    _ageController.text = '10';
+    _weightController.text = '4';
+    _cityController.text = 'Istanbul';
+    _districtController.text = 'Kadikoy';
+    _passportCodeController.text = 'RONY-DEMO';
+    _colorController.text = 'Beyaz';
+    _sex = 'female';
+    _activityLevel = 'medium';
+    _isVaccinated = true;
+    _vaccineStatus = 'Tam';
+    _friendlyWithDogs = true;
+    _friendlyWithKids = true;
+    _selectedTraits
+      ..clear()
+      ..addAll(const ['Sakin', 'Sosyal', 'Oyuncu']);
+    _temperamentController.text = _selectedTraits.join(', ');
+    _healthNotesController.text =
+        'Rony icin baslangic profili. Bilgileri kendi petine gore duzenleyebilirsin.';
+    _starterPhotoAsset = 'assets/images/rony_login_story.jpg';
+    _status = 'Rony taslagi yuklendi. Kaydetmeden once bilgileri duzenleyebilirsin.';
   }
 
   Future<void> _pickImage() async {
@@ -272,7 +388,9 @@ class _DogProfilePageState extends State<DogProfilePage> {
       setState(() => _status = AppStrings.profileAllFieldsRequired);
       return;
     }
-    if (_imageBytes == null && _existingPhotoUrl == null) {
+    if (_imageBytes == null &&
+        _existingPhotoUrl == null &&
+        _starterPhotoAsset == null) {
       setState(() => _status = AppStrings.profileNeedPhoto);
       return;
     }
@@ -307,6 +425,17 @@ class _DogProfilePageState extends State<DogProfilePage> {
             .child('${docRef.id}.jpg');
         await imageRef.putData(
           _imageBytes!,
+          SettableMetadata(contentType: 'image/jpeg'),
+        );
+        imageUrl = await imageRef.getDownloadURL();
+      } else if (_starterPhotoAsset != null && imageUrl == null) {
+        final assetData = await rootBundle.load(_starterPhotoAsset!);
+        final imageRef = FirebaseStorage.instance
+            .ref()
+            .child('dog_photos')
+            .child('${docRef.id}.jpg');
+        await imageRef.putData(
+          assetData.buffer.asUint8List(),
           SettableMetadata(contentType: 'image/jpeg'),
         );
         imageUrl = await imageRef.getDownloadURL();
@@ -345,6 +474,20 @@ class _DogProfilePageState extends State<DogProfilePage> {
         payload['createdAt'] = FieldValue.serverTimestamp();
       }
       await docRef.set(payload, SetOptions(merge: true));
+      await AnalyticsRepository().trackEvent(
+        userId: user.uid,
+        eventName: 'pet_profile_saved',
+        module: 'profile',
+        entityType: 'dog',
+        entityId: docRef.id,
+        properties: {
+          'animalCategory': _animalCategory,
+          'breed': breed,
+          'city': city,
+          'district': district,
+          'isNew': _existingDogId == null,
+        },
+      );
 
       _existingDogId = docRef.id;
       _existingPhotoUrl = imageUrl;
@@ -772,6 +915,13 @@ class _DogProfilePageState extends State<DogProfilePage> {
               SizedBox(
                 height: 160,
                 child: Image.network(_existingPhotoUrl!, fit: BoxFit.cover),
+              ),
+            if (_imageBytes == null &&
+                _existingPhotoUrl == null &&
+                _starterPhotoAsset != null)
+              SizedBox(
+                height: 160,
+                child: Image.asset(_starterPhotoAsset!, fit: BoxFit.cover),
               ),
             const SizedBox(height: 12),
             ElevatedButton(

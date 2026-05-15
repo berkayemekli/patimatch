@@ -23,8 +23,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, dynamic>> _walkers = _defaultWalkers;
 
-  static const List<Map<String, dynamic>> _walkers = [
+  static const List<Map<String, dynamic>> _defaultWalkers = [
     {
       'name': 'Ece Aras',
       'city': 'Istanbul',
@@ -38,6 +39,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 312,
       'price': 290,
       'badge': 'Verified',
+      'badges': ['Kimlik dogrulandi', 'Canli takip'],
+      'specialties': ['Orta boy kopek', 'Duzenli yuruyus'],
+      'safety': ['Rota paylasimi', 'Su molasi raporu'],
       'imageUrl':
           'https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?auto=format&fit=crop&w=1200&q=80',
     },
@@ -54,6 +58,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 188,
       'price': 250,
       'badge': 'Top Rated',
+      'badges': ['Top rated', 'Telefon dogrulandi'],
+      'specialties': ['Kucuk irklar', 'Aksam yuruyusu'],
+      'safety': ['Canli konum', 'Fotografli rapor'],
       'imageUrl':
           'https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=1200&q=80',
     },
@@ -70,6 +77,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 140,
       'price': 220,
       'badge': 'New',
+      'badges': ['Yeni', 'Veteriner referansi'],
+      'specialties': ['Buyuk irklar', 'Enerjik kopek'],
+      'safety': ['Tasma kontrolu', 'Veteriner referansi'],
       'imageUrl':
           'https://images.unsplash.com/photo-1567225557594-88d73e55f2cb?auto=format&fit=crop&w=1200&q=80',
     },
@@ -86,6 +96,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 276,
       'price': 300,
       'badge': 'Verified',
+      'badges': ['Kimlik dogrulandi', 'Canli takip'],
+      'specialties': ['Sahil rotasi', 'Sosyallesme yuruyusu'],
+      'safety': ['Rota kaydi', 'Yuruyus ozeti'],
       'imageUrl':
           'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
     },
@@ -102,6 +115,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 221,
       'price': 270,
       'badge': 'Top Rated',
+      'badges': ['Top rated', 'Tekrar tercih'],
+      'specialties': ['Yasli petler', 'Sakin tempo'],
+      'safety': ['Kisa rota', 'Dinlenme molasi'],
       'imageUrl':
           'https://images.unsplash.com/photo-1525253086316-d0c936c814f8?auto=format&fit=crop&w=1200&q=80',
     },
@@ -118,6 +134,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
       'walks': 169,
       'price': 240,
       'badge': 'Verified',
+      'badges': ['Kimlik dogrulandi', 'Buyuk irk deneyimi'],
+      'specialties': ['Enerji atma', 'Uzun rota'],
+      'safety': ['Tasma kontrolu', 'Rota paylasimi'],
       'imageUrl':
           'https://images.unsplash.com/photo-1518020382113-a7e8fc38eac9?auto=format&fit=crop&w=1200&q=80',
     },
@@ -133,12 +152,91 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     final cities = await MasterDataRepository.loadCities();
     final breeds = await MasterDataRepository.loadAnimalBreeds();
     final districts = await MasterDataRepository.loadDistricts(_city);
+    final examples = await MasterDataRepository.loadMarketplaceExamples();
+    final seedWalkers = _buildSeedWalkers(examples['walkers'] as List<dynamic>?);
     if (!mounted) return;
     setState(() {
       _cities = cities;
       _breedsByType = breeds;
       _districts = districts;
+      final seedNames = seedWalkers.map((walker) => walker['name']).toSet();
+      final remainingDefaults = _defaultWalkers
+          .where((walker) => !seedNames.contains(walker['name']))
+          .toList();
+      _walkers = <Map<String, dynamic>>[...seedWalkers, ...remainingDefaults];
     });
+  }
+
+  List<Map<String, dynamic>> _buildSeedWalkers(List<dynamic>? rawWalkers) {
+    if (rawWalkers == null) return const [];
+    return rawWalkers.whereType<Map<String, dynamic>>().map((walker) {
+      final name = walker['name']?.toString() ?? 'Pati gezdirici';
+      final badges = (walker['badges'] as List<dynamic>? ?? const [])
+          .map((item) => item.toString())
+          .toList();
+      final specialties =
+          (walker['specialties'] as List<dynamic>? ?? const [])
+              .map((item) => item.toString())
+              .toList();
+      return <String, dynamic>{
+        'name': name,
+        'city': walker['city']?.toString() ?? 'Istanbul',
+        'district': walker['district']?.toString() ?? 'Merkez',
+        'breeds': _seedWalkerBreeds(specialties),
+        'ageRange': '1-3 yas',
+        'sex': 'Fark etmez',
+        'vaccineStatus': 'Tam',
+        'size': _seedWalkerSize(specialties),
+        'rating': 4.9,
+        'walks': 86,
+        'price': walker['price'] as int? ?? 260,
+        'badge': _primaryBadge(badges),
+        'badges': badges.isEmpty ? ['Kimlik dogrulandi'] : badges,
+        'specialties': specialties.isEmpty
+            ? ['Duzenli yuruyus', 'Rota paylasimi']
+            : specialties,
+        'safety': const ['Canli takip', 'Yuruyus sonrasi rapor'],
+        'imageUrl': _imageForSeedWalker(name),
+      };
+    }).toList();
+  }
+
+  List<String> _seedWalkerBreeds(List<String> specialties) {
+    final joined = specialties.join(' ').toLowerCase();
+    if (joined.contains('kucuk')) {
+      return const ['Maltese', 'Poodle', 'Pomeranian'];
+    }
+    if (joined.contains('buyuk')) {
+      return const ['Kangal', 'Golden Retriever', 'Labrador Retriever'];
+    }
+    return const ['Golden Retriever', 'Labrador Retriever', 'Kirma'];
+  }
+
+  String _seedWalkerSize(List<String> specialties) {
+    final joined = specialties.join(' ').toLowerCase();
+    if (joined.contains('kucuk')) return 'Kucuk';
+    if (joined.contains('buyuk')) return 'Buyuk';
+    return 'Orta';
+  }
+
+  String _primaryBadge(List<String> badges) {
+    final joined = badges.join(' ').toLowerCase();
+    if (joined.contains('top')) return 'Top Rated';
+    if (joined.contains('yeni')) return 'New';
+    return 'Verified';
+  }
+
+  String _imageForSeedWalker(String name) {
+    switch (name) {
+      case 'Ece Aras':
+        return _defaultWalkers[0]['imageUrl'] as String;
+      case 'Mert Kaya':
+        return _defaultWalkers[1]['imageUrl'] as String;
+      case 'Sena Demir':
+        return _defaultWalkers[2]['imageUrl'] as String;
+      default:
+        return _defaultWalkers.first['imageUrl'] as String;
+    }
   }
 
   Future<void> _setCity(String city) async {
@@ -185,6 +283,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             walker['size'],
             walker['price'],
             walker['walks'],
+            ...(walker['badges'] as List<dynamic>? ?? const []),
+            ...(walker['specialties'] as List<dynamic>? ?? const []),
+            ...(walker['safety'] as List<dynamic>? ?? const []),
             ...breeds,
           ].any((value) => value.toString().toLowerCase().contains(query));
       return cityOk &&
@@ -215,7 +316,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
-            breeds: _breedsByType['Köpek'] ?? const <String>[],
+            breeds: _breedsByType['K\u00f6pek'] ?? const <String>[],
             onToggle: () => setState(() => _filtersOpen = !_filtersOpen),
             onCityChanged: _setCity,
             onDistrictChanged: (v) => setState(() => _district = v),
@@ -268,6 +369,10 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                   rating: walker['rating'] as double,
                   walks: walker['walks'] as int,
                   badge: walker['badge'] as String,
+                  badges: (walker['badges'] as List<dynamic>).cast<String>(),
+                  specialties:
+                      (walker['specialties'] as List<dynamic>).cast<String>(),
+                  safety: (walker['safety'] as List<dynamic>).cast<String>(),
                   imageUrl: walker['imageUrl'] as String,
                 );
               },
@@ -579,6 +684,9 @@ class _WalkerCard extends StatelessWidget {
     required this.rating,
     required this.walks,
     required this.badge,
+    required this.badges,
+    required this.specialties,
+    required this.safety,
     required this.imageUrl,
   });
 
@@ -588,6 +696,9 @@ class _WalkerCard extends StatelessWidget {
   final double rating;
   final int walks;
   final String badge;
+  final List<String> badges;
+  final List<String> specialties;
+  final List<String> safety;
   final String imageUrl;
 
   @override
@@ -610,26 +721,12 @@ class _WalkerCard extends StatelessWidget {
                     Positioned(
                       top: 10,
                       left: 10,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 4,
-                          ),
-                          child: Text(
-                            badge,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF1E3A8A),
-                            ),
-                          ),
-                        ),
-                      ),
+                      child: _WalkerPill(label: badge, emphasized: true),
+                    ),
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: _WalkerPill(label: safety.first),
                     ),
                   ],
                 ),
@@ -644,7 +741,9 @@ class _WalkerCard extends StatelessWidget {
                         Expanded(
                           child: Text(
                             name,
-                            style: const TextStyle(fontWeight: FontWeight.w800),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                         ),
                         const Icon(Icons.star_rounded, size: 16),
@@ -652,7 +751,22 @@ class _WalkerCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text('$city - $walks yuruyus'),
+                    Text(
+                      '$city - $walks yuruyus',
+                      style: const TextStyle(
+                        color: Color(0xFF64748B),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: specialties
+                          .take(2)
+                          .map((item) => _WalkerPill(label: item))
+                          .toList(),
+                    ),
                     const SizedBox(height: 6),
                     Text(
                       '$price TL / saat',
@@ -684,17 +798,99 @@ class _WalkerCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text('$city - $walks yuruyus - $price TL/saat'),
             const SizedBox(height: 12),
-            const ListTile(
-              leading: Icon(Icons.map_rounded),
-              title: Text('Canli konum paylasimi'),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: badges
+                  .map((item) => _WalkerPill(label: item, emphasized: true))
+                  .toList(),
             ),
-            const ListTile(
-              leading: Icon(Icons.verified_user_rounded),
-              title: Text('Dogrulanmis profil'),
-            ),
+            const SizedBox(height: 18),
+            _WalkerDetailSection(title: 'Uzmanlik', items: specialties),
+            const SizedBox(height: 14),
+            _WalkerDetailSection(title: 'Guvenli yuruyus', items: safety),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _WalkerPill extends StatelessWidget {
+  const _WalkerPill({required this.label, this.emphasized = false});
+
+  final String label;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: emphasized ? const Color(0xFFE7F7F2) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: emphasized ? const Color(0xFFBFE7DD) : const Color(0xFFE2E8F0),
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: emphasized ? const Color(0xFF0F766E) : const Color(0xFF475569),
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _WalkerDetailSection extends StatelessWidget {
+  const _WalkerDetailSection({required this.title, required this.items});
+
+  final String title;
+  final List<String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  size: 16,
+                  color: Color(0xFF0F766E),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      color: Color(0xFF475569),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -4,12 +4,13 @@ Bu dosya yeni laptopta veya yeni bir Codex sohbetinde projeye hizli devam etmek 
 
 ## Kisa ozet
 
-PatiParent, Flutter + Firebase tabanli AI-native pet super app girisimidir. Urun 4 ana modulle ilerliyor:
+PatiParent, Flutter + Firebase tabanli AI-native pet super app girisimidir. Urun 5 ana modulle ilerliyor:
 
 - PatiGezdirme: kopek gezdirme / duzenli yuruyus / canli takip vizyonu.
 - PatiBnB: seyahatlerde ev ortaminda pet konaklama / emanet.
 - PatiMatch: Bumble benzeri pet eslesme, sosyal tanisma ve guvenli bulusma.
 - PatiFamily: sahiplendirme, gecici yuva, aile olma yolculugu.
+- PatiVet: sehir bazli veteriner kesfi, puanlama, yorum ve klinik listeleme vizyonu.
 
 Konum: C:\AI\Dog_Date
 Flutter app: C:\AI\Dog_Date\app
@@ -55,8 +56,11 @@ Kacinilacaklar:
 - app/lib/pati_bnb_page.dart: PatiBnB filtre/kartlar.
 - app/lib/pati_match_page.dart: PatiMatch temel yapi.
 - app/lib/pati_parent_page.dart: PatiFamily/PatiParent sahiplendirme yapi.
+- app/lib/pati_vet_page.dart: PatiVet veteriner kesif ve yorum altyapisi.
 - app/lib/data/master_data/master_data_repository.dart: sehir/ilce/cins data okuyucu.
 - MARKETPLACE_BENCHMARK_NOTES.md: Airbnb/Armut/Sahibinden benchmark urun notlari.
+- DATABASE_ANALYTICS_PLAN.md: Firestore koleksiyonlari, analitik event modeli ve rapor ekrani plani.
+- analytics/bigquery/: SQL tabanli BigQuery analitik semasi, view'lar ve ornek rapor sorgulari.
 
 ## Master data dosyalari
 
@@ -69,6 +73,7 @@ Kacinilacaklar:
 - content_seo_playbook.json: modul bazli SEO keyword, headline ve FAQ.
 - onboarding_playbook.json: hizmet alan / hizmet veren / ikisini de kullanacak user onboarding akislari.
 - seed_marketplace_examples.json: UI'a baglanabilecek ornek gezdirici, konaklama, match ve family ilanlari.
+- veterinary_clinics_tr.json: PatiVet icin starter klinik veri sozlesmesi.
 
 ## Son yapilanlar
 
@@ -80,6 +85,19 @@ Son commitler:
 - 4658393 Make module filters update listings
 - 808abb5 Add search inside expanded filters
 - 6bc740e Move Rony to lower right in login hero
+- Login hero mobilde de Rony gorselini gosterecek sekilde sade ve premium hale getirildi.
+- Ana modul hero generic uzak gorsel yerine Rony asset'i ve guven odakli marka rozetiyle guncellendi.
+- PatiBnB kartlari seed_marketplace_examples.json konaklama verisiyle beslenmeye ve Airbnb benzeri trust/ev kurali detaylari gostermeye basladi.
+- PatiFamily kartlari seed familyListings verisine baglandi; aciliyet, uygunluk, trust ve sahiplendirme sureci detaylari eklendi.
+- PatiGezdirme kartlari seed walkers verisine baglandi; uzmanlik, canli takip ve yuruyus guvenligi detaylari eklendi.
+- Ayarlar ekrani hesap merkezi olarak yeniden tasarlandi; profil tamamlama bari, guven dogrulamasi ve bolumlu aksiyon yapisi eklendi.
+- Profili Duzenle ekraninda kullaniciya ait pet kaydi yoksa Rony baslangic taslagi ve gorseli otomatik doldurulacak hale getirildi.
+- Database ve analitik raporlama plani eklendi; users, dogs, servis talepleri, analytics_events ve metrics koleksiyonlari tanimlandi. Odeme akisi uzun ilk donem icin ertelendi.
+- Odeme giris noktalari ana ekrandan ve ayarlardan kaldirildi; ilk business modelde kullanicidan odeme alinmayacak.
+- SQL tabanli analitik katmani baslatildi; BigQuery icin `schema.sql`, `views.sql` ve hazir rapor sorgulari eklendi.
+- Odeme sayfasi ve payment repository aktif koddan kaldirildi.
+- PatiVet 5. ana modul olarak eklendi; starter veteriner veri sozlesmesi ve klinik kartlari baslatildi.
+- Ana shell ve ayarlar/profil ekranlarinda scroll alani tam sayfaya yayildi.
 
 ## Google login durumu
 
@@ -149,6 +167,7 @@ firebase login
 5. Google login'i gercek cihazda popup izniyle tekrar test etmek.
 6. E-posta ile login/kayit eklemek. Google takilirsa MVP icin e-posta login daha stabil olabilir.
 7. Staging/prod ayrimini build komutlariyla netlestirmek.
+8. Analytics event log ve admin rapor ekranini kurmak.
 
 ## Yeni Codex'e verilecek kisa komut
 

@@ -9,7 +9,7 @@ import 'notifications_page.dart';
 import 'pati_bnb_page.dart';
 import 'pati_gezdirme_page.dart';
 import 'pati_parent_page.dart';
-import 'payments_page.dart';
+import 'pati_vet_page.dart';
 import 'settings_page.dart';
 
 class MainShellPage extends StatefulWidget {
@@ -57,6 +57,14 @@ class _MainShellPageState extends State<MainShellPage> {
       color: Color(0xFF4F46E5),
       softColor: Color(0xFFEDEBFF),
     ),
+    _ModuleItem(
+      title: 'PatiVet',
+      subtitle:
+          'Sehir bazli veteriner kesfi, puanlama ve yorum altyapisini tek yerde topla.',
+      icon: Icons.medical_services,
+      color: Color(0xFF0891B2),
+      softColor: Color(0xFFE6F7FB),
+    ),
   ];
 
   @override
@@ -100,15 +108,6 @@ class _MainShellPageState extends State<MainShellPage> {
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const PaymentsPage()),
-                    );
-                  },
-                  icon: _buildPendingPaymentIcon(user?.uid),
-                  tooltip: 'Odemeler',
-                ),
-                IconButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const MatchesPage()),
                     );
                   },
@@ -130,25 +129,29 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
-            children: [
-              _HeroModuleChooser(
-                modules: _modules,
-                selectedIndex: _selectedModuleIndex,
-                onSelected: (index) =>
-                    setState(() => _selectedModuleIndex = index),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
+        children: [
+          Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: maxWidth),
+              child: Column(
+                children: [
+                  _HeroModuleChooser(
+                    modules: _modules,
+                    selectedIndex: _selectedModuleIndex,
+                    onSelected: (index) =>
+                        setState(() => _selectedModuleIndex = index),
+                  ),
+                  const SizedBox(height: 14),
+                  _ModuleInfoCard(module: _modules[_selectedModuleIndex]),
+                  const SizedBox(height: 20),
+                  _ModuleBody(index: _selectedModuleIndex),
+                ],
               ),
-              const SizedBox(height: 14),
-              _ModuleInfoCard(module: _modules[_selectedModuleIndex]),
-              const SizedBox(height: 20),
-              _ModuleBody(index: _selectedModuleIndex),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -175,29 +178,6 @@ class _MainShellPageState extends State<MainShellPage> {
     );
   }
 
-  Widget _buildPendingPaymentIcon(String? userId) {
-    if (userId == null) {
-      return const Icon(Icons.account_balance_wallet_outlined);
-    }
-    return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance
-          .collection('payments')
-          .where('userId', isEqualTo: userId)
-          .where('status', isEqualTo: 'pending')
-          .snapshots(),
-      builder: (context, snapshot) {
-        final count = snapshot.data?.docs.length ?? 0;
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            const Icon(Icons.account_balance_wallet_outlined),
-            if (count > 0)
-              Positioned(right: -4, top: -4, child: _CountBadge(count: count)),
-          ],
-        );
-      },
-    );
-  }
 }
 
 class _ModuleBody extends StatelessWidget {
@@ -216,6 +196,8 @@ class _ModuleBody extends StatelessWidget {
         return const PatiMatchPage();
       case 3:
         return const PatiParentPage();
+      case 4:
+        return const PatiVetPage();
       default:
         return const SizedBox.shrink();
     }
@@ -283,27 +265,28 @@ class _HeroModuleChooser extends StatelessWidget {
       borderRadius: BorderRadius.circular(34),
       child: Container(
         width: double.infinity,
-        height: compact ? 500 : 430,
+        height: compact ? 560 : 430,
         decoration: const BoxDecoration(color: Color(0xFF111827)),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Image.network(
-              'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1600&q=82',
+            Image.asset(
+              'assets/images/rony_login_story.jpg',
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  const ColoredBox(color: Color(0xFF1F2937)),
+              alignment: compact
+                  ? const Alignment(0.78, 0.55)
+                  : const Alignment(0.72, 0.64),
             ),
             const DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xCC0F172A),
-                    Color(0x88111827),
-                    Color(0xB3142A22),
+                    Color(0xE60F172A),
+                    Color(0x99111827),
+                    Color(0x66142A22),
                   ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
               ),
             ),
@@ -318,15 +301,17 @@ class _HeroModuleChooser extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const _HeroBrand(),
+                  const SizedBox(height: 10),
+                  const _HeroTrustBadge(),
                   const Spacer(),
                   Text(
-                    'Evcil dostun i\u00e7in\nneye ihtiyac\u0131n var?',
+                    'Bug\u00fcn petin i\u00e7in\nneye ihtiyac\u0131n var?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: compact ? 34 : 52,
-                      height: 1.02,
-                      letterSpacing: -1.4,
+                      fontSize: compact ? 32 : 50,
+                      height: 1.04,
+                      letterSpacing: 0,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -385,10 +370,44 @@ class _HeroBrand extends StatelessWidget {
             color: Colors.white,
             fontSize: 24,
             fontWeight: FontWeight.w900,
-            letterSpacing: -0.6,
+            letterSpacing: 0,
           ),
         ),
       ],
+    );
+  }
+}
+
+class _HeroTrustBadge extends StatelessWidget {
+  const _HeroTrustBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.16),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.verified_user_rounded, color: Colors.white, size: 16),
+            SizedBox(width: 7),
+            Text(
+              'Rony guven deneyimi',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -419,7 +438,7 @@ class _HeroModuleGrid extends StatelessWidget {
             return SizedBox(
               width: compact
                   ? constraints.maxWidth
-                  : (constraints.maxWidth - 30) / 4,
+                  : (constraints.maxWidth - 40) / 5,
               child: InkWell(
                 borderRadius: BorderRadius.circular(18),
                 onTap: () => onSelected(index),

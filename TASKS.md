@@ -41,15 +41,34 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 6. PatiFamily sahiplendirme akisini derinlestir.
    - Acil yuva, gecici yuva, sahiplendirme formu, veteriner belgesi, takip gorusmesi.
 
-7. Profil tamamlama skoru ekle.
+7. PatiVet veri ve yorum altyapisini derinlestir.
+   - Guvenilir kaynaklardan sehir/ilce bazli veteriner listesi topla.
+   - Klinik sahiplenme/dogrulama akisi tasarla.
+   - Puanlama, yorum, raporla ve moderasyon kurallarini ekle.
+   - PatiVet verisini SQL analitik katmanina dahil et.
+
+8. Profil tamamlama skoru ekle.
    - `onboarding_playbook.json` icindeki weight modeli kullanilabilir.
    - Eksik alanlari yumuşak CTA olarak goster.
 
-8. Staging/prod akisini pratiklestir.
+9. Staging/prod akisini pratiklestir.
    - `DEPLOY_ENVIRONMENTS.md` guncel.
    - Riskli isleri staging'e deploy et, onaydan sonra prod.
 
-9. Mavi tik / kimlik dogrulama altyapisini kur.
+10. Analytics event log ve admin rapor ekranini kur.
+   - `DATABASE_ANALYTICS_PLAN.md` icindeki koleksiyon sozlugunu baz al.
+   - SQL analitik katmani icin `analytics/bigquery/` dosyalarini baz al.
+   - `analytics_events` repository ekle.
+   - Login, pet profile save ve talep olusturma olaylarini event olarak yaz.
+   - BigQuery dataset'i olusturup `schema.sql` ve `views.sql` dosyalarini calistir.
+   - Baslangicta direkt Firestore sorgulariyla admin raporu goster.
+   - Blaze/Cloud Functions aktif olunca `daily_metrics` ve `module_metrics` agregasyonlarini otomatiklestir.
+
+11. Mobil uygulama ciktisi hazirla.
+   - Flutter ayni kod tabanindan Android/iOS app uretecek.
+   - Web UI stabil olduktan sonra Android build, ikon/splash, store metinleri ve test cihaz akisi hazirlanacak.
+
+12. Mavi tik / kimlik dogrulama altyapisini kur.
    - Ucuncu parti KYC/IDV saglayici sec: Veriff, Sumsub, Persona, Onfido veya Stripe Identity.
    - Ham kimlik/yuz gorseli saklama; sadece verification sonucu ve provider reference tut.
    - Guven Merkezi UI: dogrulama baslat, pending, verified, rejected state.
@@ -75,6 +94,19 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Ayarlar altina Profil ve Guven dogrulamasi sayfasi eklendi; Firestore rules mavi tik alanlarini koruyacak sekilde deploy edildi.
 - KYC backend scaffold eklendi: callable session creation + webhook iskeleti. Functions deploy Blaze plan bekliyor.
 - Veriff hosted KYC adapter kodu eklendi; `VERIFF_API_KEY` secret ve Blaze plan sonrasi gercek kimlik/yuz dogrulama linki acilacak.
+- Login hero Rony odakli guncellendi; mobil giriste de Rony gorseli gorunur hale geldi.
+- Ana modul hero Rony gorseli ve guven odakli marka rozetiyle guncellendi.
+- PatiBnB kartlari seed konaklama verisine baglandi; trust rozetleri, ev olanaklari, ev kurallari ve detay sheet'i derinlestirildi.
+- PatiFamily kartlari seed familyListings verisine baglandi; aciliyet, uygun aile, trust ve sahiplendirme sureci sinyalleri eklendi.
+- PatiGezdirme kartlari seed walker verisine baglandi; uzmanlik, canli takip ve guvenli yuruyus detaylari eklendi.
+- Ayarlar ekrani hesap merkezi olarak yeniden tasarlandi; profil tamamlama bari, guven dogrulamasi ve temiz bolumlu aksiyonlar eklendi.
+- Profili Duzenle ekraninda pet kaydi yoksa Rony baslangic taslagi ve gorseli otomatik doldurulacak hale getirildi.
+- Database ve analitik raporlama plani eklendi; users, dogs, servis talepleri, analytics_events ve metrics koleksiyonlari tanimlandi. Odeme akisi uzun ilk donem icin ertelendi.
+- Odeme giris noktalari ana ekrandan ve ayarlardan kaldirildi; ilk business modelde kullanicidan odeme alinmayacak.
+- SQL tabanli analitik katmani baslatildi; BigQuery icin tablo semasi, view'lar ve hazir rapor sorgulari eklendi.
+- Odeme sayfasi ve payment repository aktif koddan kaldirildi.
+- PatiVet 5. ana modul olarak eklendi; starter veteriner veri sozlesmesi ve klinik kartlari baslatildi.
+- Ana shell ve ayarlar/profil ekranlarinda scroll alani tam sayfaya yayildi.
 
 ## Ownership Template
 

@@ -1,0 +1,72 @@
+{
+  "sourceStatus": "starter_seed",
+  "note": "Bu dosya PatiVet icin ilk veri sozlesmesidir. Tam ve guncel veteriner listesi resmi/acik kaynaklardan dogrulanarak genisletilecek.",
+  "clinics": [
+    {
+      "clinicId": "vet_ist_kadikoy_001",
+      "name": "Kadikoy Pet Saglik Merkezi",
+      "city": "Istanbul",
+      "district": "Kadikoy",
+      "services": ["Muayene", "Asi", "Mikrocip", "Acil yonlendirme"],
+      "badges": ["PatiVet aday", "Asi takibi"],
+      "rating": 4.8,
+      "reviewCount": 128,
+      "status": "seed"
+    },
+    {
+      "clinicId": "vet_ist_besiktas_001",
+      "name": "Besiktas Veteriner Klinigi",
+      "city": "Istanbul",
+      "district": "Besiktas",
+      "services": ["Muayene", "Dis sagligi", "Beslenme danismanligi"],
+      "badges": ["PatiVet aday"],
+      "rating": 4.7,
+      "reviewCount": 96,
+      "status": "seed"
+    },
+    {
+      "clinicId": "vet_ank_cankaya_001",
+      "name": "Cankaya Hayvan Sagligi",
+      "city": "Ankara",
+      "district": "Cankaya",
+      "services": ["Muayene", "Asi", "Laboratuvar"],
+      "badges": ["PatiVet aday", "Laboratuvar"],
+      "rating": 4.6,
+      "reviewCount": 84,
+      "status": "seed"
+    },
+    {
+      "clinicId": "vet_izm_karsiyaka_001",
+      "name": "Karsiyaka Pet Klinik",
+      "city": "Izmir",
+      "district": "Karsiyaka",
+      "services": ["Muayene", "Asi", "Kedi sagligi"],
+      "badges": ["PatiVet aday"],
+      "rating": 4.7,
+      "reviewCount": 73,
+      "status": "seed"
+    },
+    {
+      "clinicId": "vet_bur_nilufer_001",
+      "name": "Nilufer Veteriner Merkezi",
+      "city": "Bursa",
+      "district": "Nilufer",
+      "services": ["Muayene", "Asi", "Cerrahi yonlendirme"],
+      "badges": ["PatiVet aday"],
+      "rating": 4.5,
+      "reviewCount": 61,
+      "status": "seed"
+    },
+    {
+      "clinicId": "vet_ant_muratpasa_001",
+      "name": "Muratpasa Pet Saglik",
+      "city": "Antalya",
+      "district": "Muratpasa",
+      "services": ["Muayene", "Asi", "Seyahat belgeleri"],
+      "badges": ["PatiVet aday", "Seyahat destegi"],
+      "rating": 4.6,
+      "reviewCount": 58,
+      "status": "seed"
+    }
+  ]
+}

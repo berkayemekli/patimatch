@@ -132,6 +132,14 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /analytics_events/{eventId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && hasKeys(request.resource.data, ['eventId', 'userId', 'eventName', 'module', 'createdAt']);
+      allow update, delete: if false;
+    }
+
     match /blocks/{blockId} {
       allow read: if isSignedIn();
       allow create: if isSignedIn()

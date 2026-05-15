@@ -6,9 +6,9 @@ import 'app_strings.dart';
 import 'blocked_users_page.dart';
 import 'data/master_data/master_data_repository.dart';
 import 'dog_profile_page.dart';
+import 'identity_verification_page.dart';
 import 'login_page.dart';
 import 'notifications_page.dart';
-import 'payments_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -60,7 +60,7 @@ class _SettingsPageState extends State<SettingsPage> {
         district = (data['district'] as String? ?? '').trim();
       }
     } catch (_) {
-      // Firestore okunamazsa Auth bilgileriyle devam edilir.
+      // Auth bilgileri ekranin acilmasi icin yeterlidir.
     }
 
     final districts = city.isEmpty
@@ -105,7 +105,7 @@ class _SettingsPageState extends State<SettingsPage> {
       await _loadProfile();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bilgilerin güncellendi.')),
+        const SnackBar(content: Text('Bilgilerin guncellendi.')),
       );
     }
   }
@@ -116,112 +116,375 @@ class _SettingsPageState extends State<SettingsPage> {
     final photoUrl = user?.photoURL;
     final title = _displayName.trim().isNotEmpty
         ? _displayName.trim()
-        : 'PatiParent hesabı';
+        : 'PatiParent hesabi';
     final location = [_city, _district].where((v) => v.isNotEmpty).join(' / ');
     final subtitle = [
       if (_emailOrPhone.isNotEmpty) _emailOrPhone,
       if (location.isNotEmpty) location,
     ].join(' - ');
+    final completionScore = _profileCompletionScore(
+      hasName: _displayName.trim().isNotEmpty,
+      hasContact: _emailOrPhone.trim().isNotEmpty,
+      hasLocation: location.isNotEmpty,
+      hasPhoto: photoUrl != null && photoUrl.isNotEmpty,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text(AppStrings.settingsTitle)),
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: AppBar(
+        title: const Text('Hesap merkezi'),
+        backgroundColor: const Color(0xFFF5F7FA),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 28),
         children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(22),
-            onTap: _loadingProfile ? null : _openAccountEditor,
-            child: Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(22),
-                border: Border.all(color: const Color(0xFFE5E7EB)),
-              ),
-              child: Row(
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 760),
+              child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 28,
-                    backgroundColor: const Color(0xFFEAF2FF),
-                    backgroundImage: photoUrl == null || photoUrl.isEmpty
-                        ? null
-                        : NetworkImage(photoUrl),
-                    child: photoUrl == null || photoUrl.isEmpty
-                        ? const Icon(Icons.person_rounded)
-                        : null,
+                  _SettingsHero(
+                    title: _loadingProfile ? 'Yukleniyor...' : title,
+                    subtitle: subtitle.isEmpty ? 'Bilgilerini duzenle' : subtitle,
+                    photoUrl: photoUrl,
+                    completionScore: completionScore,
+                    onTap: _loadingProfile ? null : _openAccountEditor,
                   ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _loadingProfile ? 'Yükleniyor...' : title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w800,
-                            fontSize: 17,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          subtitle.isEmpty ? 'Bilgilerini düzenle' : subtitle,
-                          style: const TextStyle(color: Color(0xFF64748B)),
-                        ),
-                      ],
-                    ),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'Hesap ve pet',
+                    children: [
+                      _SettingsActionTile(
+                        icon: Icons.person_outline_rounded,
+                        tint: const Color(0xFF0F766E),
+                        title: 'Benim bilgilerim',
+                        subtitle: 'Kayit bilgilerini gor ve guncelle',
+                        onTap: _loadingProfile ? null : _openAccountEditor,
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.pets_rounded,
+                        tint: const Color(0xFFE11D48),
+                        title: AppStrings.settingsEditProfile,
+                        subtitle: AppStrings.settingsEditProfileSub,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const DogProfilePage(),
+                            ),
+                          );
+                        },
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.verified_user_rounded,
+                        tint: const Color(0xFF2563EB),
+                        title: 'Guven dogrulamasi',
+                        subtitle: 'Mavi tik, kimlik durumu ve guven sinyalleri',
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const IdentityVerificationPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: Color(0xFF64748B)),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'Aktivite',
+                    children: [
+                      _SettingsActionTile(
+                        icon: Icons.notifications_outlined,
+                        tint: const Color(0xFF7C3AED),
+                        title: AppStrings.settingsNotifications,
+                        subtitle: AppStrings.settingsNotificationsSub,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const NotificationsPage(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'Gizlilik ve hesap',
+                    children: [
+                      _SettingsActionTile(
+                        icon: Icons.block_rounded,
+                        tint: const Color(0xFF475569),
+                        title: AppStrings.settingsBlocked,
+                        subtitle: AppStrings.settingsBlockedSub,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const BlockedUsersPage(),
+                            ),
+                          );
+                        },
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.logout_rounded,
+                        tint: const Color(0xFFDC2626),
+                        title: AppStrings.settingsSignOut,
+                        subtitle: 'Bu cihazdaki oturumu kapat',
+                        onTap: () => _signOut(context),
+                        destructive: true,
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
-          const SizedBox(height: 12),
-          ListTile(
-            leading: const Icon(Icons.pets),
-            title: const Text(AppStrings.settingsEditProfile),
-            subtitle: const Text(AppStrings.settingsEditProfileSub),
-            onTap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const DogProfilePage()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.block),
-            title: const Text(AppStrings.settingsBlocked),
-            subtitle: const Text(AppStrings.settingsBlockedSub),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const BlockedUsersPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.account_balance_wallet_outlined),
-            title: const Text(AppStrings.settingsPayments),
-            subtitle: const Text(AppStrings.settingsPaymentsSub),
-            onTap: () {
-              Navigator.of(
-                context,
-              ).push(MaterialPageRoute(builder: (_) => const PaymentsPage()));
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.notifications_outlined),
-            title: const Text(AppStrings.settingsNotifications),
-            subtitle: const Text(AppStrings.settingsNotificationsSub),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const NotificationsPage()),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text(AppStrings.settingsSignOut),
-            onTap: () => _signOut(context),
-          ),
         ],
+      ),
+    );
+  }
+
+  int _profileCompletionScore({
+    required bool hasName,
+    required bool hasContact,
+    required bool hasLocation,
+    required bool hasPhoto,
+  }) {
+    final completed = [hasName, hasContact, hasLocation, hasPhoto]
+        .where((item) => item)
+        .length;
+    return (completed / 4 * 100).round();
+  }
+}
+
+class _SettingsHero extends StatelessWidget {
+  const _SettingsHero({
+    required this.title,
+    required this.subtitle,
+    required this.photoUrl,
+    required this.completionScore,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final String? photoUrl;
+  final int completionScore;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = completionScore / 100;
+    return InkWell(
+      borderRadius: BorderRadius.circular(28),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(18),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111827),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1A0F172A),
+              blurRadius: 28,
+              offset: Offset(0, 14),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 31,
+                  backgroundColor: const Color(0xFFEAF2FF),
+                  backgroundImage: photoUrl == null || photoUrl!.isEmpty
+                      ? null
+                      : NetworkImage(photoUrl!),
+                  child: photoUrl == null || photoUrl!.isEmpty
+                      ? const Icon(Icons.person_rounded, color: Color(0xFF111827))
+                      : null,
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        subtitle,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.76),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right_rounded, color: Colors.white),
+              ],
+            ),
+            const SizedBox(height: 18),
+            Row(
+              children: [
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(999),
+                    child: LinearProgressIndicator(
+                      value: progress,
+                      minHeight: 8,
+                      backgroundColor: Colors.white.withValues(alpha: 0.14),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                        Color(0xFF7DD3C7),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Text(
+                  '%$completionScore',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Profil tamamlama',
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingsSection extends StatelessWidget {
+  const _SettingsSection({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE7ECF3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+            child: Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF64748B),
+                fontSize: 12,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+          ),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+class _SettingsActionTile extends StatelessWidget {
+  const _SettingsActionTile({
+    required this.icon,
+    required this.tint,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    this.destructive = false,
+  });
+
+  final IconData icon;
+  final Color tint;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final bool destructive;
+
+  @override
+  Widget build(BuildContext context) {
+    final textColor = destructive ? const Color(0xFFDC2626) : const Color(0xFF111827);
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        child: Row(
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: tint.withValues(alpha: 0.11),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(icon, color: tint, size: 22),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF94A3B8)),
+          ],
+        ),
       ),
     );
   }
@@ -309,46 +572,132 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Benim Bilgilerim')),
+      backgroundColor: const Color(0xFFF5F7FA),
+      appBar: AppBar(
+        title: const Text('Benim bilgilerim'),
+        backgroundColor: const Color(0xFFF5F7FA),
+        elevation: 0,
+        scrolledUnderElevation: 0,
+      ),
       body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 28),
         children: [
-          TextField(
-            controller: _nameController,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              labelText: 'Ad Soyad',
-              border: OutlineInputBorder(),
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 680),
+              child: Column(
+                children: [
+                  const _AccountInfoNotice(),
+                  const SizedBox(height: 12),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: const Color(0xFFE7ECF3)),
+                    ),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _nameController,
+                          textInputAction: TextInputAction.next,
+                          decoration: _fieldDecoration('Ad Soyad'),
+                        ),
+                        const SizedBox(height: 12),
+                        InputDecorator(
+                          decoration: _fieldDecoration('E-posta / Telefon'),
+                          child: Text(
+                            widget.emailOrPhone.isEmpty
+                                ? '-'
+                                : widget.emailOrPhone,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _SearchableSelect(
+                          label: 'Il',
+                          value: _city,
+                          options: widget.cities,
+                          onSelected: _setCity,
+                        ),
+                        const SizedBox(height: 12),
+                        _SearchableSelect(
+                          label: 'Ilce',
+                          value: _district,
+                          options: _districts,
+                          enabled: _city.isNotEmpty && _districts.isNotEmpty,
+                          onSelected: (value) =>
+                              setState(() => _district = value),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: _saving ? null : _save,
+                    icon: const Icon(Icons.save_rounded),
+                    label: Text(_saving ? 'Kaydediliyor...' : 'Kaydet'),
+                    style: FilledButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      backgroundColor: const Color(0xFF0F766E),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 12),
-          InputDecorator(
-            decoration: const InputDecoration(
-              labelText: 'E-posta / Telefon',
-              border: OutlineInputBorder(),
+        ],
+      ),
+    );
+  }
+
+  InputDecoration _fieldDecoration(String label) {
+    return InputDecoration(
+      labelText: label,
+      filled: true,
+      fillColor: const Color(0xFFF8FAFC),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: const BorderSide(color: Color(0xFF0F766E), width: 1.4),
+      ),
+    );
+  }
+}
+
+class _AccountInfoNotice extends StatelessWidget {
+  const _AccountInfoNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE7F7F2),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFBFE7DD)),
+      ),
+      child: const Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.info_outline_rounded, color: Color(0xFF0F766E), size: 20),
+          SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'Bu alan senin hesap bilgilerin. Pet veya Rony bilgileri ayri pet profili ekraninda duzenlenir.',
+              style: TextStyle(
+                color: Color(0xFF0F766E),
+                fontWeight: FontWeight.w700,
+                height: 1.35,
+              ),
             ),
-            child: Text(widget.emailOrPhone.isEmpty ? '-' : widget.emailOrPhone),
-          ),
-          const SizedBox(height: 12),
-          _SearchableSelect(
-            label: 'İl',
-            value: _city,
-            options: widget.cities,
-            onSelected: _setCity,
-          ),
-          const SizedBox(height: 12),
-          _SearchableSelect(
-            label: 'İlçe',
-            value: _district,
-            options: _districts,
-            enabled: _city.isNotEmpty && _districts.isNotEmpty,
-            onSelected: (value) => setState(() => _district = value),
-          ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: _saving ? null : _save,
-            icon: const Icon(Icons.save_rounded),
-            label: Text(_saving ? 'Kaydediliyor...' : 'Kaydet'),
           ),
         ],
       ),
@@ -375,16 +724,22 @@ class _SearchableSelect extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: enabled ? () => _openPicker(context) : null,
-      borderRadius: BorderRadius.circular(4),
+      borderRadius: BorderRadius.circular(18),
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: label,
-          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: const Color(0xFFF8FAFC),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+            borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+          ),
           suffixIcon: const Icon(Icons.search_rounded),
           enabled: enabled,
         ),
         child: Text(
-          value.isEmpty ? 'Seç' : value,
+          value.isEmpty ? 'Sec' : value,
           style: TextStyle(
             color: enabled ? const Color(0xFF111827) : const Color(0xFF94A3B8),
           ),
@@ -458,7 +813,7 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
             .toList();
 
     if (fallback.isEmpty) {
-      return const Center(child: Text('Sonuç bulunamadı'));
+      return const Center(child: Text('Sonuc bulunamadi'));
     }
 
     return ListView.builder(
@@ -473,17 +828,17 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
     );
   }
 }
+
 String _normalizeTurkishSearch(String value) {
   return value
       .trim()
       .toLowerCase()
-      .replaceAll('ı', 'i')
-      .replaceAll('İ', 'i')
-      .replaceAll('i̇', 'i')
-      .replaceAll('ğ', 'g')
-      .replaceAll('ü', 'u')
-      .replaceAll('ş', 's')
-      .replaceAll('ö', 'o')
-      .replaceAll('ç', 'c');
+      .replaceAll('\u0131', 'i')
+      .replaceAll('\u0130', 'i')
+      .replaceAll('i\u0307', 'i')
+      .replaceAll('\u011f', 'g')
+      .replaceAll('\u00fc', 'u')
+      .replaceAll('\u015f', 's')
+      .replaceAll('\u00f6', 'o')
+      .replaceAll('\u00e7', 'c');
 }
-

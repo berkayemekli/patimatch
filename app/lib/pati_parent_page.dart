@@ -23,20 +23,25 @@ class _PatiParentPageState extends State<PatiParentPage> {
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, String>> _familyPets = _defaultFamilyPets;
 
-  static const List<Map<String, String>> _familyPets = [
+  static const List<Map<String, String>> _defaultFamilyPets = [
     {
       'title': 'Mavi - Istanbul',
       'subtitle': '10 ay - Kucuk - Asili - Oyuncu karakter',
       'badge': 'Acil Yuva',
       'city': 'Istanbul',
       'district': 'Kadikoy',
-      'animalType': 'Köpek',
+      'animalType': 'K\u00f6pek',
       'breed': 'Maltese',
       'ageRange': '0-1 yas',
       'sex': 'Disi',
       'vaccineStatus': 'Tam',
       'size': 'Kucuk',
+      'urgency': 'Acil yuva',
+      'ownerType': 'Gecici yuva',
+      'trust': 'Asili, kimlik dogrulandi',
+      'fit': 'Apartman yasamina uygun',
     },
     {
       'title': 'Tarcin - Ankara',
@@ -44,12 +49,16 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'badge': 'Dogrulanmis',
       'city': 'Ankara',
       'district': 'Cankaya',
-      'animalType': 'Köpek',
+      'animalType': 'K\u00f6pek',
       'breed': 'Golden Retriever',
       'ageRange': '1-3 yas',
       'sex': 'Erkek',
       'vaccineStatus': 'Tam',
       'size': 'Orta',
+      'urgency': 'Aile araniyor',
+      'ownerType': 'Bireysel ilan',
+      'trust': 'Veteriner referansi, takip gorusmesi',
+      'fit': 'Cocuklarla uyumlu',
     },
     {
       'title': 'Boncuk - Bursa',
@@ -63,6 +72,10 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'sex': 'Fark etmez',
       'vaccineStatus': 'Bilinmiyor',
       'size': 'Kucuk',
+      'urgency': 'Gecici yuva',
+      'ownerType': 'Gonullu ilan',
+      'trust': 'Sahiplendirme formu',
+      'fit': 'Sakin ev ortami',
     },
     {
       'title': 'Luna - Izmir',
@@ -76,6 +89,10 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'sex': 'Disi',
       'vaccineStatus': 'Eksik',
       'size': 'Orta',
+      'urgency': 'Uygun aile',
+      'ownerType': 'Bireysel ilan',
+      'trust': 'Tuvalet egitimi, takip gorusmesi',
+      'fit': 'Ev egitimli',
     },
   ];
 
@@ -89,12 +106,76 @@ class _PatiParentPageState extends State<PatiParentPage> {
     final cities = await MasterDataRepository.loadCities();
     final breeds = await MasterDataRepository.loadAnimalBreeds();
     final districts = await MasterDataRepository.loadDistricts(_city);
+    final examples = await MasterDataRepository.loadMarketplaceExamples();
+    final seedPets = _buildSeedFamilyPets(
+      examples['familyListings'] as List<dynamic>?,
+    );
     if (!mounted) return;
     setState(() {
       _cities = cities;
       _breedsByType = breeds;
       _districts = districts;
+      final seedTitles = seedPets.map((pet) => pet['title']).toSet();
+      final remainingDefaults = _defaultFamilyPets
+          .where((pet) => !seedTitles.contains(pet['title']))
+          .toList();
+      _familyPets = <Map<String, String>>[...seedPets, ...remainingDefaults];
     });
+  }
+
+  List<Map<String, String>> _buildSeedFamilyPets(List<dynamic>? rawListings) {
+    if (rawListings == null) return const [];
+    return rawListings.whereType<Map<String, dynamic>>().map((pet) {
+      final petName = pet['petName']?.toString() ?? 'Yeni ilan';
+      final city = pet['city']?.toString() ?? 'Istanbul';
+      final type = _normalizePetType(pet['type']?.toString() ?? 'K\u00f6pek');
+      final breed = pet['breed']?.toString() ?? 'K\u0131rma';
+      final urgency = pet['urgency']?.toString() ?? 'Aile araniyor';
+      final badges = (pet['badges'] as List<dynamic>? ?? const [])
+          .map((item) => item.toString())
+          .toList();
+      return <String, String>{
+        'title': '$petName - $city',
+        'subtitle': '$breed - $urgency - ${badges.take(2).join(', ')}',
+        'badge': urgency,
+        'city': city,
+        'district': _seedDistrict(city),
+        'animalType': type,
+        'breed': breed,
+        'ageRange': type == 'Kedi' ? '1-3 yas' : '0-1 yas',
+        'sex': 'Fark etmez',
+        'vaccineStatus': badges.any(
+          (badge) => badge.toLowerCase().contains('asi'),
+        )
+            ? 'Tam'
+            : 'Fark etmez',
+        'size': 'Kucuk',
+        'urgency': urgency,
+        'ownerType': urgency.toLowerCase().contains('gecici')
+            ? 'Gecici yuva'
+            : 'Sahiplendirme',
+        'trust': badges.isEmpty ? 'Sahiplendirme formu' : badges.join(', '),
+        'fit': type == 'Kedi' ? 'Sakin ev ortami' : 'Apartman yasamina uygun',
+      };
+    }).toList();
+  }
+
+  String _normalizePetType(String value) {
+    final lower = value.toLowerCase();
+    if (lower == 'kopek' || lower == 'k\u00f6pek') return 'K\u00f6pek';
+    if (lower == 'kedi') return 'Kedi';
+    return value;
+  }
+
+  String _seedDistrict(String city) {
+    switch (city) {
+      case 'Istanbul':
+        return 'Kadikoy';
+      case 'Bursa':
+        return 'Nilufer';
+      default:
+        return 'Merkez';
+    }
   }
 
   Future<void> _setCity(String city) async {
@@ -185,10 +266,16 @@ class _PatiParentPageState extends State<PatiParentPage> {
             const _EmptyFamilyState()
           else
             for (final pet in filteredPets) ...[
-              _SimpleCard(
+              _FamilyListingCard(
                 title: pet['title']!,
                 subtitle: pet['subtitle']!,
                 badge: pet['badge']!,
+                urgency: pet['urgency']!,
+                ownerType: pet['ownerType']!,
+                trust: pet['trust']!,
+                fit: pet['fit']!,
+                city: pet['city']!,
+                district: pet['district']!,
               ),
               const SizedBox(height: 10),
             ],
@@ -452,29 +539,205 @@ class _EmptyFamilyState extends StatelessWidget {
   }
 }
 
-class _SimpleCard extends StatelessWidget {
-  const _SimpleCard({
+class _FamilyListingCard extends StatelessWidget {
+  const _FamilyListingCard({
     required this.title,
     required this.subtitle,
     required this.badge,
+    required this.urgency,
+    required this.ownerType,
+    required this.trust,
+    required this.fit,
+    required this.city,
+    required this.district,
   });
 
   final String title;
   final String subtitle;
   final String badge;
+  final String urgency;
+  final String ownerType;
+  final String trust;
+  final String fit;
+  final String city;
+  final String district;
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.pets)),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: Text(
-          badge,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+    return InkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: () => _openDetails(context),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFE7ECF3)),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x08000000),
+              blurRadius: 14,
+              offset: Offset(0, 6),
+            ),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 54,
+              height: 54,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFEEF3),
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: const Icon(Icons.favorite_rounded, color: Color(0xFFE11D48)),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF111827),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ),
+                      _FamilyPill(label: badge, emphasized: true),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Color(0xFF64748B),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      _FamilyPill(label: ownerType),
+                      _FamilyPill(label: fit),
+                      _FamilyPill(label: '$city / $district'),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
+    );
+  }
+
+  void _openDetails(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 8),
+            Text(subtitle, style: const TextStyle(color: Color(0xFF475569))),
+            const SizedBox(height: 14),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                _FamilyPill(label: urgency, emphasized: true),
+                _FamilyPill(label: ownerType),
+                _FamilyPill(label: '$city / $district'),
+              ],
+            ),
+            const SizedBox(height: 18),
+            _FamilyDetailLine(icon: Icons.verified_rounded, text: trust),
+            const SizedBox(height: 10),
+            _FamilyDetailLine(icon: Icons.home_rounded, text: fit),
+            const SizedBox(height: 10),
+            const _FamilyDetailLine(
+              icon: Icons.assignment_turned_in_rounded,
+              text: 'Sahiplendirme formu ve takip gorusmesi onerilir',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FamilyPill extends StatelessWidget {
+  const _FamilyPill({required this.label, this.emphasized = false});
+
+  final String label;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: emphasized ? const Color(0xFFFFEEF3) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: emphasized ? const Color(0xFFFBC7D3) : const Color(0xFFE2E8F0),
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: emphasized ? const Color(0xFFE11D48) : const Color(0xFF475569),
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _FamilyDetailLine extends StatelessWidget {
+  const _FamilyDetailLine({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 18, color: const Color(0xFFE11D48)),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Color(0xFF475569),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

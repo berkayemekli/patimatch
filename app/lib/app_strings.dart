@@ -83,14 +83,12 @@ class AppStrings {
   static const matchesChatTitleSuffix = ')';
 
   static const settingsTitle = 'Ayarlar';
-  static const settingsEditProfile = 'Profili Duzenle';
-  static const settingsEditProfileSub = 'Kopek profil ekranina don';
+  static const settingsEditProfile = 'Pet profilini duzenle';
+  static const settingsEditProfileSub = 'Rony veya kendi pet bilgilerini yonet';
   static const settingsBlocked = 'Engellenenler';
   static const settingsBlockedSub = 'Engellenen kullanicilari yonet';
-  static const settingsPayments = 'Odemelerim';
-  static const settingsPaymentsSub = 'Bekleyen ve tamamlanan odemeleri gor';
   static const settingsNotifications = 'Bildirimlerim';
-  static const settingsNotificationsSub = 'Talep, odeme ve sistem bildirimleri';
+  static const settingsNotificationsSub = 'Talep ve sistem bildirimleri';
   static const settingsSignOut = 'Cikis Yap';
 
   static const walkRequestSent = 'Gezdirme talebi gonderildi.';

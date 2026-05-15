@@ -314,7 +314,13 @@ class _LoginPageState extends State<LoginPage> {
                             Expanded(child: _authPanel()),
                           ],
                         )
-                      : _authPanel(compact: true),
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const _CompactStoryPanel(),
+                            _authPanel(compact: true),
+                          ],
+                        ),
                 ),
               ),
             ),
@@ -344,7 +350,7 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color(0xFF111827),
                   fontSize: 18,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: -0.2,
+                  letterSpacing: 0,
                 ),
               ),
             ],
@@ -356,7 +362,7 @@ class _LoginPageState extends State<LoginPage> {
               fontSize: 34,
               height: 1.05,
               fontWeight: FontWeight.w800,
-              letterSpacing: -1.0,
+              letterSpacing: 0,
               color: Color(0xFF111827),
             ),
           ),
@@ -631,7 +637,7 @@ class _LoginPageState extends State<LoginPage> {
               style: const TextStyle(
                 fontWeight: FontWeight.w800,
                 fontSize: 16,
-                letterSpacing: -0.1,
+                letterSpacing: 0,
               ),
             ),
           ),
@@ -678,25 +684,15 @@ class _StoryPanel extends StatelessWidget {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xD9172430),
-                    Color(0x99173B3C),
-                    Color(0x006B4A31),
+                    Color(0xE60F172A),
+                    Color(0xA6173B3C),
+                    Color(0x1AFFFFFF),
                   ],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
               ),
             ),
-          ),
-          Positioned(
-            right: -44,
-            top: -38,
-            child: _BlurOrb(size: 180, color: const Color(0x33FFFFFF)),
-          ),
-          Positioned(
-            left: -56,
-            bottom: -60,
-            child: _BlurOrb(size: 220, color: const Color(0x22FAD7A0)),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -722,14 +718,16 @@ class _StoryPanel extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 10),
+              const _RonyStatusPill(),
               const Spacer(),
               const Text(
-                'Pet bak\u0131m\u0131n\u0131 daha g\u00fcvenli, daha sakin ve daha insani hale getiriyoruz.',
+                'Rony i\u00e7in ba\u015flayan g\u00fcven katman\u0131, t\u00fcm pet ebeveynleri i\u00e7in b\u00fcy\u00fcyor.',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 42,
-                  height: 1.05,
-                  letterSpacing: -1.2,
+                  fontSize: 38,
+                  height: 1.08,
+                  letterSpacing: 0,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -745,6 +743,105 @@ class _StoryPanel extends StatelessWidget {
               const SizedBox(height: 28),
               const _TrustRow(),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CompactStoryPanel extends StatelessWidget {
+  const _CompactStoryPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 238,
+      margin: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(26),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/rony_login_story.jpg'),
+          fit: BoxFit.cover,
+          alignment: Alignment(0.82, 0.68),
+        ),
+      ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xCC0F172A), Color(0x40111827)],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(22),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                _RonyStatusPill(),
+                Spacer(),
+                Text(
+                  'Rony de burada.',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 29,
+                    height: 1.08,
+                    letterSpacing: 0,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                SizedBox(height: 8),
+                SizedBox(
+                  width: 260,
+                  child: Text(
+                    'G\u00fcvenli pet bak\u0131m\u0131n\u0131 hesab\u0131n\u0131 kurmadan da ke\u015ffedebilirsin.',
+                    style: TextStyle(
+                      color: Color(0xE6FFFFFF),
+                      fontSize: 14,
+                      height: 1.35,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RonyStatusPill extends StatelessWidget {
+  const _RonyStatusPill();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.18),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.22)),
+      ),
+      child: const Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.verified_rounded, color: Colors.white, size: 16),
+          SizedBox(width: 7),
+          Text(
+            'Rony preview',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ],
       ),
@@ -825,22 +922,6 @@ class _SoftIcon extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Icon(icon, color: color),
-    );
-  }
-}
-
-class _BlurOrb extends StatelessWidget {
-  const _BlurOrb({required this.size, required this.color});
-
-  final double size;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
     );
   }
 }

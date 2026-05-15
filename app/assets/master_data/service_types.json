@@ -3,6 +3,7 @@
     {"key": "walk", "label": "PatiGezdirme", "subTypes": ["30 dk Yuruyus", "60 dk Yuruyus", "Gunluk Yuruyus", "Canli Takip"]},
     {"key": "bnb", "label": "PatiBnB", "subTypes": ["Gunduz Emanet", "Gecelik Konaklama", "Haftalik Konaklama"]},
     {"key": "match", "label": "PatiMatch", "subTypes": ["Eslesme", "Sohbet", "Bulusma Plani"]},
-    {"key": "parent", "label": "PatiParent", "subTypes": ["Sahiplendirme", "Danismanlik", "Topluluk"]}
+    {"key": "parent", "label": "PatiParent", "subTypes": ["Sahiplendirme", "Danismanlik", "Topluluk"]},
+    {"key": "vet", "label": "PatiVet", "subTypes": ["Veteriner Kesfi", "Klinik Yorumlari", "Asi Takibi", "Acil Yonlendirme"]}
   ]
 }

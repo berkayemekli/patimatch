@@ -22,8 +22,9 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, dynamic>> _stays = _defaultStays;
 
-  static const List<Map<String, dynamic>> _stays = [
+  static const List<Map<String, dynamic>> _defaultStays = [
     {
       'host': 'Can B.',
       'city': 'Istanbul',
@@ -36,6 +37,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 128,
       'type': 'Bahceli Ev',
       'badge': 'Super Host',
+      'trustBadges': ['Super Host', 'Konum dogrulandi'],
+      'highlights': ['Bahce', 'Ayrilabilir oda', 'Acil veteriner plani'],
+      'rules': ['Asi karnesi', 'Kendi mamasi', 'Gece rutini notu'],
+      'minNights': 1,
+      'availability': 'Bu hafta sonu musait',
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': [
         'Golden Retriever',
@@ -58,6 +64,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 96,
       'type': 'Modern Daire',
       'badge': 'Verified',
+      'trustBadges': ['Kimlik dogrulandi', 'Sessiz ev'],
+      'highlights': ['Kedi dostu alan', 'Balkon filesi', 'Sakin oda'],
+      'rules': ['Kum kabini getir', 'Ilac notu', 'Yalniz kalma bilgisi'],
+      'minNights': 2,
+      'availability': 'Hafta ici musait',
       'petTypes': ['Kedi'],
       'breeds': [
         'British Shorthair',
@@ -81,6 +92,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 154,
       'type': 'Premium Home',
       'badge': 'Top Rated',
+      'trustBadges': ['Top rated', 'Fotografli ortam'],
+      'highlights': ['Kucuk irklar', 'Genis salon', 'Gunluk foto raporu'],
+      'rules': ['Tuvalet rutini', 'Oyuncak serbest', 'Yatma saati notu'],
+      'minNights': 1,
+      'availability': 'Son 2 oda',
       'petTypes': ['K\u00f6pek'],
       'breeds': ['Poodle', 'Maltese', 'Pomeranian', 'Cocker Spaniel'],
       'imageUrl':
@@ -98,6 +114,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 110,
       'type': 'Loft Daire',
       'badge': 'Verified',
+      'trustBadges': ['Kimlik dogrulandi', 'Konum dogrulandi'],
+      'highlights': ['Ayrilabilir alan', 'Sessiz bina', 'Kedi agaci'],
+      'rules': ['Tirnak durumu', 'Mama olcusu', 'Kum tercihi'],
+      'minNights': 1,
+      'availability': 'Yarin musait',
       'petTypes': ['Kedi'],
       'breeds': [
         'Siamese',
@@ -121,6 +142,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 182,
       'type': 'Deniz Manzarali Ev',
       'badge': 'Top Rated',
+      'trustBadges': ['Top rated', 'Acil veteriner plani'],
+      'highlights': ['Bahceli villa', 'Golge alan', 'Gunde 2 rapor'],
+      'rules': ['Tasma bilgisi', 'Diger pet uyumu', 'Beslenme plani'],
+      'minNights': 2,
+      'availability': 'Tatil donemi musait',
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': [
         'Kangal',
@@ -144,6 +170,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 99,
       'type': 'Sehir Evi',
       'badge': 'Super Host',
+      'trustBadges': ['Super Host', 'Telefon dogrulandi'],
+      'highlights': ['Merkezi konum', 'Yavru deneyimi', 'Saatlik rapor'],
+      'rules': ['Asi durumu bildir', 'Kemirme notu', 'Kafes rutini varsa'],
+      'minNights': 1,
+      'availability': 'Aksam teslim uygun',
       'petTypes': ['K\u00f6pek'],
       'breeds': ['Beagle', 'French Bulldog', 'Pug', 'Shih Tzu'],
       'imageUrl':
@@ -161,6 +192,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 205,
       'type': 'Tas Villa',
       'badge': 'Top Rated',
+      'trustBadges': ['Top rated', 'Ev kurallari net'],
+      'highlights': ['Sessiz villa', 'Kedi odasi', 'Genis pencere onu'],
+      'rules': ['Kum kabini getir', 'Kapi hassasiyeti', 'Veteriner bilgisi'],
+      'minNights': 3,
+      'availability': 'Uzun konaklama uygun',
       'petTypes': ['Kedi'],
       'breeds': [
         'Van Kedisi',
@@ -183,6 +219,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 88,
       'type': 'Bahce Kat',
       'badge': 'Verified',
+      'trustBadges': ['Konum dogrulandi', 'Yeni yorumlu'],
+      'highlights': ['Bahce kat', 'Karma pet deneyimi', 'Esnek teslim'],
+      'rules': ['Uyum notu', 'Mama bilgisi', 'Kisa tanisma onerilir'],
+      'minNights': 1,
+      'availability': 'Bugun musait',
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': ['K\u0131rma', 'Melez', 'Sokak kedisi', 'Tekir'],
       'imageUrl':
@@ -200,6 +241,11 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 141,
       'type': 'Terasli Ev',
       'badge': 'Super Host',
+      'trustBadges': ['Super Host', 'Kedi deneyimi'],
+      'highlights': ['Terasli alan', 'Guvenli oda', 'Rutin takibi'],
+      'rules': ['Pencere hassasiyeti', 'Mama olcusu', 'Ilac notu varsa'],
+      'minNights': 2,
+      'availability': 'Hafta sonu musait',
       'petTypes': ['Kedi'],
       'breeds': ['Sphynx', 'Bengal', 'Scottish Fold', 'Domestic Shorthair'],
       'imageUrl':
@@ -217,12 +263,98 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     final cities = await MasterDataRepository.loadCities();
     final breeds = await MasterDataRepository.loadAnimalBreeds();
     final districts = await MasterDataRepository.loadDistricts(_city);
+    final examples = await MasterDataRepository.loadMarketplaceExamples();
+    final seedStays = _buildSeedStays(examples['stays'] as List<dynamic>?);
     if (!mounted) return;
     setState(() {
       _cities = cities;
       _breedsByType = breeds;
       _districts = districts;
+      final seedHosts = seedStays.map((stay) => stay['host']).toSet();
+      final remainingDefaults = _defaultStays
+          .where((stay) => !seedHosts.contains(stay['host']))
+          .toList();
+      _stays = <Map<String, dynamic>>[...seedStays, ...remainingDefaults];
     });
+  }
+
+  List<Map<String, dynamic>> _buildSeedStays(List<dynamic>? rawStays) {
+    if (rawStays == null) return const [];
+    return rawStays
+        .whereType<Map<String, dynamic>>()
+        .map((stay) {
+          final host = stay['host']?.toString() ?? 'Pati host';
+          final accepts = (stay['accepts'] as List<dynamic>? ?? const [])
+              .map((item) => _normalizePetType(item.toString()))
+              .toList();
+          final badges = (stay['badges'] as List<dynamic>? ?? const [])
+              .map((item) => item.toString())
+              .toList();
+          return <String, dynamic>{
+            'host': host,
+            'city': stay['city']?.toString() ?? 'Istanbul',
+            'district': stay['district']?.toString() ?? 'Merkez',
+            'ageRange': 'Tum yaslar',
+            'sex': 'Fark etmez',
+            'vaccineStatus': 'Tam',
+            'nightlyPrice': stay['nightlyPrice'] as int? ?? 750,
+            'rating': 4.9,
+            'reviews': 72,
+            'type': stay['homeType']?.toString() ?? 'Ev tipi konaklama',
+            'badge': badges.isEmpty ? 'Verified' : badges.first,
+            'trustBadges': badges.isEmpty ? ['Kimlik dogrulandi'] : badges,
+            'highlights': _seedHighlights(stay['homeType']?.toString()),
+            'rules': const [
+              'Asi karnesi',
+              'Beslenme talimati',
+              'Uyku rutini notu',
+            ],
+            'minNights': 1,
+            'availability': 'Seed profil',
+            'petTypes': accepts.isEmpty ? ['K\u00f6pek', 'Kedi'] : accepts,
+            'breeds': _seedBreeds(accepts),
+            'imageUrl': _imageForSeedHost(host),
+          };
+        })
+        .toList();
+  }
+
+  String _normalizePetType(String value) {
+    final lower = value.toLowerCase();
+    if (lower == 'kopek' || lower == 'k\u00f6pek') return 'K\u00f6pek';
+    if (lower == 'kedi') return 'Kedi';
+    return value;
+  }
+
+  List<String> _seedHighlights(String? homeType) {
+    final lower = (homeType ?? '').toLowerCase();
+    if (lower.contains('villa') || lower.contains('bahce')) {
+      return const ['Bahce', 'Ayrilabilir alan', 'Acil veteriner plani'];
+    }
+    return const ['Ev ortaminda bakim', 'Fotografli rapor', 'Sakin oda'];
+  }
+
+  List<String> _seedBreeds(List<String> accepts) {
+    if (accepts.length == 1 && accepts.first == 'Kedi') {
+      return const ['Tekir', 'British Shorthair', 'Scottish Fold'];
+    }
+    if (accepts.length == 1 && accepts.first == 'K\u00f6pek') {
+      return const ['Maltese', 'Golden Retriever', 'K\u0131rma'];
+    }
+    return const ['Golden Retriever', 'Maltese', 'Tekir', 'British Shorthair'];
+  }
+
+  String _imageForSeedHost(String host) {
+    switch (host) {
+      case 'Can B.':
+        return _defaultStays[0]['imageUrl'] as String;
+      case 'Aylin S.':
+        return _defaultStays[1]['imageUrl'] as String;
+      case 'Pelin A.':
+        return _defaultStays[4]['imageUrl'] as String;
+      default:
+        return _defaultStays.first['imageUrl'] as String;
+    }
   }
 
   Future<void> _setCity(String city) async {
@@ -274,6 +406,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
             stay['sex'],
             stay['vaccineStatus'],
             stay['nightlyPrice'],
+            stay['availability'],
+            ...(stay['trustBadges'] as List<dynamic>? ?? const []),
+            ...(stay['highlights'] as List<dynamic>? ?? const []),
+            ...(stay['rules'] as List<dynamic>? ?? const []),
             ...petTypes,
             ...breeds,
           ].any((value) => value.toString().toLowerCase().contains(query));
@@ -327,18 +463,26 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 1.04,
+                childAspectRatio: 0.86,
               ),
               itemBuilder: (context, index) {
                 final stay = filteredStays[index];
-                return _StayCard(
+                return _StayCardV2(
                   host: stay['host'] as String,
                   city: stay['city'] as String,
+                  district: stay['district'] as String,
                   nightlyPrice: stay['nightlyPrice'] as int,
                   rating: stay['rating'] as double,
                   reviews: stay['reviews'] as int,
                   type: stay['type'] as String,
                   badge: stay['badge'] as String,
+                  trustBadges:
+                      (stay['trustBadges'] as List<dynamic>).cast<String>(),
+                  highlights:
+                      (stay['highlights'] as List<dynamic>).cast<String>(),
+                  rules: (stay['rules'] as List<dynamic>).cast<String>(),
+                  minNights: stay['minNights'] as int,
+                  availability: stay['availability'] as String,
                   petTypes: (stay['petTypes'] as List<dynamic>).cast<String>(),
                   breeds: (stay['breeds'] as List<dynamic>).cast<String>(),
                   imageUrl: stay['imageUrl'] as String,
@@ -592,26 +736,39 @@ class _EmptyStayState extends StatelessWidget {
   }
 }
 
-class _StayCard extends StatelessWidget {
-  const _StayCard({
+class _StayCardV2 extends StatelessWidget {
+  const _StayCardV2({
     required this.host,
     required this.city,
+    required this.district,
     required this.nightlyPrice,
     required this.rating,
     required this.reviews,
     required this.type,
     required this.badge,
+    required this.trustBadges,
+    required this.highlights,
+    required this.rules,
+    required this.minNights,
+    required this.availability,
     required this.petTypes,
     required this.breeds,
     required this.imageUrl,
   });
+
   final String host;
   final String city;
+  final String district;
   final int nightlyPrice;
   final double rating;
   final int reviews;
   final String type;
   final String badge;
+  final List<String> trustBadges;
+  final List<String> highlights;
+  final List<String> rules;
+  final int minNights;
+  final String availability;
   final List<String> petTypes;
   final List<String> breeds;
   final String imageUrl;
@@ -646,24 +803,12 @@ class _StayCard extends StatelessWidget {
                     Positioned(
                       top: 10,
                       left: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          badge,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E3A8A),
-                          ),
-                        ),
-                      ),
+                      child: _StayMiniPill(label: badge, emphasized: true),
+                    ),
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: _StayMiniPill(label: availability),
                     ),
                   ],
                 ),
@@ -677,9 +822,11 @@ class _StayCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '$host â€¢ $city',
+                            '$host - $city',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w800,
                               color: Color(0xFF111827),
                             ),
                           ),
@@ -692,26 +839,52 @@ class _StayCard extends StatelessWidget {
                         const SizedBox(width: 2),
                         Text(
                           rating.toStringAsFixed(2),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
+                          style: const TextStyle(fontWeight: FontWeight.w800),
                         ),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$type â€¢ $reviews yorum',
+                      '$type - $district - $reviews yorum',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF64748B),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      'â‚º$nightlyPrice / gece',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: Color(0xFF111827),
-                      ),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: highlights
+                          .take(2)
+                          .map((item) => _StayMiniPill(label: item))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '$nightlyPrice TL / gece',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w800,
+                              fontSize: 16,
+                              color: Color(0xFF111827),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'Min $minNights gece',
+                          style: const TextStyle(
+                            color: Color(0xFF64748B),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -733,22 +906,132 @@ class _StayCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             Text(
-              '$type - $city',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              '$type - $city / $district',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
             Text(
               'Ev sahibi: $host',
               style: const TextStyle(color: Color(0xFF475569)),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: trustBadges
+                  .map((item) => _StayMiniPill(label: item, emphasized: true))
+                  .toList(),
+            ),
+            const SizedBox(height: 18),
+            _StayDetailSection(title: 'Ev olanaklari', items: highlights),
+            const SizedBox(height: 14),
+            _StayDetailSection(title: 'Ev kurallari', items: rules),
+            const SizedBox(height: 14),
+            _StayDetailSection(
+              title: 'Kabul edilen petler',
+              items: [
+                petTypes.join(', '),
+                breeds.take(4).join(', '),
+              ],
+            ),
+            const SizedBox(height: 14),
             Text(
-              'â‚º$nightlyPrice / gece Â· $reviews yorum',
-              style: const TextStyle(color: Color(0xFF475569)),
+              '$nightlyPrice TL / gece - minimum $minNights gece - $reviews yorum',
+              style: const TextStyle(
+                color: Color(0xFF111827),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              availability,
+              style: const TextStyle(
+                color: Color(0xFF0F766E),
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StayMiniPill extends StatelessWidget {
+  const _StayMiniPill({required this.label, this.emphasized = false});
+
+  final String label;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+      decoration: BoxDecoration(
+        color: emphasized ? const Color(0xFFE7F7F2) : const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(
+          color: emphasized ? const Color(0xFFBFE7DD) : const Color(0xFFE2E8F0),
+        ),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          color: emphasized ? const Color(0xFF0F766E) : const Color(0xFF475569),
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+class _StayDetailSection extends StatelessWidget {
+  const _StayDetailSection({required this.title, required this.items});
+
+  final String title;
+  final List<String> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(
+            color: Color(0xFF111827),
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 8),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 6),
+            child: Row(
+              children: [
+                const Icon(
+                  Icons.check_circle_rounded,
+                  size: 16,
+                  color: Color(0xFF0F766E),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    item,
+                    style: const TextStyle(
+                      color: Color(0xFF475569),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
