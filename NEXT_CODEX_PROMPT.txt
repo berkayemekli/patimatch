@@ -1,5 +1,16 @@
-C:\AI\Dog_Date icindeki PROJECT_CONTEXT.md dosyasini oku.
-Bu Flutter + Firebase PatiParent projesinde son durumu, deploy komutlarini ve acik isleri oradan al.
-Once git status ve flutter analyze lib calistir.
-Sonra master data dosyalarini UI/onboarding/filtrelere baglayarak devam et.
-Google login icin PROJECT_CONTEXT.md icindeki notlari dikkate al.
+﻿Continue from branch feature/data-downloads.
+
+Read these files first:
+- DATA_WORKLOG.md
+- DATA_IMPORT_PLAN.md
+- app/assets/master_data/veterinary_clinics_tr.json
+- app/assets/master_data/pati_friendly_places_tr.json
+- scripts/download_veterinary_clinics_osm.ps1
+- scripts/download_pati_friendly_places_osm.ps1
+
+Important:
+- Do not modify unrelated UI files.
+- Treat OpenStreetMap records as unverified seed data.
+- Preserve "Â© OpenStreetMap contributors" attribution.
+- Wire data through repositories/services first, then screens.
+- Suggested next task: create data repository methods for veterinary clinics and pati-friendly places with category/city/district filters.
