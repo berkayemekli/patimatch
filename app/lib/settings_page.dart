@@ -116,12 +116,18 @@ class _SettingsPageState extends State<SettingsPage> {
     final photoUrl = user?.photoURL;
     final title = _displayName.trim().isNotEmpty
         ? _displayName.trim()
-        : 'PatiParent hesabi';
+        : 'PatiParent hesabı';
     final location = [_city, _district].where((v) => v.isNotEmpty).join(' / ');
-    final subtitle = [
-      if (_emailOrPhone.isNotEmpty) _emailOrPhone,
+    final heroSubtitle = location.isEmpty ? 'Pet Parent' : 'Pet Parent • $location';
+    final contactSummary = _emailOrPhone.trim().isEmpty
+        ? 'İletişim bilgini ekle'
+        : _emailOrPhone.trim();
+    final profileDetails = [
+      contactSummary,
       if (location.isNotEmpty) location,
-    ].join(' - ');
+    ].join(' • ');
+    final hasPhone = (user?.phoneNumber ?? '').trim().isNotEmpty;
+    final hasVerifiedEmail = user?.emailVerified ?? false;
     final completionScore = _profileCompletionScore(
       hasName: _displayName.trim().isNotEmpty,
       hasContact: _emailOrPhone.trim().isNotEmpty,
@@ -132,7 +138,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FA),
       appBar: AppBar(
-        title: const Text('Hesap merkezi'),
+        title: const Text('Profilim'),
         backgroundColor: const Color(0xFFF5F7FA),
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -146,28 +152,59 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 children: [
                   _SettingsHero(
-                    title: _loadingProfile ? 'Yukleniyor...' : title,
-                    subtitle: subtitle.isEmpty ? 'Bilgilerini duzenle' : subtitle,
+                    title: _loadingProfile ? 'Yükleniyor...' : title,
+                    subtitle: heroSubtitle,
                     photoUrl: photoUrl,
                     completionScore: completionScore,
                     onTap: _loadingProfile ? null : _openAccountEditor,
                   ),
+                  const SizedBox(height: 12),
+                  _TrustStatusCard(
+                    children: [
+                      _TrustChip(
+                        icon: Icons.phone_iphone_rounded,
+                        label: hasPhone ? 'Telefon hazır' : 'Telefon ekle',
+                        active: hasPhone,
+                      ),
+                      _TrustChip(
+                        icon: Icons.alternate_email_rounded,
+                        label: hasVerifiedEmail ? 'E-posta doğrulandı' : 'E-posta bekliyor',
+                        active: hasVerifiedEmail,
+                      ),
+                      const _TrustChip(
+                        icon: Icons.badge_rounded,
+                        label: 'Kimlik kontrolü',
+                        active: false,
+                      ),
+                      const _TrustChip(
+                        icon: Icons.pets_rounded,
+                        label: 'Pet profili',
+                        active: false,
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 14),
                   _SettingsSection(
-                    title: 'Hesap ve pet',
+                    title: 'BENİM BİLGİLERİM',
                     children: [
                       _SettingsActionTile(
                         icon: Icons.person_outline_rounded,
                         tint: const Color(0xFF0F766E),
-                        title: 'Benim bilgilerim',
-                        subtitle: 'Kayit bilgilerini gor ve guncelle',
+                        title: 'Profil bilgileri',
+                        subtitle: profileDetails,
                         onTap: _loadingProfile ? null : _openAccountEditor,
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'CAN DOSTLARIM',
+                    children: [
                       _SettingsActionTile(
                         icon: Icons.pets_rounded,
                         tint: const Color(0xFFE11D48),
-                        title: AppStrings.settingsEditProfile,
-                        subtitle: AppStrings.settingsEditProfileSub,
+                        title: 'Pet profilleri',
+                        subtitle: 'Can dostunun karakteri, sağlık notları ve bakım bilgileri',
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -176,11 +213,51 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         },
                       ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'PATIPARENT KULLANIMIM',
+                    children: [
+                      _SettingsActionTile(
+                        icon: Icons.directions_walk_rounded,
+                        tint: const Color(0xFF0891B2),
+                        title: 'PatiGezdirme tercihleri',
+                        subtitle: 'Yürüyüş saatleri, rota ve bakım beklentileri',
+                        onTap: null,
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.home_rounded,
+                        tint: const Color(0xFFF97316),
+                        title: 'PatiBNB tercihleri',
+                        subtitle: 'Konaklama, ev ortamı ve misafir pet ayarları',
+                        onTap: null,
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.favorite_rounded,
+                        tint: const Color(0xFFDB2777),
+                        title: 'PatiMatch tercihleri',
+                        subtitle: 'Sosyalleşme ve eşleşme bilgilerini yönet',
+                        onTap: null,
+                      ),
+                      _SettingsActionTile(
+                        icon: Icons.groups_rounded,
+                        tint: const Color(0xFF7C3AED),
+                        title: 'PatiFamily aile üyeleri',
+                        subtitle: 'Aile üyeleri ve ortak bakım sorumlulukları',
+                        onTap: null,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+                  _SettingsSection(
+                    title: 'GÜVEN VE GİZLİLİK',
+                    children: [
                       _SettingsActionTile(
                         icon: Icons.verified_user_rounded,
                         tint: const Color(0xFF2563EB),
-                        title: 'Guven dogrulamasi',
-                        subtitle: 'Mavi tik, kimlik durumu ve guven sinyalleri',
+                        title: 'Güven doğrulaması',
+                        subtitle: 'Mavi tik, kimlik durumu ve güven sinyalleri',
                         onTap: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -189,12 +266,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         },
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  _SettingsSection(
-                    title: 'Aktivite',
-                    children: [
                       _SettingsActionTile(
                         icon: Icons.notifications_outlined,
                         tint: const Color(0xFF7C3AED),
@@ -208,12 +279,6 @@ class _SettingsPageState extends State<SettingsPage> {
                           );
                         },
                       ),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-                  _SettingsSection(
-                    title: 'Gizlilik ve hesap',
-                    children: [
                       _SettingsActionTile(
                         icon: Icons.block_rounded,
                         tint: const Color(0xFF475569),
@@ -278,13 +343,17 @@ class _SettingsHero extends StatelessWidget {
   Widget build(BuildContext context) {
     final progress = completionScore / 100;
     return InkWell(
-      borderRadius: BorderRadius.circular(28),
+      borderRadius: BorderRadius.circular(30),
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: const Color(0xFF111827),
-          borderRadius: BorderRadius.circular(28),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF0F766E), Color(0xFF111827)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(30),
           boxShadow: const [
             BoxShadow(
               color: Color(0x1A0F172A),
@@ -298,28 +367,65 @@ class _SettingsHero extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 31,
-                  backgroundColor: const Color(0xFFEAF2FF),
-                  backgroundImage: photoUrl == null || photoUrl!.isEmpty
-                      ? null
-                      : NetworkImage(photoUrl!),
-                  child: photoUrl == null || photoUrl!.isEmpty
-                      ? const Icon(Icons.person_rounded, color: Color(0xFF111827))
-                      : null,
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    CircleAvatar(
+                      radius: 34,
+                      backgroundColor: const Color(0xFFEAF2FF),
+                      backgroundImage: photoUrl == null || photoUrl!.isEmpty
+                          ? null
+                          : NetworkImage(photoUrl!),
+                      child: photoUrl == null || photoUrl!.isEmpty
+                          ? const Icon(
+                              Icons.person_rounded,
+                              color: Color(0xFF111827),
+                              size: 31,
+                            )
+                          : null,
+                    ),
+                    Positioned(
+                      right: -2,
+                      bottom: -2,
+                      child: Container(
+                        width: 24,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF7DD3C7),
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: Colors.white, width: 2),
+                        ),
+                        child: const Icon(
+                          Icons.pets_rounded,
+                          color: Color(0xFF064E3B),
+                          size: 13,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(width: 14),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      const Text(
+                        'PatiParent profilin',
+                        style: TextStyle(
+                          color: Color(0xFFBFE7DD),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
                       Text(
                         title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 21,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -329,8 +435,8 @@ class _SettingsHero extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.76),
-                          fontWeight: FontWeight.w600,
+                          color: Colors.white.withValues(alpha: 0.78),
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ],
@@ -347,8 +453,8 @@ class _SettingsHero extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                     child: LinearProgressIndicator(
                       value: progress,
-                      minHeight: 8,
-                      backgroundColor: Colors.white.withValues(alpha: 0.14),
+                      minHeight: 9,
+                      backgroundColor: Colors.white.withValues(alpha: 0.16),
                       valueColor: const AlwaysStoppedAnimation<Color>(
                         Color(0xFF7DD3C7),
                       ),
@@ -365,17 +471,107 @@ class _SettingsHero extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Profil tamamlama',
-              style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-              ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    completionScore >= 80
+                        ? 'Profilin güçlü görünüyor.'
+                        : 'Profilini tamamla, daha güvenli bir deneyim oluştur.',
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.75),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(999),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.14),
+                    ),
+                  ),
+                  child: const Text(
+                    'Düzenle',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TrustStatusCard extends StatelessWidget {
+  const _TrustStatusCard({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFE7ECF3)),
+      ),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: children,
+      ),
+    );
+  }
+}
+
+class _TrustChip extends StatelessWidget {
+  const _TrustChip({
+    required this.icon,
+    required this.label,
+    required this.active,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final tint = active ? const Color(0xFF0F766E) : const Color(0xFF64748B);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+      decoration: BoxDecoration(
+        color: tint.withValues(alpha: 0.09),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: tint.withValues(alpha: 0.16)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 15, color: tint),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: tint,
+              fontSize: 12,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -691,7 +887,7 @@ class _AccountInfoNotice extends StatelessWidget {
           SizedBox(width: 10),
           Expanded(
             child: Text(
-              'Bu alan senin hesap bilgilerin. Pet veya Rony bilgileri ayri pet profili ekraninda duzenlenir.',
+              'Bu alan senin hesap bilgilerin. Can dostunun karakter, saglik ve bakim bilgileri pet profili ekraninda duzenlenir.',
               style: TextStyle(
                 color: Color(0xFF0F766E),
                 fontWeight: FontWeight.w700,
