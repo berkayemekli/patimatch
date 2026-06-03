@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +6,11 @@ import 'app_strings.dart';
 import 'blocked_users_page.dart';
 import 'data/master_data/master_data_repository.dart';
 import 'dog_profile_page.dart';
+import 'identity_verification_page.dart';
 import 'login_page.dart';
 import 'notifications_page.dart';
 import 'payments_page.dart';
+import 'role_selection_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -170,9 +172,43 @@ class _SettingsPageState extends State<SettingsPage> {
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: Color(0xFF64748B)),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    color: Color(0xFF64748B),
+                  ),
                 ],
               ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFFEFF6FF),
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(color: const Color(0xFFD8E7FF)),
+            ),
+            child: ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(Icons.verified_rounded, color: Color(0xFF0A84FF)),
+              ),
+              title: const Text(
+                'Profil ve güven doğrulaması',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              subtitle: const Text(
+                'Mavi tik, kimlik doğrulama ve güven rozetleri',
+              ),
+              trailing: const Icon(Icons.chevron_right_rounded),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const IdentityVerificationPage(),
+                  ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 12),
@@ -184,6 +220,18 @@ class _SettingsPageState extends State<SettingsPage> {
               Navigator.of(
                 context,
               ).push(MaterialPageRoute(builder: (_) => const DogProfilePage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.tune_rounded),
+            title: const Text('Kullanım rolüm'),
+            subtitle: const Text(
+              'Hizmet almak, hizmet vermek veya ikisini birlikte seç',
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
+              );
             },
           ),
           ListTile(
@@ -473,6 +521,7 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
     );
   }
 }
+
 String _normalizeTurkishSearch(String value) {
   return value
       .trim()
@@ -486,4 +535,3 @@ String _normalizeTurkishSearch(String value) {
       .replaceAll('ö', 'o')
       .replaceAll('ç', 'c');
 }
-
