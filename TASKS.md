@@ -20,6 +20,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - `trust_safety_framework.json` rozet/checklist alanlarini beslesin.
    - `veterinary_clinics_tr.json` ve `pati_friendly_places_tr.json` harita/nearby discovery icin kaynak olsun.
    - OSM kaynakli kayitlarda eksik il/ilce bilgisi koordinattan veya saglayici API ile zenginlestirilsin.
+   - Her master data guncellemesinden sonra `python scripts/generate_data_mapping_report.py` calistirilip `docs/data_mapping.html` guncel tutulacak.
 
 2. Onboarding akisini kur.
    - Hizmet almak istiyorum.
@@ -78,6 +79,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - KYC backend scaffold eklendi: callable session creation + webhook iskeleti. Functions deploy Blaze plan bekliyor.
 - Veriff hosted KYC adapter kodu eklendi; `VERIFF_API_KEY` secret ve Blaze plan sonrasi gercek kimlik/yuz dogrulama linki acilacak.
 - Laptop branch'indeki veteriner klinikleri ve pet dostu mekan seed verileri main'e tasindi; data mapping raporuna eklendi.
+- `docs/data_mapping.html` icin tekrar uretilebilir generator eklendi: `scripts/generate_data_mapping_report.py`.
 
 ## Ownership Template
 
