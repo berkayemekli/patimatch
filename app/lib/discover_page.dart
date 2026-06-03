@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -717,11 +717,11 @@ class _DiscoverPageState extends State<DiscoverPage> {
               Expanded(
                 child: ListView(
                   children: const [
-                    _GuestMatchCard(name: 'Luna', breed: 'Golden Retriever', city: 'Istanbul', ageMonths: '18'),
+                    _GuestMatchCard(name: 'Luna', breed: 'Golden Retriever', city: 'İstanbul', ageMonths: '18'),
                     SizedBox(height: 10),
                     _GuestMatchCard(name: 'Pasa', breed: 'Labrador', city: 'Ankara', ageMonths: '24'),
                     SizedBox(height: 10),
-                    _GuestMatchCard(name: 'Maya', breed: 'Poodle', city: 'Izmir', ageMonths: '16'),
+                    _GuestMatchCard(name: 'Maya', breed: 'Poodle', city: 'İzmir', ageMonths: '16'),
                   ],
                 ),
               ),
@@ -1191,8 +1191,8 @@ class _GuestMatchCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('$name · $ageMonths ay', style: const TextStyle(fontWeight: FontWeight.w700)),
-                Text('$breed · $city', style: const TextStyle(color: Color(0xFF6B7280))),
+                Text('$name Â· $ageMonths ay', style: const TextStyle(fontWeight: FontWeight.w700)),
+                Text('$breed Â· $city', style: const TextStyle(color: Color(0xFF6B7280))),
               ],
             ),
           ),
@@ -1202,3 +1202,4 @@ class _GuestMatchCard extends StatelessWidget {
     );
   }
 }
+

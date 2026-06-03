@@ -1,4 +1,4 @@
-import 'dart:convert';
+﻿import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
@@ -81,3 +81,4 @@ class MasterDataRepository {
     return jsonDecode(raw) as Map<String, dynamic>;
   }
 }
+

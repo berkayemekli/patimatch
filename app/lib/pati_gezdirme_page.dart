@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
 
@@ -11,7 +11,7 @@ class PatiGezdirmePage extends StatefulWidget {
 
 class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   bool _filtersOpen = false;
-  String _city = 'Istanbul';
+  String _city = 'İstanbul';
   String _district = 'Tum ilceler';
   String _breed = 'Tum cinsler';
   String _ageRange = 'Tum yaslar';
@@ -20,15 +20,15 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   String _size = 'Tum boyutlar';
   String _badgeFilter = 'All';
   String _searchQuery = '';
-  List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
+  List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
 
   static const List<Map<String, dynamic>> _walkers = [
     {
       'name': 'Ece Aras',
-      'city': 'Istanbul',
-      'district': 'Kadikoy',
+      'city': 'İstanbul',
+      'district': 'Kadıköy',
       'breeds': ['Golden Retriever', 'Labrador Retriever', 'Kirma'],
       'ageRange': '1-3 yas',
       'sex': 'Fark etmez',
@@ -43,8 +43,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     },
     {
       'name': 'Mert Kaya',
-      'city': 'Istanbul',
-      'district': 'Besiktas',
+      'city': 'İstanbul',
+      'district': 'Beşiktaş',
       'breeds': ['Poodle', 'Maltese', 'Pomeranian'],
       'ageRange': '0-1 yas',
       'sex': 'Erkek',
@@ -60,7 +60,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Sena Demir',
       'city': 'Ankara',
-      'district': 'Cankaya',
+      'district': 'Çankaya',
       'breeds': ['Kangal', 'Golden Retriever', 'Melez'],
       'ageRange': '3-7 yas',
       'sex': 'Disi',
@@ -75,8 +75,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     },
     {
       'name': 'Bora Tunc',
-      'city': 'Izmir',
-      'district': 'Karsiyaka',
+      'city': 'İzmir',
+      'district': 'Karşıyaka',
       'breeds': ['Beagle', 'Cocker Spaniel', 'French Bulldog'],
       'ageRange': '1-3 yas',
       'sex': 'Fark etmez',
@@ -91,8 +91,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     },
     {
       'name': 'Duru Acar',
-      'city': 'Istanbul',
-      'district': 'Sisli',
+      'city': 'İstanbul',
+      'district': 'Şişli',
       'breeds': ['Shih Tzu', 'Pug', 'Yorkshire Terrier'],
       'ageRange': '7+ yas',
       'sex': 'Disi',
@@ -108,7 +108,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     {
       'name': 'Kaan Yilmaz',
       'city': 'Ankara',
-      'district': 'Kecioren',
+      'district': 'Keçiören',
       'breeds': ['Border Collie', 'Labrador Retriever', 'Melez'],
       'ageRange': '3-7 yas',
       'sex': 'Erkek',
@@ -215,7 +215,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
-            breeds: _breedsByType['Köpek'] ?? const <String>[],
+            breeds: _breedsByType['K?pek'] ?? const <String>[],
             onToggle: () => setState(() => _filtersOpen = !_filtersOpen),
             onCityChanged: _setCity,
             onDistrictChanged: (v) => setState(() => _district = v),
@@ -233,7 +233,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           ),
           const SizedBox(height: 18),
           const Text(
-            'Istanbul ve cevresindeki yuruyus partnerleri',
+            'İstanbul ve cevresindeki yuruyus partnerleri',
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w700,
@@ -698,3 +698,4 @@ class _WalkerCard extends StatelessWidget {
     );
   }
 }
+

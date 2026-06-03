@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
 
@@ -11,7 +11,7 @@ class PatiParentPage extends StatefulWidget {
 
 class _PatiParentPageState extends State<PatiParentPage> {
   bool _filtersOpen = false;
-  String _city = 'Istanbul';
+  String _city = 'İstanbul';
   String _district = 'Tum ilceler';
   String _animalType = 'K\u00f6pek';
   String _breed = 'Tum cinsler';
@@ -20,18 +20,18 @@ class _PatiParentPageState extends State<PatiParentPage> {
   String _vaccineStatus = 'Fark etmez';
   String _size = 'Tum boyutlar';
   String _searchQuery = '';
-  List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
+  List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
 
   static const List<Map<String, String>> _familyPets = [
     {
-      'title': 'Mavi - Istanbul',
+      'title': 'Mavi - İstanbul',
       'subtitle': '10 ay - Kucuk - Asili - Oyuncu karakter',
       'badge': 'Acil Yuva',
-      'city': 'Istanbul',
-      'district': 'Kadikoy',
-      'animalType': 'Köpek',
+      'city': 'İstanbul',
+      'district': 'Kadıköy',
+      'animalType': 'K?pek',
       'breed': 'Maltese',
       'ageRange': '0-1 yas',
       'sex': 'Disi',
@@ -43,8 +43,8 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'subtitle': '18 ay - Orta - Asili - Cocuklarla uyumlu',
       'badge': 'Dogrulanmis',
       'city': 'Ankara',
-      'district': 'Cankaya',
-      'animalType': 'Köpek',
+      'district': 'Çankaya',
+      'animalType': 'K?pek',
       'breed': 'Golden Retriever',
       'ageRange': '1-3 yas',
       'sex': 'Erkek',
@@ -56,8 +56,8 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'subtitle': '14 ay - Kucuk - Sakin ev ortami sever',
       'badge': 'Yeni',
       'city': 'Bursa',
-      'district': 'Nilufer',
-      'animalType': 'Kedi',
+      'district': 'Nilüfer',
+      'animalType': 'K?pek',
       'breed': 'Tekir',
       'ageRange': '1-3 yas',
       'sex': 'Fark etmez',
@@ -65,12 +65,12 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'size': 'Kucuk',
     },
     {
-      'title': 'Luna - Izmir',
+      'title': 'Luna - İzmir',
       'subtitle': '2 yas - Orta - Tuvalet egitimli',
       'badge': 'Uygun',
-      'city': 'Izmir',
-      'district': 'Karsiyaka',
-      'animalType': 'Kedi',
+      'city': 'İzmir',
+      'district': 'Karşıyaka',
+      'animalType': 'K?pek',
       'breed': 'Scottish Fold',
       'ageRange': '1-3 yas',
       'sex': 'Disi',
@@ -478,3 +478,4 @@ class _SimpleCard extends StatelessWidget {
     );
   }
 }
+

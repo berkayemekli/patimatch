@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
 
@@ -11,7 +11,7 @@ class PatiBnbPage extends StatefulWidget {
 
 class _PatiBnbPageState extends State<PatiBnbPage> {
   bool _filtersOpen = false;
-  String _city = 'Istanbul';
+  String _city = 'İstanbul';
   String _district = 'Tum ilceler';
   String _animalType = 'K\u00f6pek';
   String _breed = 'Tum cinsler';
@@ -19,15 +19,15 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   String _sex = 'Fark etmez';
   String _vaccineStatus = 'Fark etmez';
   String _searchQuery = '';
-  List<String> _cities = const ['Istanbul', 'Ankara', 'Izmir'];
+  List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
 
   static const List<Map<String, dynamic>> _stays = [
     {
       'host': 'Can B.',
-      'city': 'Istanbul',
-      'district': 'Kadikoy',
+      'city': 'İstanbul',
+      'district': 'Kadıköy',
       'ageRange': '1-3 yas',
       'sex': 'Fark etmez',
       'vaccineStatus': 'Tam',
@@ -49,7 +49,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Aylin S.',
       'city': 'Ankara',
-      'district': 'Cankaya',
+      'district': 'Çankaya',
       'ageRange': '0-1 yas',
       'sex': 'Disi',
       'vaccineStatus': 'Tam',
@@ -72,7 +72,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Nisa Y.',
       'city': 'Bursa',
-      'district': 'Nilufer',
+      'district': 'Nilüfer',
       'ageRange': '1-3 yas',
       'sex': 'Erkek',
       'vaccineStatus': 'Tam',
@@ -88,8 +88,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     },
     {
       'host': 'Deniz K.',
-      'city': 'Izmir',
-      'district': 'Karsiyaka',
+      'city': 'İzmir',
+      'district': 'Karşıyaka',
       'ageRange': '3-7 yas',
       'sex': 'Fark etmez',
       'vaccineStatus': 'Tam',
@@ -112,7 +112,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     {
       'host': 'Pelin A.',
       'city': 'Antalya',
-      'district': 'Muratpasa',
+      'district': 'Muratpaşa',
       'ageRange': '3-7 yas',
       'sex': 'Fark etmez',
       'vaccineStatus': 'Tam',
@@ -134,8 +134,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     },
     {
       'host': 'Emre T.',
-      'city': 'Istanbul',
-      'district': 'Besiktas',
+      'city': 'İstanbul',
+      'district': 'Beşiktaş',
       'ageRange': '0-1 yas',
       'sex': 'Erkek',
       'vaccineStatus': 'Eksik',
@@ -173,7 +173,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     },
     {
       'host': 'Baris L.',
-      'city': 'Izmir',
+      'city': 'İzmir',
       'district': 'Bornova',
       'ageRange': '1-3 yas',
       'sex': 'Fark etmez',
@@ -190,8 +190,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     },
     {
       'host': 'Cansu P.',
-      'city': 'Istanbul',
-      'district': 'Sisli',
+      'city': 'İstanbul',
+      'district': 'Şişli',
       'ageRange': '3-7 yas',
       'sex': 'Disi',
       'vaccineStatus': 'Tam',
@@ -677,7 +677,7 @@ class _StayCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '$host â€¢ $city',
+                            '$host ? $city',
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF111827),
@@ -698,7 +698,7 @@ class _StayCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$type â€¢ $reviews yorum',
+                      '$type ? $reviews yorum',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF64748B),
@@ -706,7 +706,7 @@ class _StayCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'â‚º$nightlyPrice / gece',
+                      '?$nightlyPrice / gece',
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -743,7 +743,7 @@ class _StayCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'â‚º$nightlyPrice / gece Â· $reviews yorum',
+              '?$nightlyPrice / gece ? $reviews yorum',
               style: const TextStyle(color: Color(0xFF475569)),
             ),
           ],
@@ -752,3 +752,4 @@ class _StayCard extends StatelessWidget {
     );
   }
 }
+

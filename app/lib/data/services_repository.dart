@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firestore_payloads.dart';
 
@@ -133,7 +133,7 @@ final List<Map<String, dynamic>> _demoWalkers = <Map<String, dynamic>>[
   <String, dynamic>{
     'id': 'demo-walker-1',
     'name': 'Ece A.',
-    'city': 'Istanbul',
+    'city': 'İstanbul',
     'rating': 4.9,
     'walkCount': 312,
     'pricePerHour': 290,
@@ -144,7 +144,7 @@ final List<Map<String, dynamic>> _demoWalkers = <Map<String, dynamic>>[
   <String, dynamic>{
     'id': 'demo-walker-2',
     'name': 'Mert K.',
-    'city': 'Istanbul',
+    'city': 'İstanbul',
     'rating': 4.8,
     'walkCount': 188,
     'pricePerHour': 250,
@@ -158,7 +158,7 @@ final List<Map<String, dynamic>> _demoBnbHosts = <Map<String, dynamic>>[
   <String, dynamic>{
     'id': 'demo-host-1',
     'name': 'Can B.',
-    'city': 'Istanbul',
+    'city': 'İstanbul',
     'rating': 4.9,
     'nightlyPrice': 850,
     'verified': true,
@@ -183,7 +183,7 @@ final List<Map<String, dynamic>> _demoAdoptionPosts = <Map<String, dynamic>>[
   <String, dynamic>{
     'id': 'demo-adoption-1',
     'dogName': 'Mavi',
-    'city': 'Istanbul',
+    'city': 'İstanbul',
     'ageMonths': 10,
     'size': 'Kucuk',
     'vaccinated': true,
@@ -205,3 +205,4 @@ final List<Map<String, dynamic>> _demoAdoptionPosts = <Map<String, dynamic>>[
     'status': 'active',
   },
 ];
+

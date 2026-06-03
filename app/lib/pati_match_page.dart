@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
 
@@ -27,7 +27,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
       name: 'Luna',
       type: 'Golden Retriever',
       age: '2 yas',
-      city: 'Istanbul / Kadikoy',
+      city: 'İstanbul / Kadıköy',
       distance: '3.2 km',
       score: 94,
       photo:
@@ -42,7 +42,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
       name: 'Maya',
       type: 'British Shorthair',
       age: '3 yas',
-      city: 'Istanbul / Besiktas',
+      city: 'İstanbul / Beşiktaş',
       distance: '5.8 km',
       score: 91,
       photo:
@@ -57,7 +57,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
       name: 'Atlas',
       type: 'Kangal kirma',
       age: '4 yas',
-      city: 'Ankara / Cankaya',
+      city: 'Ankara / Çankaya',
       distance: '7.1 km',
       score: 88,
       photo:
@@ -72,7 +72,7 @@ class _PatiMatchPageState extends State<PatiMatchPage> {
       name: 'Pamuk',
       type: 'Tekir',
       age: '1.5 yas',
-      city: 'Izmir / Karsiyaka',
+      city: 'İzmir / Karşıyaka',
       distance: '2.4 km',
       score: 86,
       photo:
@@ -605,7 +605,7 @@ class _ProfileCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '${profile.type} Â· ${profile.city}',
+                  '${profile.type} ? ${profile.city}',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.86),
                     fontSize: 15,
@@ -1032,3 +1032,4 @@ class _PetMatchProfile {
   final String vibe;
   final String firstMessage;
 }
+
