@@ -1,0 +1,1468 @@
+{
+  "sourceStatus": "osm_unverified_seed",
+  "note": "Bu dosya OpenStreetMap dog/pets/pets_allowed etiketlerinden otomatik üretilmiş doğrulanmamış başlangıç datasıdır. Kullanıcıya gösterilecek kritik bilgiler manuel veya kullanıcı sinyalleriyle doğrulanmalıdır.",
+  "generatedAt": "2026-05-15T19:56:47Z",
+  "license": {
+    "name": "Open Database License (ODbL)",
+    "attribution": "© OpenStreetMap contributors",
+    "url": "https://www.openstreetmap.org/copyright"
+  },
+  "queryTags": [
+    "dog",
+    "pets",
+    "pets_allowed"
+  ],
+  "quality": {
+    "totalPlaces": 40,
+    "missingCityCount": 24,
+    "missingContactCount": 35,
+    "categoryCounts": {
+      "outdoor": 34,
+      "restaurant": 1,
+      "dog_park": 2,
+      "accommodation": 3
+    }
+  },
+  "places": [
+    {
+      "id": "osm_way_840205735",
+      "source": "openstreetmap",
+      "sourceId": "way/840205735",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8313675,
+      "longitude": 29.3167842,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_840205734",
+      "source": "openstreetmap",
+      "sourceId": "way/840205734",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8293237,
+      "longitude": 29.3204565,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_878610649",
+      "source": "openstreetmap",
+      "sourceId": "way/878610649",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Çengelköy Havuzbaşı Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0467091,
+      "longitude": 29.0537615,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_953198184",
+      "source": "openstreetmap",
+      "sourceId": "way/953198184",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Cihan Akın Köpek Eğitimi ve Pansiyon Hizmetleri",
+      "category": "dog_park",
+      "subCategory": "dog_park",
+      "city": "Ä°stanbul",
+      "district": "Çekmeköy",
+      "address": "Beykoz, 208, Hüseyinli, Çekmeköy, İstanbul",
+      "phone": "",
+      "website": "https://cihanakinacademy.com/",
+      "openingHours": "",
+      "latitude": 41.1136794,
+      "longitude": 29.3062767,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_908460080",
+      "source": "openstreetmap",
+      "sourceId": "way/908460080",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Rahşan-Bülent Ecevit Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "Ata Caddesi, Kahramandere Mahallesi",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.359031,
+      "longitude": 26.8814438,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_713893819",
+      "source": "openstreetmap",
+      "sourceId": "way/713893819",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Giresun Adası Botanik Bahçesi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Giresun",
+      "district": "Merkez",
+      "address": "Merkez, Giresun",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.9149264,
+      "longitude": 38.404856,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_706732189",
+      "source": "openstreetmap",
+      "sourceId": "way/706732189",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Cebeci Sahil Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.1901607,
+      "longitude": 30.2553555,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_718817881",
+      "source": "openstreetmap",
+      "sourceId": "way/718817881",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Şehit Çavuş Sedat Uysalcan Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 41.1545854,
+      "longitude": 27.8159978,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_840130154",
+      "source": "openstreetmap",
+      "sourceId": "way/840130154",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8280163,
+      "longitude": 29.3229611,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_821856627",
+      "source": "openstreetmap",
+      "sourceId": "way/821856627",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Müzik Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.2225972,
+      "longitude": 28.9780002,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1217386476",
+      "source": "openstreetmap",
+      "sourceId": "way/1217386476",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8362284,
+      "longitude": 29.3103657,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1216891552",
+      "source": "openstreetmap",
+      "sourceId": "way/1216891552",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8353268,
+      "longitude": 29.3117386,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1217386477",
+      "source": "openstreetmap",
+      "sourceId": "way/1217386477",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8387352,
+      "longitude": 29.2987514,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_relation_16035107",
+      "source": "openstreetmap",
+      "sourceId": "relation/16035107",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Avcılar Sahil Parkı-2",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "Avcılar",
+      "address": "Denizköşkler, Avcılar, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9742496,
+      "longitude": 28.7431145,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1314726598",
+      "source": "openstreetmap",
+      "sourceId": "way/1314726598",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Hasan Hüseyin Arslan Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0527282,
+      "longitude": 29.0065472,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1066522699",
+      "source": "openstreetmap",
+      "sourceId": "way/1066522699",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.839597,
+      "longitude": 29.2980813,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1047081817",
+      "source": "openstreetmap",
+      "sourceId": "way/1047081817",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pet Park",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "Naci Topçuoğlu",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 37.0738963,
+      "longitude": 37.3216567,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "pet"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "",
+          "pets": "",
+          "petsAllowed": "yes"
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1138662933",
+      "source": "openstreetmap",
+      "sourceId": "way/1138662933",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Afşin Millet Bahçesi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.2387848,
+      "longitude": 36.9294438,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1186191832",
+      "source": "openstreetmap",
+      "sourceId": "way/1186191832",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Avcılar Sahil Parkı-1",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "Avcılar",
+      "address": "Denizköşkler, Avcılar, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9707703,
+      "longitude": 28.7279929,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_1185939723",
+      "source": "openstreetmap",
+      "sourceId": "way/1185939723",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8405193,
+      "longitude": 29.2980427,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_314702269",
+      "source": "openstreetmap",
+      "sourceId": "way/314702269",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Şamlar Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "Başakşehir",
+      "address": "Şamlar Mahallesi, Başakşehir, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 41.1253697,
+      "longitude": 28.7552762,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_199895859",
+      "source": "openstreetmap",
+      "sourceId": "way/199895859",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Şehit Er Ömer Erüstün Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.2440531,
+      "longitude": 36.9151223,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_315745066",
+      "source": "openstreetmap",
+      "sourceId": "way/315745066",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Çukurbostan Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "Fatih",
+      "address": "Fatih, Ä°stanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0103934,
+      "longitude": 28.9344939,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_445639546",
+      "source": "openstreetmap",
+      "sourceId": "way/445639546",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Sadri Alışık Aile Çay Bahçesi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "",
+      "address": "Amiral Necdet Uran Sokak, 17, Bahçelievler, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0051672,
+      "longitude": 28.8628214,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_434726187",
+      "source": "openstreetmap",
+      "sourceId": "way/434726187",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Semra Ertem Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 39.9293582,
+      "longitude": 32.8784009,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_node_9116268627",
+      "source": "openstreetmap",
+      "sourceId": "node/9116268627",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Neşeli Patiler Köpek Eğitim Parkı",
+      "category": "dog_park",
+      "subCategory": "dog_park",
+      "city": "Ä°stanbul",
+      "district": "Pendik",
+      "address": "Kardelen Sokak, Yenişehir Mah., Pendik, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9257542,
+      "longitude": 29.2920687,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_node_4322875973",
+      "source": "openstreetmap",
+      "sourceId": "node/4322875973",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yıldızkoy Camping",
+      "category": "accommodation",
+      "subCategory": "camp_site",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "+902868872846",
+      "website": "www.yildizkoy.com",
+      "openingHours": "",
+      "latitude": 40.2338932,
+      "longitude": 25.9043888,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_node_10009947665",
+      "source": "openstreetmap",
+      "sourceId": "node/10009947665",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "ByBalık Lokantası",
+      "category": "restaurant",
+      "subCategory": "restaurant",
+      "city": "Balıkesir",
+      "district": "Bandırma",
+      "address": "Sahil Sokağı, 76/A, Hacı Yusuf Mahallesi, Bandırma, Balıkesir",
+      "phone": "",
+      "website": "https://www.bybalik.net/",
+      "openingHours": "Mo-Su 00:00-01:30, 11:00-00:00",
+      "latitude": 40.3602742,
+      "longitude": 27.9765776,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_183704906",
+      "source": "openstreetmap",
+      "sourceId": "way/183704906",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Phaselis EKOPark Camper Park",
+      "category": "accommodation",
+      "subCategory": "camp_site",
+      "city": "Antalya",
+      "district": "Kemer",
+      "address": "Phaselis Caddesi, 34, Tekirova, Kemer, Antalya",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 36.5150067,
+      "longitude": 30.5310653,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_node_11016217305",
+      "source": "openstreetmap",
+      "sourceId": "node/11016217305",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8372094,
+      "longitude": 29.3068203,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_666142056",
+      "source": "openstreetmap",
+      "sourceId": "way/666142056",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Yaşam Vadisi",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.8337912,
+      "longitude": 29.313385,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_555908291",
+      "source": "openstreetmap",
+      "sourceId": "way/555908291",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Kültürpark",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "Mimar Sinan",
+      "phone": "",
+      "website": "https://www.kulturparkizmir.org/",
+      "openingHours": "",
+      "latitude": 38.4278829,
+      "longitude": 27.1455203,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_671876425",
+      "source": "openstreetmap",
+      "sourceId": "way/671876425",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Ortadoğu Çamlık Sitesi Market Arası Yeşil Alan",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Çankaya/Ankara",
+      "district": "Çankaya",
+      "address": "1550.sk, 33-38, Çiğdem Mahallesi, Çankaya, Çankaya/Ankara",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 39.8819456,
+      "longitude": 32.7955774,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_672531639",
+      "source": "openstreetmap",
+      "sourceId": "way/672531639",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Ortadoğu Çamlık Sitesi UFO Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Çankaya/Ankara",
+      "district": "Çankaya",
+      "address": "1550/1.sk, Çiğdem Mahallesi, Çankaya, Çankaya/Ankara",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 39.8832024,
+      "longitude": 32.7955123,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_671878375",
+      "source": "openstreetmap",
+      "sourceId": "way/671878375",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Ortadoğu Çamlık Sitesi Market Yeşil Alanı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Çankaya/Ankara",
+      "district": "Çankaya",
+      "address": "1550/1.sk, 33, Çiğdem Mahallesi, Çankaya, Çankaya/Ankara",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 39.8818904,
+      "longitude": 32.7950477,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_478452404",
+      "source": "openstreetmap",
+      "sourceId": "way/478452404",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "İnge Beyhan Çocuk Ve Dinlenme Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 37.0459252,
+      "longitude": 35.3022833,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_462301240",
+      "source": "openstreetmap",
+      "sourceId": "way/462301240",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Radisson Blu Hotel Istanbul Asia",
+      "category": "accommodation",
+      "subCategory": "hotel",
+      "city": "Ä°stanbul",
+      "district": "Ataşehir",
+      "address": "Yakut Caddesi, Atatürk Mahallesi, Ataşehir, İstanbul",
+      "phone": "+90 216 579 11 00",
+      "website": "https://www.radissonhotels.com/en-us/hotels/radisson-blu-istanbul-asia",
+      "openingHours": "",
+      "latitude": 40.990939,
+      "longitude": 29.1158832,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "pet"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "",
+          "pets": "",
+          "petsAllowed": "yes"
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_528746807",
+      "source": "openstreetmap",
+      "sourceId": "way/528746807",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Gizli Bahçe",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "24/7",
+      "latitude": 40.2046247,
+      "longitude": 29.0225886,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": true,
+        "raw": {
+          "dog": "leashed",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_549903287",
+      "source": "openstreetmap",
+      "sourceId": "way/549903287",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Ali Ekber Çiçek Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°ZMÄ°R",
+      "district": "NARLIDERE",
+      "address": "SAYGIN, NARLI, NARLIDERE, Ä°ZMÄ°R",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.3919696,
+      "longitude": 27.0045616,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    },
+    {
+      "id": "osm_way_540605152",
+      "source": "openstreetmap",
+      "sourceId": "way/540605152",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "100.Yıl Parkı",
+      "category": "outdoor",
+      "subCategory": "park",
+      "city": "Ä°stanbul",
+      "district": "Pendik",
+      "address": "Batı Mahallesi, Pendik, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.877386,
+      "longitude": 29.2210075,
+      "petPolicy": {
+        "status": "allowed",
+        "scope": "all_or_unspecified",
+        "species": [
+          "dog"
+        ],
+        "requiresLeash": false,
+        "raw": {
+          "dog": "yes",
+          "pets": "",
+          "petsAllowed": ""
+        }
+      },
+      "userSignals": {
+        "confirmedCount": 0,
+        "rejectedCount": 0,
+        "lastUserSignalAt": null
+      }
+    }
+  ]
+}

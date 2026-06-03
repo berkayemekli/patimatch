@@ -80,5 +80,21 @@ class MasterDataRepository {
     );
     return jsonDecode(raw) as Map<String, dynamic>;
   }
+
+  static Future<List<Map<String, dynamic>>> loadVeterinaryClinics() async {
+    final raw = await rootBundle.loadString(
+      'assets/master_data/veterinary_clinics_tr.json',
+    );
+    final json = jsonDecode(raw) as Map<String, dynamic>;
+    return (json['clinics'] as List<dynamic>).cast<Map<String, dynamic>>();
+  }
+
+  static Future<List<Map<String, dynamic>>> loadPatiFriendlyPlaces() async {
+    final raw = await rootBundle.loadString(
+      'assets/master_data/pati_friendly_places_tr.json',
+    );
+    final json = jsonDecode(raw) as Map<String, dynamic>;
+    return (json['places'] as List<dynamic>).cast<Map<String, dynamic>>();
+  }
 }
 

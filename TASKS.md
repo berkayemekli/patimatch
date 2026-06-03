@@ -18,6 +18,8 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - `seed_marketplace_examples.json` PatiGezdirme/PatiBnB/PatiFamily kartlarina kaynak olsun.
    - `marketplace_product_taxonomy.json` filtre ve form alanlarini beslesin.
    - `trust_safety_framework.json` rozet/checklist alanlarini beslesin.
+   - `veterinary_clinics_tr.json` ve `pati_friendly_places_tr.json` harita/nearby discovery icin kaynak olsun.
+   - OSM kaynakli kayitlarda eksik il/ilce bilgisi koordinattan veya saglayici API ile zenginlestirilsin.
 
 2. Onboarding akisini kur.
    - Hizmet almak istiyorum.
@@ -75,6 +77,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Ayarlar altina Profil ve Guven dogrulamasi sayfasi eklendi; Firestore rules mavi tik alanlarini koruyacak sekilde deploy edildi.
 - KYC backend scaffold eklendi: callable session creation + webhook iskeleti. Functions deploy Blaze plan bekliyor.
 - Veriff hosted KYC adapter kodu eklendi; `VERIFF_API_KEY` secret ve Blaze plan sonrasi gercek kimlik/yuz dogrulama linki acilacak.
+- Laptop branch'indeki veteriner klinikleri ve pet dostu mekan seed verileri main'e tasindi; data mapping raporuna eklendi.
 
 ## Ownership Template
 
