@@ -57,6 +57,7 @@ Kacinilacaklar:
 - app/lib/pati_parent_page.dart: PatiFamily/PatiParent sahiplendirme yapi.
 - app/lib/data/master_data/master_data_repository.dart: sehir/ilce/cins data okuyucu.
 - MARKETPLACE_BENCHMARK_NOTES.md: Airbnb/Armut/Sahibinden benchmark urun notlari.
+- scripts/load_test_seed.js: staging load-test seed ve PatiMatch eslesme simulasyonu.
 
 ## Master data dosyalari
 
@@ -75,6 +76,8 @@ Kacinilacaklar:
 - dog_trainers_tr.json: OpenStreetMap dog training/kopek egitimi sinyallerinden dogrulanmamis kopek egitmeni seed datasi.
 
 ## Son yapilanlar
+
+- Load-test seed script eklendi; staging icin 4 modulde 250ser profil ve PatiMatch eslesme/chat simulasyonu uretebiliyor.
 
 - Kopek egitmeni seed datasi eklendi; data mapping raporu bunu ileride PatiTraining alt basligi veya PatiCare destek katmani olarak konumlandiriyor.
 

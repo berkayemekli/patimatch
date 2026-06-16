@@ -1,0 +1,27 @@
+{
+  "generatedAt": "2026-06-16T19:20:12.651Z",
+  "projectId": "patimatch-staging",
+  "prefix": "lt_2026",
+  "countPerModule": 250,
+  "matchPairs": 120,
+  "writeEnabled": false,
+  "written": false,
+  "counters": {
+    "users": 1000,
+    "walkers": 250,
+    "bnb_hosts": 250,
+    "dogs": 250,
+    "adoption_posts": 250,
+    "walk_requests": 80,
+    "bnb_requests": 80,
+    "adoption_applications": 80,
+    "swipes": 240,
+    "matches": 120,
+    "chats": 120
+  },
+  "notes": [
+    "Use staging by default; production requires --allow-prod.",
+    "Generated users are Firestore profile docs, not Firebase Auth accounts.",
+    "PatiMatch mutual swipes create matches and chats for regression testing."
+  ]
+}
