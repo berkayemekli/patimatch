@@ -1,0 +1,604 @@
+{
+  "sourceStatus": "osm_unverified_seed",
+  "note": "Bu dosya OpenStreetMap pet kuafor/grooming sinyallerinden otomatik uretilmis dogrulanmamis baslangic datasidir. Kullaniciya gosterilecek kritik bilgiler manuel veya saglayici API ile dogrulanmalidir.",
+  "generatedAt": "2026-06-16T18:33:52Z",
+  "license": {
+    "name": "Open Database License (ODbL)",
+    "attribution": "OpenStreetMap contributors",
+    "url": "https://www.openstreetmap.org/copyright"
+  },
+  "queryTags": [
+    "shop=pet",
+    "shop=pet_grooming",
+    "service:animal:grooming",
+    "grooming",
+    "name grooming signals"
+  ],
+  "quality": {
+    "totalGroomers": 20,
+    "missingCityCount": 12,
+    "missingContactCount": 15
+  },
+  "groomers": [
+    {
+      "id": "osm_node_13406383096",
+      "source": "openstreetmap",
+      "sourceId": "node/13406383096",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pars Pet Kuaför Petshop",
+      "city": "Balıkesir",
+      "district": "Bandırma",
+      "address": "Kemal Özal Caddesi, 112/A, 17 Eylül Mahallesi, Bandırma, Balıkesir",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.3442791,
+      "longitude": 27.9785064,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_13473069529",
+      "source": "openstreetmap",
+      "sourceId": "node/13473069529",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "More Petshop & Pet Kuaför",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.396995,
+      "longitude": 27.0678277,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_13049738281",
+      "source": "openstreetmap",
+      "sourceId": "node/13049738281",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pet Kuaför",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.4926008,
+      "longitude": 27.0551922,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_11820450473",
+      "source": "openstreetmap",
+      "sourceId": "node/11820450473",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pets kuaför Sedat",
+      "city": "",
+      "district": "",
+      "address": "3",
+      "phone": "+90 535 775 01 15",
+      "website": "",
+      "openingHours": "Mo-Sa 10:00-19:00, Su 12:00-17:00",
+      "latitude": 40.983168,
+      "longitude": 29.0398577,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_12652570647",
+      "source": "openstreetmap",
+      "sourceId": "node/12652570647",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pet Stills Pet Kuaför",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.2633856,
+      "longitude": 28.031708,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_way_1005353276",
+      "source": "openstreetmap",
+      "sourceId": "way/1005353276",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pa'ti Stylist",
+      "city": "Bursa",
+      "district": "Nilüfer",
+      "address": "155. Sokak, Ertuğrul Mahallesi, Nilüfer, Bursa",
+      "phone": "+905465922355",
+      "website": "https://www.instagram.com/patistylist_/",
+      "openingHours": "",
+      "latitude": 40.2180041,
+      "longitude": 28.9185382,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_way_1030207673",
+      "source": "openstreetmap",
+      "sourceId": "way/1030207673",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Turkuaz Akvaryum & Pet Shop",
+      "city": "Ä°stanbul",
+      "district": "Eyüpsultan",
+      "address": "Reşadiye Caddesi, 22, Rami Cuma, Eyüpsultan, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0492992,
+      "longitude": 28.9201458,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_13856415943",
+      "source": "openstreetmap",
+      "sourceId": "node/13856415943",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Kavpet Petshop & Pet Kuaför",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.8254636,
+      "longitude": 29.3229854,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_13730229648",
+      "source": "openstreetmap",
+      "sourceId": "node/13730229648",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Uysal Pati Pet Center",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9032704,
+      "longitude": 29.169149,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_13754868049",
+      "source": "openstreetmap",
+      "sourceId": "node/13754868049",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Lil Petshop & Kuaför",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9285837,
+      "longitude": 29.2146544,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_8485788181",
+      "source": "openstreetmap",
+      "sourceId": "node/8485788181",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Atakent Pet Kuaför",
+      "city": "Ä°stanbul",
+      "district": "Küçükçekmece",
+      "address": "Huzur Sokak, 11, İstasyon Mahallesi, Küçükçekmece, İstanbul",
+      "phone": "+905435795077",
+      "website": "",
+      "openingHours": "",
+      "latitude": 41.0336998,
+      "longitude": 28.7739638,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_9839776595",
+      "source": "openstreetmap",
+      "sourceId": "node/9839776595",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Petpark Petshop - Kedi Kopek Kuaförü",
+      "city": "Ä°stanbul",
+      "district": "Pendik",
+      "address": "Yenişehir Mahallesi, Pendik, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9308171,
+      "longitude": 29.3056618,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_7415542044",
+      "source": "openstreetmap",
+      "sourceId": "node/7415542044",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Ergül Pet Shop",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.192336,
+      "longitude": 28.9422724,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_164637890",
+      "source": "openstreetmap",
+      "sourceId": "node/164637890",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Kirpi Pet Kuafor",
+      "city": "",
+      "district": "",
+      "address": "Simon Bolivar Caddesi, Çankaya Mah.",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 39.8842019,
+      "longitude": 32.8563574,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_5568565956",
+      "source": "openstreetmap",
+      "sourceId": "node/5568565956",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "DELTA PET",
+      "city": "Ankara",
+      "district": "Yenimahalle",
+      "address": "Batı Bulvarı, 1/81, Macun Mahallesi, Yenimahalle, Ankara",
+      "phone": "",
+      "website": "http://deltapet.com.tr",
+      "openingHours": "",
+      "latitude": 39.9490302,
+      "longitude": 32.7702187,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_10916698539",
+      "source": "openstreetmap",
+      "sourceId": "node/10916698539",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Keops",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.4065072,
+      "longitude": 27.101341,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_11816962105",
+      "source": "openstreetmap",
+      "sourceId": "node/11816962105",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Bulldog Pet",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.4041336,
+      "longitude": 27.1007249,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_9993073940",
+      "source": "openstreetmap",
+      "sourceId": "node/9993073940",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pet Accessories Showroom",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.7650325,
+      "longitude": 29.9235105,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_9860981065",
+      "source": "openstreetmap",
+      "sourceId": "node/9860981065",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Pawz Up Pet Kuaför",
+      "city": "Ä°stanbul",
+      "district": "Kadıköy",
+      "address": "Tuğlacı Eminbey Sokağı, 9A, Caferağa Mahallesi, Kadıköy, İstanbul",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 40.9863317,
+      "longitude": 29.0220693,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    },
+    {
+      "id": "osm_node_9869679783",
+      "source": "openstreetmap",
+      "sourceId": "node/9869679783",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "CNC Petshop & Pet Kuaförü",
+      "city": "Kazımdirik Mahallesi",
+      "district": "Bornova",
+      "address": "Mustafa Kemal Caddesi, no: 85/B, Kazım Dirik Mahallesi, Bornova, Kazımdirik Mahallesi",
+      "phone": "+90 5522049381",
+      "website": "",
+      "openingHours": "Mo-Su 09:00-22:30",
+      "latitude": 38.4620902,
+      "longitude": 27.2071625,
+      "category": "pet_groomer",
+      "acceptedSpecies": [
+        "dog",
+        "cat"
+      ],
+      "serviceSignals": [
+        "name_signal"
+      ],
+      "tags": [
+        "pet kuaförü",
+        "bakım",
+        "grooming"
+      ]
+    }
+  ]
+}

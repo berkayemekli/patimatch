@@ -71,6 +71,7 @@ Kacinilacaklar:
 - seed_marketplace_examples.json: UI'a baglanabilecek ornek gezdirici, konaklama, match ve family ilanlari.
 - veterinary_clinics_tr.json: OpenStreetMap kaynakli dogrulanmamis veteriner klinigi seed datası.
 - pati_friendly_places_tr.json: OpenStreetMap dog/pets etiketlerinden dogrulanmamis pet dostu mekan seed datası.
+- pet_groomers_tr.json: OpenStreetMap grooming/pet kuafor sinyallerinden dogrulanmamis pet kuaforu seed datasi.
 
 ## Son yapilanlar
 
@@ -83,6 +84,7 @@ Son commitler:
 - 808abb5 Add search inside expanded filters
 - 6bc740e Move Rony to lower right in login hero
 - Data mapping raporu docs/data_mapping.html altinda guncellendi; veteriner ve pet dostu mekan katmani eklendi.
+- Pet kuaforu seed datasi eklendi; data mapping raporu veteriner + kuafor + pet dostu mekanlari PatiCare/Yakinimda destek katmani olarak konumlandiriyor.
 
 ## Google login durumu
 
@@ -146,7 +148,7 @@ firebase login
 ## Siradaki mantikli isler
 
 1. Master data dosyalarini UI'a baglamak.
-   - Veteriner ve pet dostu mekan datasini harita/nearby discovery akisi icin zenginlestirmek.
+   - Veteriner, pet kuaforu ve pet dostu mekan datasini PatiCare/Yakinimda harita/nearby discovery akisi icin zenginlestirmek.
 2. Profil/onboarding ekranini hizmet alan / hizmet veren / ikisini de kullanacak sekilde yeniden kurmak.
 3. PatiBnB ve PatiFamily kartlarini seed_marketplace_examples.json ile doldurmak.
 4. PatiMatch'i Bumble benzeri kart stack + guest preview seklinde guclendirmek.

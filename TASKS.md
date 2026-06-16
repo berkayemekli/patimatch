@@ -1,4 +1,4 @@
-﻿# PatiParent Tasks
+# PatiParent Tasks
 
 Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `git pull origin main` yap ve bu dosyayi oku.
 
@@ -18,7 +18,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - `seed_marketplace_examples.json` PatiGezdirme/PatiBnB/PatiFamily kartlarina kaynak olsun.
    - `marketplace_product_taxonomy.json` filtre ve form alanlarini beslesin.
    - `trust_safety_framework.json` rozet/checklist alanlarini beslesin.
-   - `veterinary_clinics_tr.json` ve `pati_friendly_places_tr.json` harita/nearby discovery icin kaynak olsun.
+   - `veterinary_clinics_tr.json`, `pet_groomers_tr.json` ve `pati_friendly_places_tr.json` PatiCare/Yakinimda harita/nearby discovery icin kaynak olsun.
    - OSM kaynakli kayitlarda eksik il/ilce bilgisi koordinattan veya saglayici API ile zenginlestirilsin.
    - Her master data guncellemesinden sonra `python scripts/generate_data_mapping_report.py` calistirilip `docs/data_mapping.html` guncel tutulacak.
 
@@ -60,6 +60,8 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - Backend webhook: provider sonucuyla `users/{userId}` guncellensin.
 
 ## Done Recently
+
+- Pet kuaforu OSM seed datasi eklendi; `docs/data_mapping.html` veteriner + kuafor + pet dostu mekanlari PatiCare/Yakinimda destek katmani olarak gosteriyor.
 
 - Proje baglami icin `PROJECT_CONTEXT.md` eklendi.
 - Yeni Codex baslangic komutu icin `NEXT_CODEX_PROMPT.txt` eklendi.
