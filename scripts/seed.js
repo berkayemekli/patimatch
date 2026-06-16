@@ -164,6 +164,23 @@ function buildSeedDocuments() {
         reviewCount: Math.max(3, Math.round(walkCount / 18)),
         walkCount,
         availability,
+        responseTime: ["01", "04", "09"].includes(n) ? "30 dk i\u{00E7}inde" : "2 saat i\u{00E7}inde",
+        repeatClientRate: 62 + Number(n) * 3,
+        routeStyle: ["01", "06", "10"].includes(n)
+          ? "Sakin park rotas?, kontroll? cadde ge?i?i ve su molas\u{0131}"
+          : "Mahalle i\u{00E7}i g\u{00FC}venli rota ve enerjiye g\u{00F6}re tempo ayar\u{0131}",
+        cancellationPolicy: "24 saat \u{00F6}nce \u{00FC}cretsiz iptal",
+        specialties: Number(n) % 3 === 0
+          ? ["Ya\u{0130}l? k?pek", "Sakin tempo", "\u{0130}la? saati takibi"]
+          : Number(n) % 2 === 0
+            ? ["K\u{00FC}\u{00E7}\u{00FC}k \u{0131}rklar", "Ak\u{015F}am y\u{00FC}r\u{00FC}y\u{00FC}\u{015F}\u{00FC}", "Apartman \u{00E7}\u{0131}k\u{0131}\u{015F}\u{0131}"]
+            : ["Enerjik k\u{00F6}pek", "B\u{00FC}y\u{00FC}k \u{0131}rk", "Tempo ayar\u{0131}"],
+        safetyChecklist: [
+          "Canl\u{0131} konum payla\u{015F}\u{0131}m\u{0131}",
+          "Su molas\u{0131} ve hava durumu takibi",
+          "Y\u{00FC}r\u{00FC}y\u{00FC}\u{015F} sonras\u{0131} foto\u{011F}rafl\u{0131} \u{00F6}zet",
+          "Acil durumda sahip ve veteriner aramas\u{0131}",
+        ],
         bio,
         imageUrl,
         instantBooking: ["01", "04", "06", "09", "10"].includes(n),
