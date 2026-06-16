@@ -1,0 +1,89 @@
+{
+  "sourceStatus": "osm_unverified_seed",
+  "note": "Bu dosya OpenStreetMap kopek egitimi/dog training sinyallerinden otomatik uretilmis dogrulanmamis baslangic datasidir. Kullaniciya gosterilecek kritik bilgiler manuel veya saglayici API ile dogrulanmalidir.",
+  "generatedAt": "2026-06-16T19:08:05Z",
+  "license": {
+    "name": "Open Database License (ODbL)",
+    "attribution": "OpenStreetMap contributors",
+    "url": "https://www.openstreetmap.org/copyright"
+  },
+  "queryTags": [
+    "animal_training",
+    "service:animal:training",
+    "dog:training",
+    "dog trainer name signals"
+  ],
+  "quality": {
+    "totalTrainers": 2,
+    "missingCityCount": 1,
+    "missingContactCount": 1
+  },
+  "trainers": [
+    {
+      "id": "osm_way_776743101",
+      "source": "openstreetmap",
+      "sourceId": "way/776743101",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "Kopek egitmeni",
+      "city": "",
+      "district": "",
+      "address": "",
+      "phone": "",
+      "website": "",
+      "openingHours": "",
+      "latitude": 38.5972536,
+      "longitude": 34.7187541,
+      "category": "dog_trainer",
+      "acceptedSpecies": [
+        "dog"
+      ],
+      "trainingTypes": [
+        "basic_obedience",
+        "puppy_training",
+        "behavior_support"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "kopek egitimi",
+        "itaat",
+        "davranis destegi"
+      ]
+    },
+    {
+      "id": "osm_node_12871081512",
+      "source": "openstreetmap",
+      "sourceId": "node/12871081512",
+      "verified": false,
+      "verificationStatus": "unverified_seed",
+      "name": "K9 Köpekli Arama Kurtarma Eğitim Merkezi",
+      "city": "Ä°stanbul",
+      "district": "Başakşehir",
+      "address": "İstiklal Caddesi, 57/6, Şahintepe Mahallesi, Başakşehir, İstanbul",
+      "phone": "+902124028224",
+      "website": "https://itfaiye.ibb.gov.tr/",
+      "openingHours": "",
+      "latitude": 41.0833313,
+      "longitude": 28.7409505,
+      "category": "dog_trainer",
+      "acceptedSpecies": [
+        "dog"
+      ],
+      "trainingTypes": [
+        "basic_obedience",
+        "puppy_training",
+        "behavior_support"
+      ],
+      "serviceSignals": [
+        "inferred_from_osm"
+      ],
+      "tags": [
+        "kopek egitimi",
+        "itaat",
+        "davranis destegi"
+      ]
+    }
+  ]
+}

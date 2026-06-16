@@ -72,8 +72,11 @@ Kacinilacaklar:
 - veterinary_clinics_tr.json: OpenStreetMap kaynakli dogrulanmamis veteriner klinigi seed datası.
 - pati_friendly_places_tr.json: OpenStreetMap dog/pets etiketlerinden dogrulanmamis pet dostu mekan seed datası.
 - pet_groomers_tr.json: OpenStreetMap grooming/pet kuafor sinyallerinden dogrulanmamis pet kuaforu seed datasi.
+- dog_trainers_tr.json: OpenStreetMap dog training/kopek egitimi sinyallerinden dogrulanmamis kopek egitmeni seed datasi.
 
 ## Son yapilanlar
+
+- Kopek egitmeni seed datasi eklendi; data mapping raporu bunu ileride PatiTraining alt basligi veya PatiCare destek katmani olarak konumlandiriyor.
 
 - Takvim sayfas? eklendi; tarihli PatiGezdirme/PatiBnB talepleri listeleniyor ve Google Takvim linki a??l?yor.
 
@@ -152,7 +155,7 @@ firebase login
 ## Siradaki mantikli isler
 
 1. Master data dosyalarini UI'a baglamak.
-   - Veteriner, pet kuaforu ve pet dostu mekan datasini PatiCare/Yakinimda harita/nearby discovery akisi icin zenginlestirmek.
+   - Veteriner, pet kuaforu, kopek egitmeni ve pet dostu mekan datasini PatiCare/Yakinimda harita/nearby discovery akisi icin zenginlestirmek.
 2. Profil/onboarding ekranini hizmet alan / hizmet veren / ikisini de kullanacak sekilde yeniden kurmak.
 3. PatiBnB ve PatiFamily kartlarini seed_marketplace_examples.json ile doldurmak.
 4. PatiMatch'i Bumble benzeri kart stack + guest preview seklinde guclendirmek.

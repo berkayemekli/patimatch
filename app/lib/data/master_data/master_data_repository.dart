@@ -104,5 +104,13 @@ class MasterDataRepository {
     final json = jsonDecode(raw) as Map<String, dynamic>;
     return (json['groomers'] as List<dynamic>).cast<Map<String, dynamic>>();
   }
+
+  static Future<List<Map<String, dynamic>>> loadDogTrainers() async {
+    final raw = await rootBundle.loadString(
+      'assets/master_data/dog_trainers_tr.json',
+    );
+    final json = jsonDecode(raw) as Map<String, dynamic>;
+    return (json['trainers'] as List<dynamic>).cast<Map<String, dynamic>>();
+  }
 }
 

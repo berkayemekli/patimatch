@@ -110,6 +110,7 @@ def main() -> None:
     vet = load_json("veterinary_clinics_tr.json")
     places = load_json("pati_friendly_places_tr.json")
     groomers = load_json("pet_groomers_tr.json")
+    trainers = load_json("dog_trainers_tr.json")
 
     district_count = sum(len(city["districts"]) for city in cities)
     breed_total = sum(
@@ -166,6 +167,7 @@ def main() -> None:
     vet_missing_city = sum(1 for clinic in vet["clinics"] if not clinic.get("city"))
     place_missing_city = sum(1 for place in places["places"] if not place.get("city"))
     groomer_missing_city = sum(1 for groomer in groomers["groomers"] if not groomer.get("city"))
+    trainer_missing_city = sum(1 for trainer in trainers["trainers"] if not trainer.get("city"))
     place_categories: dict[str, int] = {}
     for place in places["places"]:
         category = tr(str(place.get("category", "unknown")))
@@ -174,6 +176,7 @@ def main() -> None:
     clinic_names = [clinic.get("name", "Veteriner klini\u011fi") for clinic in vet["clinics"] if clinic.get("name")][:10]
     place_names = [place.get("name", "Pet dostu mekan") for place in places["places"] if place.get("name")][:10]
     groomer_names = [groomer.get("name", "Pet kuaförü") for groomer in groomers["groomers"] if groomer.get("name")][:10]
+    trainer_names = [trainer.get("name", "Köpek eğitmeni") for trainer in trainers["trainers"] if trainer.get("name")][:10]
 
     html_doc = f'''<!doctype html>
 <html lang="tr">
@@ -183,7 +186,7 @@ def main() -> None:
 <title>PatiParent Data Mapping</title>
 <style>
 :root{{--bg:#f6f3ee;--paper:rgba(255,255,255,.9);--ink:#101828;--muted:#667085;--line:rgba(16,24,40,.1);--teal:#0f766e;--rose:#e11d48;--orange:#f97316;--violet:#4f46e5;--shadow:0 24px 80px rgba(16,24,40,.1)}}
-*{{box-sizing:border-box}}body{{margin:0;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 0%,rgba(37,99,235,.12),transparent 28rem),radial-gradient(circle at 90% 6%,rgba(249,115,22,.12),transparent 26rem),linear-gradient(180deg,#fbfaf7 0%,var(--bg) 100%)}}.wrap{{max-width:1180px;margin:0 auto;padding:42px 22px 72px}}.hero{{padding:42px;border-radius:34px;background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.68));box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.72)}}.eyebrow{{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(15,118,110,.1);color:var(--teal);font-weight:800;font-size:13px}}h1{{font-size:clamp(38px,6vw,72px);line-height:.96;letter-spacing:-3px;margin:18px 0 16px;max-width:860px}}.lead{{color:var(--muted);font-size:18px;line-height:1.6;max-width:800px;margin:0}}.stats{{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;margin-top:28px}}.stat,.card{{background:var(--paper);border:1px solid var(--line);border-radius:26px;box-shadow:0 14px 50px rgba(16,24,40,.06)}}.stat{{padding:18px}}.stat strong{{display:block;font-size:30px;letter-spacing:-1px}}.stat span{{color:var(--muted);font-size:13px;font-weight:700}}section{{margin-top:30px}}.section-title{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:34px 0 14px}}h2{{margin:0;font-size:28px;letter-spacing:-1px}}.hint,.muted{{color:var(--muted)}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}.grid-3{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}.card{{padding:22px}}.card h3{{margin:0 0 8px;font-size:20px;letter-spacing:-.4px}}.module.walk{{border-top:5px solid var(--teal)}}.module.bnb{{border-top:5px solid var(--orange)}}.module.match{{border-top:5px solid var(--rose)}}.module.family{{border-top:5px solid var(--violet)}}.row{{display:grid;grid-template-columns:180px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}}.row:first-of-type{{border-top:0}}.row b{{color:#344054}}.tag{{display:inline-flex;align-items:center;margin:3px 5px 3px 0;padding:7px 10px;border-radius:999px;background:#f2f4f7;color:#344054;font-weight:700;font-size:12px}}.tag.more{{background:#e0f2fe;color:#0369a1}}.tag.warn{{background:#fff7ed;color:#c2410c}}ul,ol{{margin:8px 0 0;padding-left:20px;color:#344054;line-height:1.55}}.footer{{margin-top:38px;color:var(--muted);font-size:13px}}@media(max-width:900px){{.hero{{padding:26px;border-radius:26px}}.stats,.grid,.grid-3{{grid-template-columns:1fr}}.row{{grid-template-columns:1fr}}h1{{letter-spacing:-1.5px}}}}
+*{{box-sizing:border-box}}body{{margin:0;font-family:ui-sans-serif,-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 8% 0%,rgba(37,99,235,.12),transparent 28rem),radial-gradient(circle at 90% 6%,rgba(249,115,22,.12),transparent 26rem),linear-gradient(180deg,#fbfaf7 0%,var(--bg) 100%)}}.wrap{{max-width:1180px;margin:0 auto;padding:42px 22px 72px}}.hero{{padding:42px;border-radius:34px;background:linear-gradient(135deg,rgba(255,255,255,.94),rgba(255,255,255,.68));box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.72)}}.eyebrow{{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(15,118,110,.1);color:var(--teal);font-weight:800;font-size:13px}}h1{{font-size:clamp(38px,6vw,72px);line-height:.96;letter-spacing:-3px;margin:18px 0 16px;max-width:860px}}.lead{{color:var(--muted);font-size:18px;line-height:1.6;max-width:800px;margin:0}}.stats{{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:14px;margin-top:28px}}.stat,.card{{background:var(--paper);border:1px solid var(--line);border-radius:26px;box-shadow:0 14px 50px rgba(16,24,40,.06)}}.stat{{padding:18px}}.stat strong{{display:block;font-size:30px;letter-spacing:-1px}}.stat span{{color:var(--muted);font-size:13px;font-weight:700}}section{{margin-top:30px}}.section-title{{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:34px 0 14px}}h2{{margin:0;font-size:28px;letter-spacing:-1px}}.hint,.muted{{color:var(--muted)}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}}.grid-3{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}}.card{{padding:22px}}.card h3{{margin:0 0 8px;font-size:20px;letter-spacing:-.4px}}.module.walk{{border-top:5px solid var(--teal)}}.module.bnb{{border-top:5px solid var(--orange)}}.module.match{{border-top:5px solid var(--rose)}}.module.family{{border-top:5px solid var(--violet)}}.row{{display:grid;grid-template-columns:180px 1fr;gap:12px;padding:10px 0;border-top:1px solid var(--line)}}.row:first-of-type{{border-top:0}}.row b{{color:#344054}}.tag{{display:inline-flex;align-items:center;margin:3px 5px 3px 0;padding:7px 10px;border-radius:999px;background:#f2f4f7;color:#344054;font-weight:700;font-size:12px}}.tag.more{{background:#e0f2fe;color:#0369a1}}.tag.warn{{background:#fff7ed;color:#c2410c}}ul,ol{{margin:8px 0 0;padding-left:20px;color:#344054;line-height:1.55}}.footer{{margin-top:38px;color:var(--muted);font-size:13px}}@media(max-width:900px){{.hero{{padding:26px;border-radius:26px}}.stats,.grid,.grid-3{{grid-template-columns:1fr}}.row{{grid-template-columns:1fr}}h1{{letter-spacing:-1.5px}}}}
 </style>
 </head>
 <body>
@@ -216,6 +219,13 @@ def main() -> None:
     ("Ãrnekler", tag_list(groomer_names, 10)),
     ("KullanÄ±m", tag_list(["PatiBnB konaklama Ã¶ncesi bakÄ±m", "PatiFamily sahiplendirme sonrasÄ± bakÄ±m", "PatiGezdirme yakÄ±n bakÄ±m noktalarÄ±", "PatiCare destek servisleri"], 10)),
 ])}</article>
+<article class="card"><h3>Köpek Eğitmenleri</h3><p class="muted">{len(trainers["trainers"])} eğitmen seed datası. Temel itaat, yavru eğitimi ve davranış desteği için ileri faz destek katmanı.</p>{rows([
+    ("Kaynak", "OpenStreetMap dog training / köpek eğitimi sinyalleri"),
+    ("Kalite", f'<span class="tag warn">{trainer_missing_city} kayıtta il/ilçe eksik</span><span class="tag">koordinat mevcut</span><span class="tag">doğrulanmamış seed</span>'),
+    ("Örnekler", tag_list(trainer_names, 10)),
+    ("Kullanım", tag_list(["PatiGezdirme davranış desteği", "PatiFamily adaptasyon eğitimi", "PatiBnB ev uyumu", "İleri faz PatiTraining alt başlığı"], 10)),
+])}</article>
+
 <article class="card"><h3>Pet Dostu Mekanlar</h3><p class="muted">{len(places["places"])} mekan seed datası. Park, açık alan, konaklama ve bazı mekan kategorileri için ilk harita omurgası.</p>{rows([
     ("Kaynak", "OpenStreetMap dog/pets/pets_allowed etiketleri"),
     ("Kategori", tag_list([f"{name}: {count}" for name, count in sorted(place_categories.items())], 10)),
