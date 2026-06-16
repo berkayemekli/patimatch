@@ -11,6 +11,7 @@ import 'pati_gezdirme_page.dart';
 import 'pati_parent_page.dart';
 import 'payments_page.dart';
 import 'settings_page.dart';
+import 'identity_verification_page.dart';
 
 class MainShellPage extends StatefulWidget {
   const MainShellPage({super.key, this.guestMode = false});
@@ -145,6 +146,8 @@ class _MainShellPageState extends State<MainShellPage> {
               const SizedBox(height: 14),
               _ModuleInfoCard(module: _modules[_selectedModuleIndex]),
               const SizedBox(height: 20),
+              _TrustCenterStrip(userId: user?.uid, isGuest: isGuest),
+              const SizedBox(height: 20),
               _ModuleBody(index: _selectedModuleIndex),
             ],
           ),
@@ -196,6 +199,237 @@ class _MainShellPageState extends State<MainShellPage> {
           ],
         );
       },
+    );
+  }
+}
+
+class _TrustCenterStrip extends StatelessWidget {
+  const _TrustCenterStrip({required this.userId, required this.isGuest});
+
+  final String? userId;
+  final bool isGuest;
+
+  @override
+  Widget build(BuildContext context) {
+    if (isGuest || userId == null) {
+      return _TrustCenterContent(
+        statusLabel: 'Güven Merkezi',
+        statusDetail: 'Kimlik, telefon ve profil doğrulama rozetleri',
+        verified: false,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+          );
+        },
+      );
+    }
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        final data = snapshot.data?.data();
+        final status = (data?['verificationStatus'] as String? ?? '').trim();
+        final blueBadge = data?['blueBadge'] == true;
+        final verified = blueBadge || status == 'verified';
+        final pending = status == 'pending';
+
+        return _TrustCenterContent(
+          verified: verified,
+          statusLabel: verified
+              ? 'Mavi tik aktif'
+              : pending
+                  ? 'Doğrulama beklemede'
+                  : 'Güven profilini güçlendir',
+          statusDetail: verified
+              ? 'Kimlik doğrulaması tamamlanmış profil'
+              : pending
+                  ? 'Talebin kaydedildi, sonuç bekleniyor'
+                  : 'Kimlik doğrulama, güven rozetleri ve daha yüksek görünürlük',
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const IdentityVerificationPage(),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _TrustCenterContent extends StatelessWidget {
+  const _TrustCenterContent({
+    required this.statusLabel,
+    required this.statusDetail,
+    required this.verified,
+    required this.onPressed,
+  });
+
+  final String statusLabel;
+  final String statusDetail;
+  final bool verified;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final compact = width < 720;
+
+    final badges = <Widget>[
+      const _TrustBadge(icon: Icons.badge_rounded, label: 'Kimlik kontrolü'),
+      const _TrustBadge(icon: Icons.phone_iphone_rounded, label: 'Telefon onayı'),
+      const _TrustBadge(icon: Icons.shield_rounded, label: 'Güven rozetleri'),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: compact
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _TrustHeading(
+                  statusLabel: statusLabel,
+                  statusDetail: statusDetail,
+                  verified: verified,
+                ),
+                const SizedBox(height: 12),
+                Wrap(spacing: 8, runSpacing: 8, children: badges),
+                const SizedBox(height: 12),
+                _TrustActionButton(onPressed: onPressed, verified: verified),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: _TrustHeading(
+                    statusLabel: statusLabel,
+                    statusDetail: statusDetail,
+                    verified: verified,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Wrap(spacing: 8, runSpacing: 8, children: badges),
+                const SizedBox(width: 16),
+                _TrustActionButton(onPressed: onPressed, verified: verified),
+              ],
+            ),
+    );
+  }
+}
+
+class _TrustHeading extends StatelessWidget {
+  const _TrustHeading({
+    required this.statusLabel,
+    required this.statusDetail,
+    required this.verified,
+  });
+
+  final String statusLabel;
+  final String statusDetail;
+  final bool verified;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            color: verified ? const Color(0xFFEFF6FF) : const Color(0xFFF0FDFA),
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Icon(
+            verified ? Icons.verified_rounded : Icons.verified_user_rounded,
+            color: verified ? const Color(0xFF2563EB) : const Color(0xFF0F766E),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                statusLabel,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 3),
+              Text(
+                statusDetail,
+                style: const TextStyle(
+                  color: Color(0xFF64748B),
+                  height: 1.35,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrustBadge extends StatelessWidget {
+  const _TrustBadge({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 16, color: const Color(0xFF0F766E)),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w800),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrustActionButton extends StatelessWidget {
+  const _TrustActionButton({required this.onPressed, required this.verified});
+
+  final VoidCallback onPressed;
+  final bool verified;
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton.icon(
+      onPressed: onPressed,
+      icon: Icon(verified ? Icons.verified_rounded : Icons.arrow_forward_rounded),
+      label: Text(verified ? 'Güven profili' : 'Doğrula'),
+      style: FilledButton.styleFrom(
+        backgroundColor:
+            verified ? const Color(0xFF2563EB) : const Color(0xFF111827),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      ),
     );
   }
 }

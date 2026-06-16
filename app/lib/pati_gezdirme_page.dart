@@ -1,6 +1,11 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
+import 'data/services_repository.dart';
+import 'data/user_repository.dart';
+import 'login_page.dart';
 
 class PatiGezdirmePage extends StatefulWidget {
   const PatiGezdirmePage({super.key});
@@ -23,8 +28,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, dynamic>> _publishedWalkers = const <Map<String, dynamic>>[];
 
-  static const List<Map<String, dynamic>> _walkers = [
+  static const List<Map<String, dynamic>> _demoWalkers = [
     {
       'name': 'Ece Aras',
       'city': 'İstanbul',
@@ -127,6 +133,40 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   void initState() {
     super.initState();
     _loadFilterData();
+    _loadPublishedWalkers();
+  }
+
+  Future<void> _loadPublishedWalkers() async {
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('walkers')
+          .where('status', isEqualTo: 'active')
+          .get();
+      if (!mounted || snap.docs.isEmpty) return;
+      final published = snap.docs.map((doc) {
+        final data = doc.data();
+        return <String, dynamic>{
+          'name': data['name'] as String? ?? 'PatiParent gezdirici',
+          'id': doc.id,
+          'ownerUserId': data['ownerUserId'] as String? ?? doc.id,
+          'city': data['city'] as String? ?? '',
+          'district': data['district'] as String? ?? '',
+          'breeds': const <String>['Kirma', 'Melez'],
+          'ageRange': 'Tum yaslar',
+          'sex': 'Fark etmez',
+          'vaccineStatus': 'Fark etmez',
+          'size': 'Tum boyutlar',
+          'rating': (data['rating'] as num?)?.toDouble() ?? 0.0,
+          'walks': data['walkCount'] as int? ?? 0,
+          'price': data['pricePerHour'] as int? ?? 0,
+          'badge': 'Telefon onayli',
+          'imageUrl': 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
+        };
+      }).toList();
+      setState(() => _publishedWalkers = published);
+    } catch (_) {
+      // Demo listeyle devam edilir.
+    }
   }
 
   Future<void> _loadFilterData() async {
@@ -157,7 +197,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final crossCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
-    final filtered = _walkers.where((walker) {
+    final sourceWalkers = _publishedWalkers.isEmpty ? _demoWalkers : _publishedWalkers;
+    final filtered = sourceWalkers.where((walker) {
       final breeds = (walker['breeds'] as List<dynamic>).cast<String>();
       final cityOk = _city == 'All' || walker['city'] == _city;
       final districtOk =
@@ -262,6 +303,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
               itemBuilder: (context, index) {
                 final walker = filtered[index];
                 return _WalkerCard(
+                  walkerId: walker['id'] as String? ?? 'demo-walker-',
+                  walkerOwnerUserId: walker['ownerUserId'] as String? ?? 'demo-walker-owner',
                   name: walker['name'] as String,
                   city: walker['city'] as String,
                   price: walker['price'] as int,
@@ -573,6 +616,8 @@ class _EmptyWalkerState extends StatelessWidget {
 
 class _WalkerCard extends StatelessWidget {
   const _WalkerCard({
+    required this.walkerId,
+    required this.walkerOwnerUserId,
     required this.name,
     required this.city,
     required this.price,
@@ -582,6 +627,8 @@ class _WalkerCard extends StatelessWidget {
     required this.imageUrl,
   });
 
+  final String walkerId;
+  final String walkerOwnerUserId;
   final String name;
   final String city;
   final int price;
@@ -692,10 +739,62 @@ class _WalkerCard extends StatelessWidget {
               leading: Icon(Icons.verified_user_rounded),
               title: Text('Dogrulanmis profil'),
             ),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: () => _sendWalkRequest(context),
+              icon: const Icon(Icons.send_rounded),
+              label: const Text('Gezdirme talebi gonder'),
+            ),
           ],
         ),
       ),
     );
   }
-}
+  Future<void> _sendWalkRequest(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+      return;
+    }
+
+    try {
+      final dogDoc = await UserRepository().fetchMyDogDoc(user.uid);
+      if (dogDoc == null) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Talep icin once pet profilini olusturmalisin.'),
+          ),
+        );
+        return;
+      }
+
+      await ServicesRepository().createWalkRequest(
+        requesterUserId: user.uid,
+        requesterDogId: dogDoc.id,
+        walkerId: walkerId,
+        walkerOwnerUserId: walkerOwnerUserId,
+        walkerName: name,
+        preferredAt: DateTime.now().add(const Duration(days: 1)),
+        note: 'PatiParent uzerinden gezdirme talebi.',
+      );
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Gezdirme talebi gonderildi.')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Talep gonderilemedi: $e')),
+      );
+    }
+  }}
+
+
+
+
 

@@ -1,6 +1,11 @@
-﻿import 'package:flutter/material.dart';
+﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
+import 'data/services_repository.dart';
+import 'data/user_repository.dart';
+import 'login_page.dart';
 
 class PatiBnbPage extends StatefulWidget {
   const PatiBnbPage({super.key});
@@ -22,8 +27,9 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, dynamic>> _publishedStays = const <Map<String, dynamic>>[];
 
-  static const List<Map<String, dynamic>> _stays = [
+  static const List<Map<String, dynamic>> _demoStays = [
     {
       'host': 'Can B.',
       'city': 'İstanbul',
@@ -36,6 +42,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 128,
       'type': 'Bahceli Ev',
       'badge': 'Super Host',
+      'trustBadges': ['Kimlik doğrulandı', 'Ev ön kontrolü'],
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': [
         'Golden Retriever',
@@ -58,6 +65,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 96,
       'type': 'Modern Daire',
       'badge': 'Verified',
+      'trustBadges': ['Kimlik doğrulandı', 'Güvenli rezervasyon'],
       'petTypes': ['Kedi'],
       'breeds': [
         'British Shorthair',
@@ -81,6 +89,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 154,
       'type': 'Premium Home',
       'badge': 'Top Rated',
+      'trustBadges': ['Kimlik doğrulandı', 'Ev ön kontrolü'],
       'petTypes': ['K\u00f6pek'],
       'breeds': ['Poodle', 'Maltese', 'Pomeranian', 'Cocker Spaniel'],
       'imageUrl':
@@ -98,6 +107,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 110,
       'type': 'Loft Daire',
       'badge': 'Verified',
+      'trustBadges': ['Kimlik doğrulandı'],
       'petTypes': ['Kedi'],
       'breeds': [
         'Siamese',
@@ -121,6 +131,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 182,
       'type': 'Deniz Manzarali Ev',
       'badge': 'Top Rated',
+      'trustBadges': ['Kimlik doğrulandı', 'Ev ön kontrolü'],
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': [
         'Kangal',
@@ -144,6 +155,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 99,
       'type': 'Sehir Evi',
       'badge': 'Super Host',
+      'trustBadges': ['Kimlik doğrulandı', 'Güvenli rezervasyon'],
       'petTypes': ['K\u00f6pek'],
       'breeds': ['Beagle', 'French Bulldog', 'Pug', 'Shih Tzu'],
       'imageUrl':
@@ -161,6 +173,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 205,
       'type': 'Tas Villa',
       'badge': 'Top Rated',
+      'trustBadges': ['Kimlik doğrulandı', 'Ev ön kontrolü'],
       'petTypes': ['Kedi'],
       'breeds': [
         'Van Kedisi',
@@ -183,6 +196,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 88,
       'type': 'Bahce Kat',
       'badge': 'Verified',
+      'trustBadges': ['Kimlik doğrulandı'],
       'petTypes': ['K\u00f6pek', 'Kedi'],
       'breeds': ['K\u0131rma', 'Melez', 'Sokak kedisi', 'Tekir'],
       'imageUrl':
@@ -200,6 +214,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
       'reviews': 141,
       'type': 'Terasli Ev',
       'badge': 'Super Host',
+      'trustBadges': ['Kimlik doğrulandı', 'Güvenli rezervasyon'],
       'petTypes': ['Kedi'],
       'breeds': ['Sphynx', 'Bengal', 'Scottish Fold', 'Domestic Shorthair'],
       'imageUrl':
@@ -211,6 +226,42 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   void initState() {
     super.initState();
     _loadFilterData();
+    _loadPublishedStays();
+  }
+
+  Future<void> _loadPublishedStays() async {
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('bnb_hosts')
+          .where('status', isEqualTo: 'active')
+          .get();
+      if (!mounted || snap.docs.isEmpty) return;
+      final published = snap.docs.map((doc) {
+        final data = doc.data();
+        return <String, dynamic>{
+          'host': data['name'] as String? ?? 'PatiBnB host',
+          'id': doc.id,
+          'ownerUserId': data['ownerUserId'] as String? ?? doc.id,
+          'city': data['city'] as String? ?? '',
+          'district': data['district'] as String? ?? '',
+          'ageRange': 'Tum yaslar',
+          'sex': 'Fark etmez',
+          'vaccineStatus': 'Fark etmez',
+          'nightlyPrice': data['nightlyPrice'] as int? ?? 0,
+          'rating': (data['rating'] as num?)?.toDouble() ?? 0.0,
+          'reviews': data['reviewCount'] as int? ?? 0,
+          'type': data['yard'] == true ? 'Bahceli Ev' : 'Ev Konaklama',
+          'badge': 'Telefon onayli',
+          'trustBadges': (data['trustBadges'] as List<dynamic>? ?? const <dynamic>['Telefon onayli']).map((e) => e.toString()).toList(),
+          'petTypes': const <String>['Köpek', 'Kedi'],
+          'breeds': const <String>['Kirma', 'Melez', 'Tekir'],
+          'imageUrl': 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80',
+        };
+      }).toList();
+      setState(() => _publishedStays = published);
+    } catch (_) {
+      // Demo listeyle devam edilir.
+    }
   }
 
   Future<void> _loadFilterData() async {
@@ -248,7 +299,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final crossAxisCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
-    final filteredStays = _stays.where((stay) {
+    final sourceStays = _publishedStays.isEmpty ? _demoStays : _publishedStays;
+    final filteredStays = sourceStays.where((stay) {
       final petTypes = (stay['petTypes'] as List<dynamic>).cast<String>();
       final breeds = (stay['breeds'] as List<dynamic>).cast<String>();
       final cityOk = _city == 'All' || stay['city'] == _city;
@@ -332,6 +384,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
               itemBuilder: (context, index) {
                 final stay = filteredStays[index];
                 return _StayCard(
+                  hostId: stay['id'] as String? ?? 'demo-host-$index',
+                  hostOwnerUserId: stay['ownerUserId'] as String? ?? 'demo-host-owner',
                   host: stay['host'] as String,
                   city: stay['city'] as String,
                   nightlyPrice: stay['nightlyPrice'] as int,
@@ -341,6 +395,8 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                   badge: stay['badge'] as String,
                   petTypes: (stay['petTypes'] as List<dynamic>).cast<String>(),
                   breeds: (stay['breeds'] as List<dynamic>).cast<String>(),
+                  trustBadges:
+                      (stay['trustBadges'] as List<dynamic>).cast<String>(),
                   imageUrl: stay['imageUrl'] as String,
                 );
               },
@@ -594,6 +650,8 @@ class _EmptyStayState extends StatelessWidget {
 
 class _StayCard extends StatelessWidget {
   const _StayCard({
+    required this.hostId,
+    required this.hostOwnerUserId,
     required this.host,
     required this.city,
     required this.nightlyPrice,
@@ -603,8 +661,11 @@ class _StayCard extends StatelessWidget {
     required this.badge,
     required this.petTypes,
     required this.breeds,
+    required this.trustBadges,
     required this.imageUrl,
   });
+  final String hostId;
+  final String hostOwnerUserId;
   final String host;
   final String city;
   final int nightlyPrice;
@@ -614,6 +675,7 @@ class _StayCard extends StatelessWidget {
   final String badge;
   final List<String> petTypes;
   final List<String> breeds;
+  final List<String> trustBadges;
   final String imageUrl;
 
   @override
@@ -665,6 +727,11 @@ class _StayCard extends StatelessWidget {
                         ),
                       ),
                     ),
+                    Positioned(
+                      right: 10,
+                      bottom: 10,
+                      child: _CardTrustBadge(label: trustBadges.first),
+                    ),
                   ],
                 ),
               ),
@@ -677,7 +744,7 @@ class _StayCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            '$host ? $city',
+                            '$host - $city',
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
                               color: Color(0xFF111827),
@@ -698,15 +765,24 @@ class _StayCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '$type ? $reviews yorum',
+                      '$type - $reviews yorum',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Color(0xFF64748B),
                       ),
                     ),
                     const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: trustBadges
+                          .take(2)
+                          .map((label) => _MiniTrustChip(label: label))
+                          .toList(),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
-                      '?$nightlyPrice / gece',
+                      '$nightlyPrice TL / gece',
                       style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 16,
@@ -743,8 +819,116 @@ class _StayCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '?$nightlyPrice / gece ? $reviews yorum',
+              '$nightlyPrice TL / gece - $reviews yorum',
               style: const TextStyle(color: Color(0xFF475569)),
+            ),
+            const SizedBox(height: 12),
+            ...trustBadges.map(
+              (label) => ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(
+                  Icons.verified_user_rounded,
+                  color: Color(0xFF0F766E),
+                ),
+                title: Text(label),
+              ),
+            ),
+            const SizedBox(height: 8),
+            FilledButton.icon(
+              onPressed: () => _sendBnbRequest(context),
+              icon: const Icon(Icons.send_rounded),
+              label: const Text('Konaklama talebi gonder'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendBnbRequest(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+      return;
+    }
+
+    try {
+      final dogDoc = await UserRepository().fetchMyDogDoc(user.uid);
+      if (dogDoc == null) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Talep icin once pet profilini olusturmalisin.'),
+          ),
+        );
+        return;
+      }
+
+      final checkIn = DateTime.now().add(const Duration(days: 7));
+      await ServicesRepository().createBnbRequest(
+        requesterUserId: user.uid,
+        requesterDogId: dogDoc.id,
+        hostId: hostId,
+        hostOwnerUserId: hostOwnerUserId,
+        hostName: host,
+        checkIn: checkIn,
+        checkOut: checkIn.add(const Duration(days: 1)),
+        note: 'PatiParent uzerinden konaklama talebi.',
+      );
+
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Konaklama talebi gonderildi.')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Talep gonderilemedi: $e')),
+      );
+    }
+  }
+}
+
+class _CardTrustBadge extends StatelessWidget {
+  const _CardTrustBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: const Color(0xF2FFFFFF),
+        borderRadius: BorderRadius.circular(999),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x22000000),
+            blurRadius: 12,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.verified_rounded,
+              size: 14,
+              color: Color(0xFF0F766E),
+            ),
+            const SizedBox(width: 4),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: Color(0xFF0F172A),
+              ),
             ),
           ],
         ),
@@ -752,4 +936,32 @@ class _StayCard extends StatelessWidget {
     );
   }
 }
+
+class _MiniTrustChip extends StatelessWidget {
+  const _MiniTrustChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0FDFA),
+        borderRadius: BorderRadius.circular(999),
+        border: Border.all(color: const Color(0xFFBFEFE7)),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: Color(0xFF0F766E),
+          fontSize: 11,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+}
+
+
 

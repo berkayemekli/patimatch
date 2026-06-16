@@ -142,13 +142,31 @@ service cloud.firestore {
     }
 
     match /walkers/{walkerId} {
-      allow read: if isSignedIn() && resource.data.status == 'active';
-      allow create, update, delete: if false;
+      allow read: if isSignedIn()
+        && (resource.data.status == 'active' || resource.data.ownerUserId == request.auth.uid);
+      allow create: if isSignedIn()
+        && walkerId == request.auth.uid
+        && request.resource.data.ownerUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['ownerUserId', 'name', 'city', 'district', 'pricePerHour', 'status'])
+        && request.resource.data.status == 'active';
+      allow update: if isSignedIn()
+        && resource.data.ownerUserId == request.auth.uid
+        && request.resource.data.ownerUserId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.ownerUserId == request.auth.uid;
     }
 
     match /bnb_hosts/{hostId} {
-      allow read: if isSignedIn() && resource.data.status == 'active';
-      allow create, update, delete: if false;
+      allow read: if isSignedIn()
+        && (resource.data.status == 'active' || resource.data.ownerUserId == request.auth.uid);
+      allow create: if isSignedIn()
+        && hostId == request.auth.uid
+        && request.resource.data.ownerUserId == request.auth.uid
+        && hasKeys(request.resource.data, ['ownerUserId', 'name', 'city', 'district', 'nightlyPrice', 'status'])
+        && request.resource.data.status == 'active';
+      allow update: if isSignedIn()
+        && resource.data.ownerUserId == request.auth.uid
+        && request.resource.data.ownerUserId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.ownerUserId == request.auth.uid;
     }
 
     match /adoption_posts/{postId} {
@@ -161,7 +179,7 @@ service cloud.firestore {
         && (resource.data.requesterUserId == request.auth.uid || resource.data.walkerOwnerUserId == request.auth.uid);
       allow create: if isSignedIn()
         && request.resource.data.requesterUserId == request.auth.uid
-        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'walkerId', 'walkerName', 'preferredAt', 'status'])
+        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'walkerId', 'walkerOwnerUserId', 'walkerName', 'preferredAt', 'status'])
         && request.resource.data.status == 'pending';
       allow update, delete: if false;
     }
@@ -171,7 +189,7 @@ service cloud.firestore {
         && (resource.data.requesterUserId == request.auth.uid || resource.data.hostOwnerUserId == request.auth.uid);
       allow create: if isSignedIn()
         && request.resource.data.requesterUserId == request.auth.uid
-        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'hostId', 'hostName', 'checkIn', 'checkOut', 'status'])
+        && hasKeys(request.resource.data, ['requestId', 'requesterUserId', 'requesterDogId', 'hostId', 'hostOwnerUserId', 'hostName', 'checkIn', 'checkOut', 'status'])
         && request.resource.data.status == 'pending';
       allow update, delete: if false;
     }

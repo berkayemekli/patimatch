@@ -11,6 +11,7 @@ import 'login_page.dart';
 import 'notifications_page.dart';
 import 'payments_page.dart';
 import 'role_selection_page.dart';
+import 'service_provider_profile_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -224,13 +225,27 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           ListTile(
             leading: const Icon(Icons.tune_rounded),
-            title: const Text('Kullanım rolüm'),
+            title: const Text('Alt platform katılımım'),
             subtitle: const Text(
-              'Hizmet almak, hizmet vermek veya ikisini birlikte seç',
+              'Her modülde hizmet almak veya vermek için katılımını seç',
             ),
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => const RoleSelectionPage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.storefront_rounded),
+            title: const Text('Hizmet veren profilim'),
+            subtitle: const Text(
+              'Gezdirici veya PatiBnB host profilini yayına al',
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => const ServiceProviderProfilePage(),
+                ),
               );
             },
           ),
