@@ -75,6 +75,8 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Takvim sayfas? eklendi; tarihli PatiGezdirme/PatiBnB talepleri listeleniyor ve Google Takvim linki a??l?yor.
+
 - PatiGezdirme, PatiBnB ve PatiFamily detay panellerine tarih/rezervasyon secimi eklendi.
 
 Son commitler:

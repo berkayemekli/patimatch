@@ -1,9 +1,10 @@
-﻿import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'app_strings.dart';
 import 'blocked_users_page.dart';
+import 'calendar_page.dart';
 import 'data/master_data/master_data_repository.dart';
 import 'dog_profile_page.dart';
 import 'identity_verification_page.dart';
@@ -58,7 +59,9 @@ class _SettingsPageState extends State<SettingsPage> {
       if (data != null) {
         displayName = (data['displayName'] as String? ?? displayName).trim();
         emailOrPhone =
-            (data['email'] as String? ?? data['phone'] as String? ?? emailOrPhone)
+            (data['email'] as String? ??
+                    data['phone'] as String? ??
+                    emailOrPhone)
                 .trim();
         city = (data['city'] as String? ?? '').trim();
         district = (data['district'] as String? ?? '').trim();
@@ -108,9 +111,9 @@ class _SettingsPageState extends State<SettingsPage> {
     if (updated == true) {
       await _loadProfile();
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bilgilerin güncellendi.')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Bilgilerin güncellendi.')));
     }
   }
 
@@ -257,9 +260,21 @@ class _SettingsPageState extends State<SettingsPage> {
               'Gelen ve gönderdiğin hizmet taleplerini yönet',
             ),
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const RequestsPage()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const RequestsPage()));
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.calendar_month_outlined),
+            title: const Text('Takvim'),
+            subtitle: const Text(
+              'Rezervasyonlarını gör ve Google Takvim’e ekle',
+            ),
+            onTap: () {
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const CalendarPage()));
             },
           ),
           ListTile(
@@ -403,7 +418,9 @@ class _AccountInfoPageState extends State<AccountInfoPage> {
               labelText: 'E-posta / Telefon',
               border: OutlineInputBorder(),
             ),
-            child: Text(widget.emailOrPhone.isEmpty ? '-' : widget.emailOrPhone),
+            child: Text(
+              widget.emailOrPhone.isEmpty ? '-' : widget.emailOrPhone,
+            ),
           ),
           const SizedBox(height: 12),
           _SearchableSelect(
@@ -521,17 +538,19 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
     final matches = normalized.isEmpty
         ? options
         : options
-            .where(
-              (option) => _normalizeTurkishSearch(option).startsWith(normalized),
-            )
-            .toList();
+              .where(
+                (option) =>
+                    _normalizeTurkishSearch(option).startsWith(normalized),
+              )
+              .toList();
     final fallback = normalized.isEmpty || matches.isNotEmpty
         ? matches
         : options
-            .where(
-              (option) => _normalizeTurkishSearch(option).contains(normalized),
-            )
-            .toList();
+              .where(
+                (option) =>
+                    _normalizeTurkishSearch(option).contains(normalized),
+              )
+              .toList();
 
     if (fallback.isEmpty) {
       return const Center(child: Text('Sonuç bulunamadı'));

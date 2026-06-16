@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'pati_match_page.dart';
+import 'calendar_page.dart';
 import 'login_page.dart';
 import 'matches_page.dart';
 import 'notifications_page.dart';
@@ -72,6 +73,17 @@ class _MainShellPageState extends State<MainShellPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: const Color(0xFFF5F7FA),
+        leading: isGuest
+            ? null
+            : IconButton(
+                tooltip: 'Takvim',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const CalendarPage()),
+                  );
+                },
+                icon: const Icon(Icons.calendar_month_outlined),
+              ),
         title: const Text('PatiParent'),
         actions: isGuest
             ? [
@@ -217,9 +229,9 @@ class _TrustCenterStrip extends StatelessWidget {
         statusDetail: 'Kimlik, telefon ve profil doğrulama rozetleri',
         verified: false,
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => const LoginPage()),
-          );
+          Navigator.of(
+            context,
+          ).push(MaterialPageRoute(builder: (_) => const LoginPage()));
         },
       );
     }
@@ -241,13 +253,13 @@ class _TrustCenterStrip extends StatelessWidget {
           statusLabel: verified
               ? 'Mavi tik aktif'
               : pending
-                  ? 'Doğrulama beklemede'
-                  : 'Güven profilini güçlendir',
+              ? 'Doğrulama beklemede'
+              : 'Güven profilini güçlendir',
           statusDetail: verified
               ? 'Kimlik doğrulaması tamamlanmış profil'
               : pending
-                  ? 'Talebin kaydedildi, sonuç bekleniyor'
-                  : 'Kimlik doğrulama, güven rozetleri ve daha yüksek görünürlük',
+              ? 'Talebin kaydedildi, sonuç bekleniyor'
+              : 'Kimlik doğrulama, güven rozetleri ve daha yüksek görünürlük',
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
@@ -281,7 +293,10 @@ class _TrustCenterContent extends StatelessWidget {
 
     final badges = <Widget>[
       const _TrustBadge(icon: Icons.badge_rounded, label: 'Kimlik kontrolü'),
-      const _TrustBadge(icon: Icons.phone_iphone_rounded, label: 'Telefon onayı'),
+      const _TrustBadge(
+        icon: Icons.phone_iphone_rounded,
+        label: 'Telefon onayı',
+      ),
       const _TrustBadge(icon: Icons.shield_rounded, label: 'Güven rozetleri'),
     ];
 
@@ -422,11 +437,14 @@ class _TrustActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FilledButton.icon(
       onPressed: onPressed,
-      icon: Icon(verified ? Icons.verified_rounded : Icons.arrow_forward_rounded),
+      icon: Icon(
+        verified ? Icons.verified_rounded : Icons.arrow_forward_rounded,
+      ),
       label: Text(verified ? 'Güven profili' : 'Doğrula'),
       style: FilledButton.styleFrom(
-        backgroundColor:
-            verified ? const Color(0xFF2563EB) : const Color(0xFF111827),
+        backgroundColor: verified
+            ? const Color(0xFF2563EB)
+            : const Color(0xFF111827),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
       ),
