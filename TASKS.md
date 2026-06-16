@@ -61,6 +61,8 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- PatiGezdirme, PatiBnB ve PatiFamily detay ak??lar?na tarih/rezervasyon se?imi eklendi; talepler se?ilen tarih bilgisiyle kaydediliyor.
+
 - Pet kuaforu OSM seed datasi eklendi; `docs/data_mapping.html` veteriner + kuafor + pet dostu mekanlari PatiCare/Yakinimda destek katmani olarak gosteriyor.
 
 - Proje baglami icin `PROJECT_CONTEXT.md` eklendi.

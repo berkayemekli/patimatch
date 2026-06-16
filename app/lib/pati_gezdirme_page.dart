@@ -168,17 +168,25 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           'availability': data['availability'] as String? ?? '',
           'bio': data['bio'] as String? ?? '',
           'reviewCount': data['reviewCount'] as int? ?? 0,
-          'responseTime': data['responseTime'] as String? ?? '2 saat i\u{00E7}inde',
+          'responseTime':
+              data['responseTime'] as String? ?? '2 saat i\u{00E7}inde',
           'repeatClientRate': data['repeatClientRate'] as int? ?? 72,
-          'specialties': (data['specialties'] as List<dynamic>? ?? const <dynamic>[])
-              .whereType<String>()
-              .toList(),
-          'safetyChecklist': (data['safetyChecklist'] as List<dynamic>? ?? const <dynamic>[])
-              .whereType<String>()
-              .toList(),
-          'routeStyle': data['routeStyle'] as String? ?? 'Mahalle park\u{0131} ve sakin rota',
-          'cancellationPolicy': data['cancellationPolicy'] as String? ?? '24 saat \u{00F6}nce \u{00FC}cretsiz iptal',
-          'imageUrl': data['imageUrl'] as String? ??
+          'specialties':
+              (data['specialties'] as List<dynamic>? ?? const <dynamic>[])
+                  .whereType<String>()
+                  .toList(),
+          'safetyChecklist':
+              (data['safetyChecklist'] as List<dynamic>? ?? const <dynamic>[])
+                  .whereType<String>()
+                  .toList(),
+          'routeStyle':
+              data['routeStyle'] as String? ??
+              'Mahalle park\u{0131} ve sakin rota',
+          'cancellationPolicy':
+              data['cancellationPolicy'] as String? ??
+              '24 saat \u{00F6}nce \u{00FC}cretsiz iptal',
+          'imageUrl':
+              data['imageUrl'] as String? ??
               'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
         };
       }).toList();
@@ -216,15 +224,19 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final crossCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
-    final sourceWalkers = _publishedWalkers.isEmpty ? _demoWalkers : _publishedWalkers;
+    final sourceWalkers = _publishedWalkers.isEmpty
+        ? _demoWalkers
+        : _publishedWalkers;
     final filtered = sourceWalkers.where((walker) {
       final breeds = (walker['breeds'] as List<dynamic>).cast<String>();
       final cityOk = _city == 'All' || walker['city'] == _city;
       final districtOk =
-          _district == 'T\u{00FC}m il\u{00E7}eler' || walker['district'] == _district;
+          _district == 'T\u{00FC}m il\u{00E7}eler' ||
+          walker['district'] == _district;
       final breedOk = _breed == 'T\u{00FC}m cinsler' || breeds.contains(_breed);
       final ageOk =
-          _ageRange == 'T\u{00FC}m ya\u{015F}lar' || walker['ageRange'] == _ageRange;
+          _ageRange == 'T\u{00FC}m ya\u{015F}lar' ||
+          walker['ageRange'] == _ageRange;
       final sexOk = _sex == 'Fark etmez' || walker['sex'] == _sex;
       final vaccineOk =
           _vaccineStatus == 'Fark etmez' ||
@@ -323,7 +335,8 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                 final walker = filtered[index];
                 return _WalkerCard(
                   walkerId: walker['id'] as String? ?? 'demo-walker-',
-                  walkerOwnerUserId: walker['ownerUserId'] as String? ?? 'demo-walker-owner',
+                  walkerOwnerUserId:
+                      walker['ownerUserId'] as String? ?? 'demo-walker-owner',
                   name: walker['name'] as String,
                   city: walker['city'] as String,
                   district: walker['district'] as String? ?? '',
@@ -331,22 +344,33 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                   rating: walker['rating'] as double,
                   walks: walker['walks'] as int,
                   badge: walker['badge'] as String,
-                  badges: (walker['badges'] as List<dynamic>? ?? const <dynamic>[])
-                      .whereType<String>()
-                      .toList(),
+                  badges:
+                      (walker['badges'] as List<dynamic>? ?? const <dynamic>[])
+                          .whereType<String>()
+                          .toList(),
                   availability: walker['availability'] as String? ?? '',
                   bio: walker['bio'] as String? ?? '',
                   reviewCount: walker['reviewCount'] as int? ?? 0,
-                  responseTime: walker['responseTime'] as String? ?? '2 saat i\u{00E7}inde',
+                  responseTime:
+                      walker['responseTime'] as String? ??
+                      '2 saat i\u{00E7}inde',
                   repeatClientRate: walker['repeatClientRate'] as int? ?? 72,
-                  specialties: (walker['specialties'] as List<dynamic>? ?? const <dynamic>[])
-                      .whereType<String>()
-                      .toList(),
-                  safetyChecklist: (walker['safetyChecklist'] as List<dynamic>? ?? const <dynamic>[])
-                      .whereType<String>()
-                      .toList(),
-                  routeStyle: walker['routeStyle'] as String? ?? 'Mahalle park\u{0131} ve sakin rota',
-                  cancellationPolicy: walker['cancellationPolicy'] as String? ?? '24 saat \u{00F6}nce \u{00FC}cretsiz iptal',
+                  specialties:
+                      (walker['specialties'] as List<dynamic>? ??
+                              const <dynamic>[])
+                          .whereType<String>()
+                          .toList(),
+                  safetyChecklist:
+                      (walker['safetyChecklist'] as List<dynamic>? ??
+                              const <dynamic>[])
+                          .whereType<String>()
+                          .toList(),
+                  routeStyle:
+                      walker['routeStyle'] as String? ??
+                      'Mahalle park\u{0131} ve sakin rota',
+                  cancellationPolicy:
+                      walker['cancellationPolicy'] as String? ??
+                      '24 saat \u{00F6}nce \u{00FC}cretsiz iptal',
                   imageUrl: walker['imageUrl'] as String,
                 );
               },
@@ -360,7 +384,9 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     if (_breedsByType.isEmpty) return const <String>[];
     for (final entry in _breedsByType.entries) {
       final key = entry.key.toLowerCase();
-      if (key.contains('k\u00f6pek') || key.contains('kopek') || key.contains('pek')) {
+      if (key.contains('k\u00f6pek') ||
+          key.contains('kopek') ||
+          key.contains('pek')) {
         return entry.value;
       }
     }
@@ -376,7 +402,11 @@ class _BadgeFilters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const items = ['All', 'Kimlik do\u{011F}ruland\u{0131}', 'Telefon onayl\u{0131}'];
+    const items = [
+      'All',
+      'Kimlik do\u{011F}ruland\u{0131}',
+      'Telefon onayl\u{0131}',
+    ];
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
@@ -544,7 +574,12 @@ class _TopFilter extends StatelessWidget {
                 _FilterDropdown(
                   label: 'Boyut',
                   value: size,
-                  items: const ['T\u{00FC}m boyutlar', 'K\u{00FC}\u{00E7}\u{00FC}k', 'Orta', 'B\u{00FC}y\u{00FC}k'],
+                  items: const [
+                    'T\u{00FC}m boyutlar',
+                    'K\u{00FC}\u{00E7}\u{00FC}k',
+                    'Orta',
+                    'B\u{00FC}y\u{00FC}k',
+                  ],
                   onChanged: onSizeChanged,
                 ),
               ],
@@ -706,7 +741,8 @@ class _WalkerCard extends StatelessWidget {
   final String cancellationPolicy;
   final String imageUrl;
 
-  String get _location => [city, if (district.trim().isNotEmpty) district].join(' / ');
+  String get _location =>
+      [city, if (district.trim().isNotEmpty) district].join(' / ');
 
   @override
   Widget build(BuildContext context) {
@@ -801,7 +837,11 @@ class _WalkerCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(Icons.star_rounded, size: 18, color: Color(0xFFF59E0B)),
+                      const Icon(
+                        Icons.star_rounded,
+                        size: 18,
+                        color: Color(0xFFF59E0B),
+                      ),
                       const SizedBox(width: 3),
                       Text(
                         rating.toStringAsFixed(1),
@@ -809,7 +849,10 @@ class _WalkerCard extends StatelessWidget {
                       ),
                       Text(
                         ' ($reviewCount yorum)',
-                        style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+                        style: const TextStyle(
+                          color: Color(0xFF64748B),
+                          fontSize: 12,
+                        ),
                       ),
                       const Spacer(),
                       Text(
@@ -823,16 +866,22 @@ class _WalkerCard extends StatelessWidget {
                     bio.trim().isEmpty ? routeStyle : bio,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Color(0xFF475569), height: 1.35),
+                    style: const TextStyle(
+                      color: Color(0xFF475569),
+                      height: 1.35,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Wrap(
                     spacing: 6,
                     runSpacing: 6,
                     children: [
-                      _MiniChip(label: '$walks y\u{00FC}r\u{00FC}y\u{00FC}\u{015F}'),
+                      _MiniChip(
+                        label: '$walks y\u{00FC}r\u{00FC}y\u{00FC}\u{015F}',
+                      ),
                       _MiniChip(label: '%$repeatClientRate tekrar'),
-                      if (specialties.isNotEmpty) _MiniChip(label: specialties.first),
+                      if (specialties.isNotEmpty)
+                        _MiniChip(label: specialties.first),
                     ],
                   ),
                 ],
@@ -882,7 +931,8 @@ class _WalkerCard extends StatelessWidget {
                       availability: availability,
                       responseTime: responseTime,
                       cancellationPolicy: cancellationPolicy,
-                      onRequest: () => _sendWalkRequest(context),
+                      onRequest: (preferredAt) =>
+                          _sendWalkRequest(context, preferredAt),
                     ),
                     const SizedBox(height: 14),
                     _ProfileSection(
@@ -900,7 +950,8 @@ class _WalkerCard extends StatelessWidget {
                             ),
                           _TrustPill(
                             icon: Icons.repeat_rounded,
-                            label: '%$repeatClientRate tekrar eden m\u{00FC}\u{015F}teri',
+                            label:
+                                '%$repeatClientRate tekrar eden m\u{00FC}\u{015F}teri',
                             foreground: const Color(0xFF1D4ED8),
                             background: const Color(0xFFEFF6FF),
                           ),
@@ -911,7 +962,9 @@ class _WalkerCard extends StatelessWidget {
                     _ProfileSection(
                       title: 'Profil \u{00F6}zeti',
                       child: Text(
-                        bio.trim().isEmpty ? 'Bu gezdirici hen\u{00FC}z detayl\u{0131} a\u{00E7}\u{0131}klama eklemedi.' : bio,
+                        bio.trim().isEmpty
+                            ? 'Bu gezdirici hen\u{00FC}z detayl\u{0131} a\u{00E7}\u{0131}klama eklemedi.'
+                            : bio,
                         style: const TextStyle(
                           height: 1.5,
                           color: Color(0xFF334155),
@@ -921,13 +974,26 @@ class _WalkerCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 14),
                     _ProfileSection(
-                      title: 'Y\u00fcr\u00fcy\u00fc\u015f yakla\u{015F}\u{0131}m\u{0131}',
+                      title:
+                          'Y\u00fcr\u00fcy\u00fc\u015f yakla\u{015F}\u{0131}m\u{0131}',
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          _InfoRow(icon: Icons.route_rounded, title: 'Rota', value: routeStyle),
-                          _InfoRow(icon: Icons.schedule_rounded, title: 'Uygunluk', value: availability),
-                          _InfoRow(icon: Icons.chat_bubble_rounded, title: 'Yan\u{0131}t', value: responseTime),
+                          _InfoRow(
+                            icon: Icons.route_rounded,
+                            title: 'Rota',
+                            value: routeStyle,
+                          ),
+                          _InfoRow(
+                            icon: Icons.schedule_rounded,
+                            title: 'Uygunluk',
+                            value: availability,
+                          ),
+                          _InfoRow(
+                            icon: Icons.chat_bubble_rounded,
+                            title: 'Yan\u{0131}t',
+                            value: responseTime,
+                          ),
                         ],
                       ),
                     ),
@@ -938,19 +1004,31 @@ class _WalkerCard extends StatelessWidget {
                         spacing: 8,
                         runSpacing: 8,
                         children: specialties.isEmpty
-                            ? const [_MiniChip(label: 'Genel y\u{00FC}r\u{00FC}y\u{00FC}\u{015F}')]
-                            : specialties.map((item) => _MiniChip(label: item)).toList(),
+                            ? const [
+                                _MiniChip(
+                                  label:
+                                      'Genel y\u{00FC}r\u{00FC}y\u{00FC}\u{015F}',
+                                ),
+                              ]
+                            : specialties
+                                  .map((item) => _MiniChip(label: item))
+                                  .toList(),
                       ),
                     ),
                     const SizedBox(height: 14),
                     _ProfileSection(
                       title: 'G\u00fcvenlik checklist\u2019i',
                       child: Column(
-                        children: (safetyChecklist.isEmpty
-                                ? const ['Canl\u{0131} konum payla\u{015F}\u{0131}m\u{0131}', 'Su molas\u{0131} takibi', 'Y\u00fcr\u00fcy\u00fc\u015f sonras\u{0131} \u{00F6}zet']
-                                : safetyChecklist)
-                            .map((item) => _ChecklistRow(text: item))
-                            .toList(),
+                        children:
+                            (safetyChecklist.isEmpty
+                                    ? const [
+                                        'Canl\u{0131} konum payla\u{015F}\u{0131}m\u{0131}',
+                                        'Su molas\u{0131} takibi',
+                                        'Y\u00fcr\u00fcy\u00fc\u015f sonras\u{0131} \u{00F6}zet',
+                                      ]
+                                    : safetyChecklist)
+                                .map((item) => _ChecklistRow(text: item))
+                                .toList(),
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -991,12 +1069,15 @@ class _WalkerCard extends StatelessWidget {
     );
   }
 
-  Future<void> _sendWalkRequest(BuildContext context) async {
+  Future<void> _sendWalkRequest(
+    BuildContext context,
+    DateTime preferredAt,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const LoginPage()));
       return;
     }
 
@@ -1006,7 +1087,9 @@ class _WalkerCard extends StatelessWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Talep i\u{00E7}in \u{00F6}nce pet profilini olu\u{015F}turmal\u{0131}s\u{0131}n.'),
+            content: Text(
+              'Talep i\u{00E7}in \u{00F6}nce pet profilini olu\u{015F}turmal\u{0131}s\u{0131}n.',
+            ),
           ),
         );
         return;
@@ -1018,7 +1101,7 @@ class _WalkerCard extends StatelessWidget {
         walkerId: walkerId,
         walkerOwnerUserId: walkerOwnerUserId,
         walkerName: name,
-        preferredAt: DateTime.now().add(const Duration(days: 1)),
+        preferredAt: preferredAt,
         note: 'PatiParent \u{00FC}zerinden gezdirme talebi.',
       );
 
@@ -1029,9 +1112,9 @@ class _WalkerCard extends StatelessWidget {
       );
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Talep g\u{00F6}nderilemedi: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Talep g\u{00F6}nderilemedi: $e')));
     }
   }
 }
@@ -1114,11 +1197,18 @@ class _ProfileHero extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Icon(Icons.star_rounded, color: Color(0xFFFBBF24), size: 20),
+                    const Icon(
+                      Icons.star_rounded,
+                      color: Color(0xFFFBBF24),
+                      size: 20,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${rating.toStringAsFixed(1)} puan',
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                     Text(
                       ' ? $reviewCount yorum',
@@ -1135,7 +1225,7 @@ class _ProfileHero extends StatelessWidget {
   }
 }
 
-class _BookingPanel extends StatelessWidget {
+class _BookingPanel extends StatefulWidget {
   const _BookingPanel({
     required this.price,
     required this.availability,
@@ -1148,10 +1238,39 @@ class _BookingPanel extends StatelessWidget {
   final String availability;
   final String responseTime;
   final String cancellationPolicy;
-  final VoidCallback onRequest;
+  final ValueChanged<DateTime> onRequest;
+
+  @override
+  State<_BookingPanel> createState() => _BookingPanelState();
+}
+
+class _BookingPanelState extends State<_BookingPanel> {
+  late DateTime _date = DateTime.now().add(const Duration(days: 1));
+  TimeOfDay _time = const TimeOfDay(hour: 18, minute: 0);
+
+  DateTime get _preferredAt =>
+      DateTime(_date.year, _date.month, _date.day, _time.hour, _time.minute);
+
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _date,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 120)),
+    );
+    if (picked != null) setState(() => _date = picked);
+  }
+
+  Future<void> _pickTime() async {
+    final picked = await showTimePicker(context: context, initialTime: _time);
+    if (picked != null) setState(() => _time = picked);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = MaterialLocalizations.of(context);
+    final dateText = localizations.formatMediumDate(_date);
+    final timeText = localizations.formatTimeOfDay(_time);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1165,7 +1284,7 @@ class _BookingPanel extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                '$price TL',
+                '${widget.price} TL',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -1175,20 +1294,47 @@ class _BookingPanel extends StatelessWidget {
               const SizedBox(width: 4),
               const Padding(
                 padding: EdgeInsets.only(bottom: 5),
-                child: Text('/ saat', style: TextStyle(color: Color(0xFFCBD5E1))),
+                child: Text(
+                  '/ saat',
+                  style: TextStyle(color: Color(0xFFCBD5E1)),
+                ),
               ),
               const Spacer(),
               const Icon(Icons.shield_rounded, color: Color(0xFF86EFAC)),
             ],
           ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: _BookingChoiceTile(
+                  icon: Icons.event_rounded,
+                  label: 'Tarih',
+                  value: dateText,
+                  onTap: _pickDate,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _BookingChoiceTile(
+                  icon: Icons.schedule_rounded,
+                  label: 'Saat',
+                  value: timeText,
+                  onTap: _pickTime,
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 10),
           Text(
-            availability.trim().isEmpty ? 'Uygunluk bilgisi profil sahibinden istenir.' : availability,
+            widget.availability.trim().isEmpty
+                ? 'Uygunluk bilgisi profil sahibinden istenir.'
+                : widget.availability,
             style: const TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
           ),
           const SizedBox(height: 6),
           Text(
-            '$responseTime yan\u{0131}t ? $cancellationPolicy',
+            '${widget.responseTime} yanıt • ${widget.cancellationPolicy}',
             style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
           ),
           const SizedBox(height: 14),
@@ -1200,12 +1346,70 @@ class _BookingPanel extends StatelessWidget {
                 foregroundColor: const Color(0xFF052E16),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              onPressed: onRequest,
-              icon: const Icon(Icons.send_rounded),
-              label: const Text('Gezdirme talebi g\u{00F6}nder'),
+              onPressed: () => widget.onRequest(_preferredAt),
+              icon: const Icon(Icons.calendar_month_rounded),
+              label: const Text('Tarihli yürüyüş talebi gönder'),
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _BookingChoiceTile extends StatelessWidget {
+  const _BookingChoiceTile({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: const Color(0xFF86EFAC), size: 18),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    label,
+                    style: const TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 11,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1242,7 +1446,11 @@ class _ProfileSection extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({required this.icon, required this.title, required this.value});
+  const _InfoRow({
+    required this.icon,
+    required this.title,
+    required this.value,
+  });
 
   final IconData icon;
   final String title;
@@ -1261,11 +1469,19 @@ class _InfoRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w900)),
+                Text(
+                  title,
+                  style: const TextStyle(fontWeight: FontWeight.w900),
+                ),
                 const SizedBox(height: 2),
                 Text(
-                  value.trim().isEmpty ? 'Profil sahibinden teyit edilir.' : value,
-                  style: const TextStyle(color: Color(0xFF475569), height: 1.35),
+                  value.trim().isEmpty
+                      ? 'Profil sahibinden teyit edilir.'
+                      : value,
+                  style: const TextStyle(
+                    color: Color(0xFF475569),
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),
@@ -1287,9 +1503,18 @@ class _ChecklistRow extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          const Icon(Icons.check_circle_rounded, color: Color(0xFF16A34A), size: 20),
+          const Icon(
+            Icons.check_circle_rounded,
+            color: Color(0xFF16A34A),
+            size: 20,
+          ),
           const SizedBox(width: 8),
-          Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.w700))),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontWeight: FontWeight.w700),
+            ),
+          ),
         ],
       ),
     );
@@ -1297,7 +1522,11 @@ class _ChecklistRow extends StatelessWidget {
 }
 
 class _StatCard extends StatelessWidget {
-  const _StatCard({required this.value, required this.label, required this.icon});
+  const _StatCard({
+    required this.value,
+    required this.label,
+    required this.icon,
+  });
 
   final String value;
   final String label;
@@ -1316,8 +1545,14 @@ class _StatCard extends StatelessWidget {
         children: [
           Icon(icon, color: const Color(0xFF0F766E)),
           const SizedBox(height: 6),
-          Text(value, style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17)),
-          Text(label, style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+          Text(
+            value,
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 17),
+          ),
+          Text(
+            label,
+            style: const TextStyle(color: Color(0xFF64748B), fontSize: 12),
+          ),
         ],
       ),
     );

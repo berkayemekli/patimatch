@@ -1002,7 +1002,8 @@ class _StayCard extends StatelessWidget {
                       price: nightlyPrice,
                       responseTime: responseTime,
                       acceptedPetSize: acceptedPetSize,
-                      onRequest: () => _sendBnbRequest(context),
+                      onRequest: (checkIn, checkOut) =>
+                          _sendBnbRequest(context, checkIn, checkOut),
                     ),
                     const SizedBox(height: 14),
                     _BnbProfileSection(
@@ -1085,7 +1086,11 @@ class _StayCard extends StatelessWidget {
     );
   }
 
-  Future<void> _sendBnbRequest(BuildContext context) async {
+  Future<void> _sendBnbRequest(
+    BuildContext context,
+    DateTime checkIn,
+    DateTime checkOut,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       await Navigator.of(
@@ -1104,7 +1109,6 @@ class _StayCard extends StatelessWidget {
         );
         return;
       }
-      final checkIn = DateTime.now().add(const Duration(days: 7));
       await ServicesRepository().createBnbRequest(
         requesterUserId: user.uid,
         requesterDogId: dogDoc.id,
@@ -1112,7 +1116,7 @@ class _StayCard extends StatelessWidget {
         hostOwnerUserId: hostOwnerUserId,
         hostName: host,
         checkIn: checkIn,
-        checkOut: checkIn.add(const Duration(days: 1)),
+        checkOut: checkOut,
         note: 'PatiParent üzerinden konaklama talebi.',
       );
       if (!context.mounted) return;
@@ -1129,7 +1133,7 @@ class _StayCard extends StatelessWidget {
   }
 }
 
-class _BnbBookingPanel extends StatelessWidget {
+class _BnbBookingPanel extends StatefulWidget {
   const _BnbBookingPanel({
     required this.price,
     required this.responseTime,
@@ -1139,10 +1143,44 @@ class _BnbBookingPanel extends StatelessWidget {
   final int price;
   final String responseTime;
   final String acceptedPetSize;
-  final VoidCallback onRequest;
+  final void Function(DateTime checkIn, DateTime checkOut) onRequest;
+
+  @override
+  State<_BnbBookingPanel> createState() => _BnbBookingPanelState();
+}
+
+class _BnbBookingPanelState extends State<_BnbBookingPanel> {
+  late DateTime _checkIn = DateTime.now().add(const Duration(days: 7));
+  late DateTime _checkOut = DateTime.now().add(const Duration(days: 8));
+
+  int get _nights {
+    final nights = _checkOut.difference(_checkIn).inDays;
+    return nights < 1 ? 1 : nights;
+  }
+
+  Future<void> _pickRange() async {
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 180)),
+      initialDateRange: DateTimeRange(start: _checkIn, end: _checkOut),
+    );
+    if (picked != null) {
+      setState(() {
+        _checkIn = picked.start;
+        _checkOut = picked.end.isAfter(picked.start)
+            ? picked.end
+            : picked.start.add(const Duration(days: 1));
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final localizations = MaterialLocalizations.of(context);
+    final checkInText = localizations.formatMediumDate(_checkIn);
+    final checkOutText = localizations.formatMediumDate(_checkOut);
+    final total = widget.price * _nights;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -1155,7 +1193,7 @@ class _BnbBookingPanel extends StatelessWidget {
           Row(
             children: [
               Text(
-                '$price TL',
+                '${widget.price} TL',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -1168,10 +1206,22 @@ class _BnbBookingPanel extends StatelessWidget {
               const Icon(Icons.home_work_rounded, color: Color(0xFFFDBA74)),
             ],
           ),
+          const SizedBox(height: 12),
+          _BnbDateRangeTile(
+            checkInText: checkInText,
+            checkOutText: checkOutText,
+            nights: _nights,
+            onTap: _pickRange,
+          ),
           const SizedBox(height: 8),
           Text(
-            '$acceptedPetSize kabul • $responseTime yanıt',
+            '${widget.acceptedPetSize} kabul • ${widget.responseTime} yanıt',
             style: const TextStyle(color: Color(0xFFE2E8F0)),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            'Tahmini toplam: $total TL / $_nights gece',
+            style: const TextStyle(color: Color(0xFF94A3B8), fontSize: 12),
           ),
           const SizedBox(height: 14),
           SizedBox(
@@ -1182,15 +1232,75 @@ class _BnbBookingPanel extends StatelessWidget {
                 foregroundColor: const Color(0xFF431407),
                 padding: const EdgeInsets.symmetric(vertical: 14),
               ),
-              onPressed: onRequest,
-              icon: const Icon(Icons.send_rounded),
-              label: const Text('Konaklama talebi gönder'),
+              onPressed: () => widget.onRequest(_checkIn, _checkOut),
+              icon: const Icon(Icons.calendar_month_rounded),
+              label: const Text('Rezervasyon talebi gönder'),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+class _BnbDateRangeTile extends StatelessWidget {
+  const _BnbDateRangeTile({
+    required this.checkInText,
+    required this.checkOutText,
+    required this.nights,
+    required this.onTap,
+  });
+
+  final String checkInText;
+  final String checkOutText;
+  final int nights;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+    onTap: onTap,
+    borderRadius: BorderRadius.circular(18),
+    child: Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.date_range_rounded, color: Color(0xFFFDBA74)),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Giriş - çıkış',
+                  style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '$checkInText → $checkOutText',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            '$nights gece',
+            style: const TextStyle(
+              color: Color(0xFFFED7AA),
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 class _BnbProfileSection extends StatelessWidget {

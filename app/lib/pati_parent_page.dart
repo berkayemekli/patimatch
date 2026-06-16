@@ -506,7 +506,8 @@ class _FamilyPetCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _FamilyActionPanel(
-                      onApply: () => _sendApplication(context),
+                      onApply: (visitDate) =>
+                          _sendApplication(context, visitDate),
                     ),
                     const SizedBox(height: 14),
                     _FamilySection(
@@ -562,7 +563,10 @@ class _FamilyPetCard extends StatelessWidget {
     );
   }
 
-  Future<void> _sendApplication(BuildContext context) async {
+  Future<void> _sendApplication(
+    BuildContext context,
+    DateTime visitDate,
+  ) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
       await Navigator.of(
@@ -589,7 +593,8 @@ class _FamilyPetCard extends StatelessWidget {
         postId: pet['id'] as String,
         dogName: pet['dogName'] as String,
         ownerUserId: pet['ownerUserId'] as String? ?? 'demo-owner',
-        note: 'PatiFamily \u00FCzerinden sahiplenme ba\u015Fvurusu.',
+        note:
+            'PatiFamily üzerinden sahiplenme başvurusu. Tanışma/adaptasyon görüşmesi: ${visitDate.toIso8601String()}',
       );
       if (!context.mounted) return;
       Navigator.of(context).pop();
@@ -844,49 +849,116 @@ class _EmptyFamilyState extends StatelessWidget {
   );
 }
 
-class _FamilyActionPanel extends StatelessWidget {
+class _FamilyActionPanel extends StatefulWidget {
   const _FamilyActionPanel({required this.onApply});
-  final VoidCallback onApply;
+  final ValueChanged<DateTime> onApply;
+
   @override
-  Widget build(BuildContext context) => Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: const Color(0xFF111827),
-      borderRadius: BorderRadius.circular(24),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Yuva ba\u015Fvurusu',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Ba\u015Fvurudan sonra sahip notlar\u0131 ve uyum s\u00FCreci Taleplerim ekran\u0131nda takip edilebilir.',
-          style: TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
-        ),
-        const SizedBox(height: 14),
-        SizedBox(
-          width: double.infinity,
-          child: FilledButton.icon(
-            style: FilledButton.styleFrom(
-              backgroundColor: const Color(0xFFFDE68A),
-              foregroundColor: const Color(0xFF422006),
-              padding: const EdgeInsets.symmetric(vertical: 14),
+  State<_FamilyActionPanel> createState() => _FamilyActionPanelState();
+}
+
+class _FamilyActionPanelState extends State<_FamilyActionPanel> {
+  late DateTime _visitDate = DateTime.now().add(const Duration(days: 3));
+
+  Future<void> _pickVisitDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _visitDate,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 120)),
+    );
+    if (picked != null) setState(() => _visitDate = picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dateText = MaterialLocalizations.of(
+      context,
+    ).formatMediumDate(_visitDate);
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Yuva başvurusu',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w900,
             ),
-            onPressed: onApply,
-            icon: const Icon(Icons.favorite_rounded),
-            label: const Text('Sahiplenme ba\u015Fvurusu g\u00F6nder'),
           ),
-        ),
-      ],
-    ),
-  );
+          const SizedBox(height: 8),
+          const Text(
+            'Başvurudan sonra sahip notları ve uyum süreci Taleplerim ekranında takip edilebilir.',
+            style: TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
+          ),
+          const SizedBox(height: 12),
+          InkWell(
+            onTap: _pickVisitDate,
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.08),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.14)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.event_available_rounded,
+                    color: Color(0xFFFDE68A),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Tanışma tarihi',
+                          style: TextStyle(
+                            color: Color(0xFF94A3B8),
+                            fontSize: 11,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          dateText,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFFDE68A),
+                foregroundColor: const Color(0xFF422006),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+              ),
+              onPressed: () => widget.onApply(_visitDate),
+              icon: const Icon(Icons.favorite_rounded),
+              label: const Text('Tarihli başvuru gönder'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _FamilySection extends StatelessWidget {

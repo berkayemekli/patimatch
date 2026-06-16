@@ -75,6 +75,8 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- PatiGezdirme, PatiBnB ve PatiFamily detay panellerine tarih/rezervasyon secimi eklendi.
+
 Son commitler:
 
 - 540eaae Use popup flow for Google web sign-in
