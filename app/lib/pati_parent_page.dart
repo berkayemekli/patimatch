@@ -1,6 +1,11 @@
-﻿import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
+import 'data/services_repository.dart';
+import 'data/user_repository.dart';
+import 'login_page.dart';
 
 class PatiParentPage extends StatefulWidget {
   const PatiParentPage({super.key});
@@ -11,71 +16,60 @@ class PatiParentPage extends StatefulWidget {
 
 class _PatiParentPageState extends State<PatiParentPage> {
   bool _filtersOpen = false;
-  String _city = 'İstanbul';
-  String _district = 'Tum ilceler';
-  String _animalType = 'K\u00f6pek';
-  String _breed = 'Tum cinsler';
-  String _ageRange = 'Tum yaslar';
+  String _city = '\u0130stanbul';
+  String _district = 'T\u00FCm il\u00E7eler';
+  String _animalType = 'K\u00F6pek';
+  String _breed = 'T\u00FCm cinsler';
+  String _ageRange = 'T\u00FCm ya\u015Flar';
   String _sex = 'Fark etmez';
   String _vaccineStatus = 'Fark etmez';
-  String _size = 'Tum boyutlar';
+  String _size = 'T\u00FCm boyutlar';
   String _searchQuery = '';
-  List<String> _cities = const ['İstanbul', 'Ankara', 'İzmir'];
+  List<String> _cities = const ['\u0130stanbul', 'Ankara', '\u0130zmir'];
   List<String> _districts = const [];
   Map<String, List<String>> _breedsByType = const {};
+  List<Map<String, dynamic>> _publishedPosts = const <Map<String, dynamic>>[];
 
-  static const List<Map<String, String>> _familyPets = [
+  static const List<Map<String, dynamic>> _familyPets = [
     {
-      'title': 'Mavi - İstanbul',
-      'subtitle': '10 ay - Kucuk - Asili - Oyuncu karakter',
-      'badge': 'Acil Yuva',
-      'city': 'İstanbul',
-      'district': 'Kadıköy',
-      'animalType': 'K?pek',
+      'id': 'family_demo_01',
+      'dogName': 'Mavi',
+      'city': '\u0130stanbul',
+      'district': 'Kad\u0131k\u00F6y',
+      'animalType': 'K\u00F6pek',
       'breed': 'Maltese',
-      'ageRange': '0-1 yas',
-      'sex': 'Disi',
+      'ageMonths': 10,
+      'ageRange': '0-1 ya\u015F',
+      'sex': 'Di\u015Fi',
       'vaccineStatus': 'Tam',
-      'size': 'Kucuk',
+      'size': 'K\u00FC\u00E7\u00FCk',
+      'badge': 'Acil yuva',
+      'bio': 'Ev ortam\u0131na al\u0131\u015Fk\u0131n, oyuncu ve insan odakl\u0131 bir yavru. Sakin bir ailede h\u0131zla g\u00FCven kurar.',
+      'ownerNote': 'D\u00FCzenli veteriner takibi ve ilk ay yak\u0131n ileti\u015Fim bizim i\u00E7in \u00F6nemli.',
+      'imageUrl': 'https://placedog.net/900/700?id=81',
+      'ownerUserId': 'demo-family-owner-1',
+      'trustBadges': ['A\u015F\u0131 kart\u0131', 'Sahip do\u011Fruland\u0131'],
+      'careNeeds': ['G\u00FCnl\u00FCk k\u0131sa y\u00FCr\u00FCy\u00FC\u015F', 'Sakin ev', '\u0130lk ay takip'],
     },
     {
-      'title': 'Tarcin - Ankara',
-      'subtitle': '18 ay - Orta - Asili - Cocuklarla uyumlu',
-      'badge': 'Dogrulanmis',
+      'id': 'family_demo_02',
+      'dogName': 'Tar\u00E7\u0131n',
       'city': 'Ankara',
-      'district': 'Çankaya',
-      'animalType': 'K?pek',
+      'district': '\u00C7ankaya',
+      'animalType': 'K\u00F6pek',
       'breed': 'Golden Retriever',
-      'ageRange': '1-3 yas',
+      'ageMonths': 18,
+      'ageRange': '1-3 ya\u015F',
       'sex': 'Erkek',
       'vaccineStatus': 'Tam',
       'size': 'Orta',
-    },
-    {
-      'title': 'Boncuk - Bursa',
-      'subtitle': '14 ay - Kucuk - Sakin ev ortami sever',
-      'badge': 'Yeni',
-      'city': 'Bursa',
-      'district': 'Nilüfer',
-      'animalType': 'K?pek',
-      'breed': 'Tekir',
-      'ageRange': '1-3 yas',
-      'sex': 'Fark etmez',
-      'vaccineStatus': 'Bilinmiyor',
-      'size': 'Kucuk',
-    },
-    {
-      'title': 'Luna - İzmir',
-      'subtitle': '2 yas - Orta - Tuvalet egitimli',
-      'badge': 'Uygun',
-      'city': 'İzmir',
-      'district': 'Karşıyaka',
-      'animalType': 'K?pek',
-      'breed': 'Scottish Fold',
-      'ageRange': '1-3 yas',
-      'sex': 'Disi',
-      'vaccineStatus': 'Eksik',
-      'size': 'Orta',
+      'badge': 'Do\u011Frulanm\u0131\u015F',
+      'bio': 'Temel komutlar\u0131 biliyor, \u00E7ocuklarla kontroll\u00FC \u015Fekilde iyi anla\u015F\u0131yor. D\u00FCzenli y\u00FCr\u00FCy\u00FC\u015F ister.',
+      'ownerNote': 'Bah\u00E7eli ev tercihimiz var ama en \u00F6nemlisi sabit rutin ve sevgi dolu ortam.',
+      'imageUrl': 'https://placedog.net/900/700?id=82',
+      'ownerUserId': 'demo-family-owner-2',
+      'trustBadges': ['A\u015F\u0131 kart\u0131', 'Sahiplendirme formu'],
+      'careNeeds': ['Uzun y\u00FCr\u00FCy\u00FC\u015F', 'Oyun rutini', 'Deneyimli aile'],
     },
   ];
 
@@ -83,6 +77,61 @@ class _PatiParentPageState extends State<PatiParentPage> {
   void initState() {
     super.initState();
     _loadFilterData();
+    _loadPublishedPosts();
+  }
+
+  Future<void> _loadPublishedPosts() async {
+    try {
+      final snap = await FirebaseFirestore.instance
+          .collection('adoption_posts')
+          .where('status', isEqualTo: 'active')
+          .get();
+      if (!mounted || snap.docs.isEmpty) return;
+      final posts = snap.docs.map((doc) {
+        final data = doc.data();
+        final ageMonths = data['ageMonths'] as int? ?? 0;
+        return <String, dynamic>{
+          'id': doc.id,
+          'dogName': data['dogName'] as String? ?? 'Pati',
+          'city': data['city'] as String? ?? '',
+          'district': data['district'] as String? ?? '',
+          'animalType': data['animalType'] as String? ?? 'K\u00F6pek',
+          'breed': data['breed'] as String? ?? 'Melez',
+          'ageMonths': ageMonths,
+          'ageRange': _ageRangeFor(ageMonths),
+          'sex': data['sex'] as String? ?? 'Fark etmez',
+          'vaccineStatus': data['vaccinated'] == true ? 'Tam' : 'Bilinmiyor',
+          'size': data['size'] as String? ?? 'Orta',
+          'badge': data['urgency'] as String? ??
+              (data['featured'] == true ? 'Do\u011Frulanm\u0131\u015F' : 'Yeni'),
+          'bio': data['bio'] as String? ?? '',
+          'ownerNote': data['ownerNote'] as String? ?? '',
+          'ownerUserId': data['ownerUserId'] as String? ?? 'demo-owner',
+          'imageUrl': data['imageUrl'] as String? ??
+              'https://placedog.net/900/700?id=${doc.id.hashCode.abs() % 100}',
+          'trustBadges':
+              (data['trustBadges'] as List<dynamic>? ?? const <dynamic>[
+            'A\u015F\u0131 kart\u0131',
+            'Sahiplendirme formu',
+          ]).whereType<String>().toList(),
+          'careNeeds': (data['careNeeds'] as List<dynamic>? ?? const <dynamic>[
+            '\u0130lk ay takip',
+            'Sabit rutin',
+            'Veteriner kontrol\u00FC',
+          ]).whereType<String>().toList(),
+        };
+      }).toList();
+      setState(() => _publishedPosts = posts);
+    } catch (_) {
+      // Demo listeyle devam edilir.
+    }
+  }
+
+  static String _ageRangeFor(int ageMonths) {
+    if (ageMonths <= 12) return '0-1 ya\u015F';
+    if (ageMonths <= 36) return '1-3 ya\u015F';
+    if (ageMonths <= 84) return '3-7 ya\u015F';
+    return '7+ ya\u015F';
   }
 
   Future<void> _loadFilterData() async {
@@ -98,13 +147,12 @@ class _PatiParentPageState extends State<PatiParentPage> {
   }
 
   Future<void> _setCity(String city) async {
-    final districts = city == 'All'
-        ? <String>[]
-        : await MasterDataRepository.loadDistricts(city);
+    final districts =
+        city == 'All' ? <String>[] : await MasterDataRepository.loadDistricts(city);
     if (!mounted) return;
     setState(() {
       _city = city;
-      _district = 'Tum ilceler';
+      _district = 'T\u00FCm il\u00E7eler';
       _districts = districts;
     });
   }
@@ -112,38 +160,30 @@ class _PatiParentPageState extends State<PatiParentPage> {
   void _setAnimalType(String type) {
     setState(() {
       _animalType = type;
-      _breed = 'Tum cinsler';
+      _breed = 'T\u00FCm cinsler';
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final query = _searchQuery.trim().toLowerCase();
-    final filteredPets = _familyPets.where((pet) {
-      final cityOk = _city == 'All' || pet['city'] == _city;
-      final districtOk =
-          _district == 'Tum ilceler' || pet['district'] == _district;
-      final animalOk = pet['animalType'] == _animalType;
-      final breedOk = _breed == 'Tum cinsler' || pet['breed'] == _breed;
-      final ageOk = _ageRange == 'Tum yaslar' || pet['ageRange'] == _ageRange;
-      final sexOk = _sex == 'Fark etmez' || pet['sex'] == _sex;
-      final vaccineOk =
-          _vaccineStatus == 'Fark etmez' ||
-          pet['vaccineStatus'] == _vaccineStatus;
-      final sizeOk = _size == 'Tum boyutlar' || pet['size'] == _size;
-      final searchOk =
-          query.isEmpty ||
-          pet.values.any((value) => value.toLowerCase().contains(query));
-      return cityOk &&
-          districtOk &&
-          animalOk &&
-          breedOk &&
-          ageOk &&
-          sexOk &&
-          vaccineOk &&
-          sizeOk &&
-          searchOk;
+    final source = _publishedPosts.isEmpty ? _familyPets : _publishedPosts;
+    final filteredPets = source.where((pet) {
+      final values = pet.values.map((v) => v.toString().toLowerCase()).join(' ');
+      return (_city == 'All' || pet['city'] == _city) &&
+          (_district == 'T\u00FCm il\u00E7eler' || pet['district'] == _district) &&
+          pet['animalType'] == _animalType &&
+          (_breed == 'T\u00FCm cinsler' || pet['breed'] == _breed) &&
+          (_ageRange == 'T\u00FCm ya\u015Flar' || pet['ageRange'] == _ageRange) &&
+          (_sex == 'Fark etmez' || pet['sex'] == _sex) &&
+          (_vaccineStatus == 'Fark etmez' ||
+              pet['vaccineStatus'] == _vaccineStatus) &&
+          (_size == 'T\u00FCm boyutlar' || pet['size'] == _size) &&
+          (query.isEmpty || values.contains(query));
     }).toList();
+
+    final width = MediaQuery.of(context).size.width;
+    final crossAxisCount = width > 860 ? 3 : (width > 560 ? 2 : 1);
 
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -177,24 +217,321 @@ class _PatiParentPageState extends State<PatiParentPage> {
           ),
           const SizedBox(height: 16),
           const Text(
-            'PatiFamily ilanlari',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+            'PatiFamily yuva adaylar\u0131',
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 6),
+          const Text(
+            'Sahiplendirme s\u00FCreci i\u00E7in g\u00FCven, bak\u0131m ihtiyac\u0131 ve aile uyumu tek profilde.',
+            style: TextStyle(color: Color(0xFF64748B)),
+          ),
+          const SizedBox(height: 14),
           if (filteredPets.isEmpty)
             const _EmptyFamilyState()
           else
-            for (final pet in filteredPets) ...[
-              _SimpleCard(
-                title: pet['title']!,
-                subtitle: pet['subtitle']!,
-                badge: pet['badge']!,
+            GridView.builder(
+              itemCount: filteredPets.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount,
+                crossAxisSpacing: 14,
+                mainAxisSpacing: 14,
+                childAspectRatio: width > 860 ? 0.78 : 0.86,
               ),
-              const SizedBox(height: 10),
-            ],
+              itemBuilder: (context, index) =>
+                  _FamilyPetCard(pet: filteredPets[index]),
+            ),
         ],
       ),
     );
+  }
+}
+
+class _FamilyPetCard extends StatelessWidget {
+  const _FamilyPetCard({required this.pet});
+  final Map<String, dynamic> pet;
+
+  @override
+  Widget build(BuildContext context) {
+    final dogName = pet['dogName'] as String;
+    final city = pet['city'] as String;
+    final imageUrl = pet['imageUrl'] as String;
+    final badge = pet['badge'] as String;
+    final bio = pet['bio'] as String? ?? '';
+    final ageMonths = pet['ageMonths'] as int? ?? 0;
+    final size = pet['size'] as String? ?? 'Orta';
+    return InkWell(
+      borderRadius: BorderRadius.circular(28),
+      onTap: () => _openDetails(context),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x140F172A),
+              blurRadius: 24,
+              offset: Offset(0, 14),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(imageUrl, fit: BoxFit.cover),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Color(0xCC1F2937)],
+                      ),
+                    ),
+                  ),
+                  Positioned(top: 12, left: 12, child: _FamilyBadge(label: badge)),
+                  Positioned(
+                    left: 14,
+                    right: 14,
+                    bottom: 14,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          dogName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 22,
+                            fontWeight: FontWeight.w900,
+                          ),
+                        ),
+                        Text(
+                          '$city · $size · $ageMonths ay',
+                          style: const TextStyle(
+                            color: Color(0xFFE2E8F0),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    bio,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Color(0xFF475569), height: 1.35),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      _FamilyChip(label: pet['breed'] as String? ?? 'Melez'),
+                      _FamilyChip(
+                        label: pet['vaccineStatus'] as String? ?? 'Bilinmiyor',
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _openDetails(BuildContext context) {
+    final trust =
+        (pet['trustBadges'] as List<dynamic>? ?? const <dynamic>[])
+            .whereType<String>()
+            .toList();
+    final needs = (pet['careNeeds'] as List<dynamic>? ?? const <dynamic>[])
+        .whereType<String>()
+        .toList();
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.55,
+        maxChildSize: 0.96,
+        builder: (context, controller) => Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFFBEB),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: ListView(
+            controller: controller,
+            padding: EdgeInsets.zero,
+            children: [
+              SizedBox(
+                height: 300,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(pet['imageUrl'] as String, fit: BoxFit.cover),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0x22000000), Color(0xEE1F2937)],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 14,
+                      right: 14,
+                      child: IconButton.filled(
+                        style: IconButton.styleFrom(backgroundColor: Colors.white),
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close_rounded),
+                      ),
+                    ),
+                    Positioned(
+                      left: 18,
+                      right: 18,
+                      bottom: 22,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _FamilyBadge(label: pet['badge'] as String),
+                          const SizedBox(height: 12),
+                          Text(
+                            pet['dogName'] as String,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 31,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          Text(
+                            '${pet['city']} · ${pet['breed']} · ${pet['ageMonths']} ay',
+                            style: const TextStyle(
+                              color: Color(0xFFE2E8F0),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _FamilyActionPanel(onApply: () => _sendApplication(context)),
+                    const SizedBox(height: 14),
+                    _FamilySection(
+                      title: 'Yuva hikayesi',
+                      child: Text(
+                        pet['bio'] as String? ?? '',
+                        style: const TextStyle(
+                          height: 1.5,
+                          color: Color(0xFF334155),
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _FamilySection(
+                      title: 'Sahip notu',
+                      child: Text(
+                        pet['ownerNote'] as String? ?? '',
+                        style: const TextStyle(
+                          height: 1.5,
+                          color: Color(0xFF334155),
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _FamilySection(
+                      title: 'G\u00FCven sinyalleri',
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: trust.map((e) => _FamilyChip(label: e)).toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _FamilySection(
+                      title: 'Bak\u0131m ihtiya\u00E7lar\u0131',
+                      child: Column(
+                        children:
+                            needs.map((e) => _FamilyChecklistRow(text: e)).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendApplication(BuildContext context) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => const LoginPage()),
+      );
+      return;
+    }
+    try {
+      final dogDoc = await UserRepository().fetchMyDogDoc(user.uid);
+      if (dogDoc == null) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Ba\u015Fvuru i\u00E7in \u00F6nce pet profilini olu\u015Fturmal\u0131s\u0131n.',
+            ),
+          ),
+        );
+        return;
+      }
+      await ServicesRepository().createAdoptionApplication(
+        requesterUserId: user.uid,
+        requesterDogId: dogDoc.id,
+        postId: pet['id'] as String,
+        dogName: pet['dogName'] as String,
+        ownerUserId: pet['ownerUserId'] as String? ?? 'demo-owner',
+        note: 'PatiFamily \u00FCzerinden sahiplenme ba\u015Fvurusu.',
+      );
+      if (!context.mounted) return;
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sahiplenme ba\u015Fvurusu g\u00F6nderildi.'),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ba\u015Fvuru g\u00F6nderilemedi: $e')),
+      );
+    }
   }
 }
 
@@ -283,7 +620,7 @@ class _FamilyFilterBar extends StatelessWidget {
             const SizedBox(height: 12),
             _FamilySearchField(
               value: searchQuery,
-              hintText: 'Ilan, sehir, karakter veya durum ara',
+              hintText: '\u0130lan, \u015Fehir, karakter veya durum ara',
               onChanged: onSearchChanged,
             ),
             const SizedBox(height: 12),
@@ -292,51 +629,51 @@ class _FamilyFilterBar extends StatelessWidget {
               runSpacing: 10,
               children: [
                 _FamilyDrop(
-                  label: 'Il',
+                  label: '\u0130l',
                   value: city,
                   items: ['All', ...cities],
                   onChanged: onCityChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Ilce',
+                  label: '\u0130l\u00E7e',
                   value: districts.contains(district)
                       ? district
-                      : 'Tum ilceler',
-                  items: ['Tum ilceler', ...districts],
+                      : 'T\u00FCm il\u00E7eler',
+                  items: ['T\u00FCm il\u00E7eler', ...districts],
                   onChanged: onDistrictChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Kedi / K\u00f6pek',
+                  label: 'Kedi / K\u00F6pek',
                   value: animalType,
-                  items: const ['K\u00f6pek', 'Kedi'],
+                  items: const ['K\u00F6pek', 'Kedi'],
                   onChanged: onAnimalTypeChanged,
                 ),
                 _FamilyDrop(
                   label: '$animalType cinsi',
-                  value: breeds.contains(breed) ? breed : 'Tum cinsler',
-                  items: ['Tum cinsler', ...breeds],
+                  value: breeds.contains(breed) ? breed : 'T\u00FCm cinsler',
+                  items: ['T\u00FCm cinsler', ...breeds],
                   onChanged: onBreedChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Yas',
+                  label: 'Ya\u015F',
                   value: ageRange,
                   items: const [
-                    'Tum yaslar',
-                    '0-1 yas',
-                    '1-3 yas',
-                    '3-7 yas',
-                    '7+ yas',
+                    'T\u00FCm ya\u015Flar',
+                    '0-1 ya\u015F',
+                    '1-3 ya\u015F',
+                    '3-7 ya\u015F',
+                    '7+ ya\u015F',
                   ],
                   onChanged: onAgeChanged,
                 ),
                 _FamilyDrop(
                   label: 'Cinsiyet',
                   value: sex,
-                  items: const ['Fark etmez', 'Disi', 'Erkek'],
+                  items: const ['Fark etmez', 'Di\u015Fi', 'Erkek'],
                   onChanged: onSexChanged,
                 ),
                 _FamilyDrop(
-                  label: 'Asi',
+                  label: 'A\u015F\u0131',
                   value: vaccineStatus,
                   items: const ['Fark etmez', 'Tam', 'Eksik', 'Bilinmiyor'],
                   onChanged: onVaccineChanged,
@@ -344,7 +681,12 @@ class _FamilyFilterBar extends StatelessWidget {
                 _FamilyDrop(
                   label: 'Boyut',
                   value: size,
-                  items: const ['Tum boyutlar', 'Kucuk', 'Orta', 'Buyuk'],
+                  items: const [
+                    'T\u00FCm boyutlar',
+                    'K\u00FC\u00E7\u00FCk',
+                    'Orta',
+                    'B\u00FCy\u00FCk',
+                  ],
                   onChanged: onSizeChanged,
                 ),
               ],
@@ -362,38 +704,23 @@ class _FamilySearchField extends StatelessWidget {
     required this.hintText,
     required this.onChanged,
   });
-
   final String value;
   final String hintText;
   final ValueChanged<String> onChanged;
-
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      key: const ValueKey('family-filter-search'),
-      initialValue: value,
-      onChanged: onChanged,
-      textInputAction: TextInputAction.search,
-      decoration: InputDecoration(
-        hintText: hintText,
-        prefixIcon: const Icon(Icons.search_rounded),
-        filled: true,
-        fillColor: const Color(0xFFF8FAFC),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
+  Widget build(BuildContext context) => TextFormField(
+        key: const ValueKey('family-filter-search'),
+        initialValue: value,
+        onChanged: onChanged,
+        textInputAction: TextInputAction.search,
+        decoration: InputDecoration(
+          hintText: hintText,
+          prefixIcon: const Icon(Icons.search_rounded),
+          filled: true,
+          fillColor: const Color(0xFFF8FAFC),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(18),
-          borderSide: const BorderSide(color: Color(0xFF0F766E), width: 1.4),
-        ),
-      ),
-    );
-  }
+      );
 }
 
 class _FamilyDrop extends StatelessWidget {
@@ -403,79 +730,194 @@ class _FamilyDrop extends StatelessWidget {
     required this.items,
     required this.onChanged,
   });
-
   final String label;
   final String value;
   final List<String> items;
   final ValueChanged<String> onChanged;
-
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 220,
-      child: DropdownButtonFormField<String>(
-        key: ValueKey('$label-$value-${items.length}'),
-        initialValue: items.contains(value) ? value : items.first,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+  Widget build(BuildContext context) => SizedBox(
+        width: 220,
+        child: DropdownButtonFormField<String>(
+          key: ValueKey('$label-$value-${items.length}'),
+          initialValue: items.contains(value) ? value : items.first,
+          decoration: InputDecoration(
+            labelText: label,
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+          ),
+          items: items
+              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+              .toList(),
+          onChanged: (value) {
+            if (value != null) onChanged(value);
+          },
         ),
-        items: items
-            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-            .toList(),
-        onChanged: (value) {
-          if (value != null) onChanged(value);
-        },
-      ),
-    );
-  }
+      );
 }
 
 class _EmptyFamilyState extends StatelessWidget {
   const _EmptyFamilyState();
-
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE7ECF3)),
-      ),
-      child: const Text(
-        'Bu filtrelere uygun ilan henuz yok. Tur, cins veya konum filtresini degistirebilirsin.',
-        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-      ),
-    );
-  }
-}
-
-class _SimpleCard extends StatelessWidget {
-  const _SimpleCard({
-    required this.title,
-    required this.subtitle,
-    required this.badge,
-  });
-
-  final String title;
-  final String subtitle;
-  final String badge;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: ListTile(
-        leading: const CircleAvatar(child: Icon(Icons.pets)),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: Text(
-          badge,
-          style: const TextStyle(fontWeight: FontWeight.w800),
+  Widget build(BuildContext context) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: const Color(0xFFE7ECF3)),
         ),
-      ),
-    );
-  }
+        child: const Text(
+          'Bu filtrelere uygun ilan hen\u00FCz yok. T\u00FCr, cins veya konum filtresini de\u011Fi\u015Ftirebilirsin.',
+          style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+        ),
+      );
 }
 
+class _FamilyActionPanel extends StatelessWidget {
+  const _FamilyActionPanel({required this.onApply});
+  final VoidCallback onApply;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111827),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Yuva ba\u015Fvurusu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Ba\u015Fvurudan sonra sahip notlar\u0131 ve uyum s\u00FCreci Taleplerim ekran\u0131nda takip edilebilir.',
+              style: TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
+            ),
+            const SizedBox(height: 14),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                style: FilledButton.styleFrom(
+                  backgroundColor: const Color(0xFFFDE68A),
+                  foregroundColor: const Color(0xFF422006),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                onPressed: onApply,
+                icon: const Icon(Icons.favorite_rounded),
+                label: const Text('Sahiplenme ba\u015Fvurusu g\u00F6nder'),
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _FamilySection extends StatelessWidget {
+  const _FamilySection({required this.title, required this.child});
+  final String title;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: const Color(0xFFFDE68A)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
+            ),
+            const SizedBox(height: 12),
+            child,
+          ],
+        ),
+      );
+}
+
+class _FamilyChecklistRow extends StatelessWidget {
+  const _FamilyChecklistRow({required this.text});
+  final String text;
+  @override
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Color(0xFFEAB308),
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(fontWeight: FontWeight.w700),
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _FamilyBadge extends StatelessWidget {
+  const _FamilyBadge({required this.label});
+  final String label;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.94),
+          borderRadius: BorderRadius.circular(999),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.favorite_rounded,
+              size: 15,
+              color: Color(0xFFE11D48),
+            ),
+            const SizedBox(width: 5),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Color(0xFF881337),
+                fontWeight: FontWeight.w900,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+      );
+}
+
+class _FamilyChip extends StatelessWidget {
+  const _FamilyChip({required this.label});
+  final String label;
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFFBEB),
+          borderRadius: BorderRadius.circular(999),
+          border: Border.all(color: const Color(0xFFFDE68A)),
+        ),
+        child: Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFF92400E),
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      );
+}

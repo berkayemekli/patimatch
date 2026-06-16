@@ -244,18 +244,38 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
           'ownerUserId': data['ownerUserId'] as String? ?? doc.id,
           'city': data['city'] as String? ?? '',
           'district': data['district'] as String? ?? '',
-          'ageRange': 'Tum yaslar',
+          'ageRange': 'T\u{00FC}m ya\u{015F}lar',
           'sex': 'Fark etmez',
           'vaccineStatus': 'Fark etmez',
           'nightlyPrice': data['nightlyPrice'] as int? ?? 0,
           'rating': (data['rating'] as num?)?.toDouble() ?? 0.0,
           'reviews': data['reviewCount'] as int? ?? 0,
-          'type': data['yard'] == true ? 'Bahceli Ev' : 'Ev Konaklama',
-          'badge': 'Telefon onayli',
-          'trustBadges': (data['trustBadges'] as List<dynamic>? ?? const <dynamic>['Telefon onayli']).map((e) => e.toString()).toList(),
-          'petTypes': const <String>['Köpek', 'Kedi'],
-          'breeds': const <String>['Kirma', 'Melez', 'Tekir'],
-          'imageUrl': 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80',
+          'type': data['homeType'] as String? ??
+              (data['yard'] == true ? 'Bah\u{00E7}eli Ev' : 'Ev Konaklama'),
+          'badge': data['verificationStatus'] == 'verified'
+              ? 'Kimlik do\u{011F}ruland\u{0131}'
+              : 'Telefon onayl\u{0131}',
+          'trustBadges': (data['trustBadges'] as List<dynamic>? ?? const <dynamic>['Telefon onayl\u{0131}'])
+              .map((e) => e.toString())
+              .toList(),
+          'petTypes': (data['petTypes'] as List<dynamic>? ?? const <dynamic>['K\u{00F6}pek', 'Kedi'])
+              .map((e) => e.toString())
+              .toList(),
+          'breeds': (data['breeds'] as List<dynamic>? ?? const <dynamic>['K\u{0131}rma', 'Melez', 'Tekir'])
+              .map((e) => e.toString())
+              .toList(),
+          'bio': data['bio'] as String? ?? '',
+          'houseRules': (data['houseRules'] as List<dynamic>? ?? const <dynamic>[])
+              .map((e) => e.toString())
+              .toList(),
+          'safetyFeatures': (data['safetyFeatures'] as List<dynamic>? ?? const <dynamic>[])
+              .map((e) => e.toString())
+              .toList(),
+          'dailyRoutine': data['dailyRoutine'] as String? ?? '',
+          'responseTime': data['responseTime'] as String? ?? '2 saat i\u{00E7}inde',
+          'acceptedPetSize': data['acceptedPetSize'] as String? ?? 'K\u{00FC}\u{00E7}\u{00FC}k ve orta',
+          'imageUrl': data['imageUrl'] as String? ??
+              'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1400&q=80',
         };
       }).toList();
       setState(() => _publishedStays = published);
@@ -379,7 +399,7 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                 crossAxisCount: crossAxisCount,
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
-                childAspectRatio: 1.04,
+                childAspectRatio: width > 860 ? 0.76 : 0.82,
               ),
               itemBuilder: (context, index) {
                 final stay = filteredStays[index];
@@ -397,6 +417,16 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
                   breeds: (stay['breeds'] as List<dynamic>).cast<String>(),
                   trustBadges:
                       (stay['trustBadges'] as List<dynamic>).cast<String>(),
+                  bio: stay['bio'] as String? ?? '',
+                  houseRules: (stay['houseRules'] as List<dynamic>? ?? const <dynamic>[])
+                      .whereType<String>()
+                      .toList(),
+                  safetyFeatures: (stay['safetyFeatures'] as List<dynamic>? ?? const <dynamic>[])
+                      .whereType<String>()
+                      .toList(),
+                  dailyRoutine: stay['dailyRoutine'] as String? ?? '',
+                  responseTime: stay['responseTime'] as String? ?? '2 saat i\u{00E7}inde',
+                  acceptedPetSize: stay['acceptedPetSize'] as String? ?? 'K\u{00FC}\u{00E7}\u{00FC}k ve orta',
                   imageUrl: stay['imageUrl'] as String,
                 );
               },
@@ -662,8 +692,15 @@ class _StayCard extends StatelessWidget {
     required this.petTypes,
     required this.breeds,
     required this.trustBadges,
+    required this.bio,
+    required this.houseRules,
+    required this.safetyFeatures,
+    required this.dailyRoutine,
+    required this.responseTime,
+    required this.acceptedPetSize,
     required this.imageUrl,
   });
+
   final String hostId;
   final String hostOwnerUserId;
   final String host;
@@ -676,117 +713,218 @@ class _StayCard extends StatelessWidget {
   final List<String> petTypes;
   final List<String> breeds;
   final List<String> trustBadges;
+  final String bio;
+  final List<String> houseRules;
+  final List<String> safetyFeatures;
+  final String dailyRoutine;
+  final String responseTime;
+  final String acceptedPetSize;
   final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(28),
       onTap: () => _openStayDetails(context),
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(28),
           boxShadow: const [
-            BoxShadow(
-              color: Color(0x0C000000),
-              blurRadius: 14,
-              offset: Offset(0, 6),
+            BoxShadow(color: Color(0x140F172A), blurRadius: 24, offset: Offset(0, 14)),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(imageUrl, fit: BoxFit.cover),
+                  const DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Color(0xCC111827)],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: _CardTrustBadge(label: badge),
+                  ),
+                  Positioned(
+                    left: 14,
+                    right: 14,
+                    bottom: 14,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(host, style: const TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900)),
+                        const SizedBox(height: 4),
+                        Text('$type ? $city', style: const TextStyle(color: Color(0xFFE2E8F0), fontWeight: FontWeight.w700)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(14),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.star_rounded, size: 18, color: Color(0xFFF97316)),
+                      const SizedBox(width: 3),
+                      Text(rating.toStringAsFixed(2), style: const TextStyle(fontWeight: FontWeight.w900)),
+                      Text(' ($reviews yorum)', style: const TextStyle(color: Color(0xFF64748B), fontSize: 12)),
+                      const Spacer(),
+                      Text('$nightlyPrice TL/gece', style: const TextStyle(fontWeight: FontWeight.w900)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    bio.trim().isEmpty ? dailyRoutine : bio,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(color: Color(0xFF475569), height: 1.35),
+                  ),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      _MiniTrustChip(label: acceptedPetSize),
+                      if (petTypes.isNotEmpty) _MiniTrustChip(label: petTypes.join(' + ')),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      ),
+    );
+  }
+
+  void _openStayDetails(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.55,
+        maxChildSize: 0.96,
+        builder: (context, controller) => Container(
+          decoration: const BoxDecoration(
+            color: Color(0xFFFFF7ED),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: ListView(
+            controller: controller,
+            padding: EdgeInsets.zero,
             children: [
-              Expanded(
+              SizedBox(
+                height: 300,
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     Image.network(imageUrl, fit: BoxFit.cover),
-                    Positioned(
-                      top: 10,
-                      left: 10,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Text(
-                          badge,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                            color: Color(0xFF1E3A8A),
-                          ),
+                    const DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [Color(0x22000000), Color(0xEE111827)],
                         ),
                       ),
                     ),
                     Positioned(
-                      right: 10,
-                      bottom: 10,
-                      child: _CardTrustBadge(label: trustBadges.first),
+                      top: 14,
+                      right: 14,
+                      child: IconButton.filled(
+                        style: IconButton.styleFrom(backgroundColor: Colors.white),
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.close_rounded, color: Color(0xFF111827)),
+                      ),
+                    ),
+                    Positioned(
+                      left: 18,
+                      right: 18,
+                      bottom: 22,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _CardTrustBadge(label: badge),
+                          const SizedBox(height: 12),
+                          Text(host, style: const TextStyle(color: Colors.white, fontSize: 31, fontWeight: FontWeight.w900)),
+                          const SizedBox(height: 6),
+                          Text('$type ? $city', style: const TextStyle(color: Color(0xFFE2E8F0), fontWeight: FontWeight.w700)),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 28),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            '$host - $city',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827),
-                            ),
-                          ),
-                        ),
-                        const Icon(
-                          Icons.star_rounded,
-                          size: 16,
-                          color: Color(0xFF111827),
-                        ),
-                        const SizedBox(width: 2),
-                        Text(
-                          rating.toStringAsFixed(2),
-                          style: const TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ],
+                    _BnbBookingPanel(
+                      price: nightlyPrice,
+                      responseTime: responseTime,
+                      acceptedPetSize: acceptedPetSize,
+                      onRequest: () => _sendBnbRequest(context),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$type - $reviews yorum',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFF64748B),
+                    const SizedBox(height: 14),
+                    _BnbProfileSection(
+                      title: 'Ev güven profili',
+                      child: Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: trustBadges.map((label) => _MiniTrustChip(label: label)).toList(),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 6,
-                      children: trustBadges
-                          .take(2)
-                          .map((label) => _MiniTrustChip(label: label))
-                          .toList(),
+                    const SizedBox(height: 14),
+                    _BnbProfileSection(
+                      title: 'Host açıklaması',
+                      child: Text(
+                        bio.trim().isEmpty ? 'Host henüz detaylı açıklama eklemedi.' : bio,
+                        style: const TextStyle(height: 1.5, color: Color(0xFF334155), fontSize: 15),
+                      ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      '$nightlyPrice TL / gece',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-                        color: Color(0xFF111827),
+                    const SizedBox(height: 14),
+                    _BnbProfileSection(
+                      title: 'Günlük rutin',
+                      child: Text(
+                        dailyRoutine.trim().isEmpty ? 'Beslenme, yürüyüş ve dinlenme rutini talepte netleştirilir.' : dailyRoutine,
+                        style: const TextStyle(height: 1.5, color: Color(0xFF334155), fontSize: 15),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _BnbProfileSection(
+                      title: 'Ev kuralları',
+                      child: Column(
+                        children: (houseRules.isEmpty ? const ['Ön görüşme ile kabul', 'Aşı kartı istenir', 'Günlük fotoğraf paylaşımı'] : houseRules)
+                            .map((item) => _BnbChecklistRow(text: item))
+                            .toList(),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    _BnbProfileSection(
+                      title: 'Güvenlik özellikleri',
+                      child: Column(
+                        children: (safetyFeatures.isEmpty ? const ['Ayrı dinlenme alanı', 'Acil veteriner iletişimi', 'Güvenli kapı/pencere kontrolü'] : safetyFeatures)
+                            .map((item) => _BnbChecklistRow(text: item))
+                            .toList(),
                       ),
                     ),
                   ],
@@ -799,73 +937,19 @@ class _StayCard extends StatelessWidget {
     );
   }
 
-  void _openStayDetails(BuildContext context) {
-    showModalBottomSheet<void>(
-      context: context,
-      showDragHandle: true,
-      builder: (context) => SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(16),
-          children: [
-            Text(
-              '$type - $city',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Ev sahibi: $host',
-              style: const TextStyle(color: Color(0xFF475569)),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              '$nightlyPrice TL / gece - $reviews yorum',
-              style: const TextStyle(color: Color(0xFF475569)),
-            ),
-            const SizedBox(height: 12),
-            ...trustBadges.map(
-              (label) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                leading: const Icon(
-                  Icons.verified_user_rounded,
-                  color: Color(0xFF0F766E),
-                ),
-                title: Text(label),
-              ),
-            ),
-            const SizedBox(height: 8),
-            FilledButton.icon(
-              onPressed: () => _sendBnbRequest(context),
-              icon: const Icon(Icons.send_rounded),
-              label: const Text('Konaklama talebi gonder'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> _sendBnbRequest(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      await Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LoginPage()));
       return;
     }
-
     try {
       final dogDoc = await UserRepository().fetchMyDogDoc(user.uid);
       if (dogDoc == null) {
         if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Talep icin once pet profilini olusturmalisin.'),
-          ),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Talep için önce pet profilini oluşturmalısın.')));
         return;
       }
-
       final checkIn = DateTime.now().add(const Duration(days: 7));
       await ServicesRepository().createBnbRequest(
         requesterUserId: user.uid,
@@ -875,20 +959,91 @@ class _StayCard extends StatelessWidget {
         hostName: host,
         checkIn: checkIn,
         checkOut: checkIn.add(const Duration(days: 1)),
-        note: 'PatiParent uzerinden konaklama talebi.',
+        note: 'PatiParent üzerinden konaklama talebi.',
       );
-
       if (!context.mounted) return;
       Navigator.of(context).pop();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Konaklama talebi gonderildi.')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Konaklama talebi gönderildi.')));
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Talep gonderilemedi: $e')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Talep gönderilemedi: $e')));
     }
+  }
+}
+
+class _BnbBookingPanel extends StatelessWidget {
+  const _BnbBookingPanel({required this.price, required this.responseTime, required this.acceptedPetSize, required this.onRequest});
+  final int price;
+  final String responseTime;
+  final String acceptedPetSize;
+  final VoidCallback onRequest;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: const Color(0xFF111827), borderRadius: BorderRadius.circular(24)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text('$price TL', style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w900)),
+              const SizedBox(width: 4),
+              const Text('/ gece', style: TextStyle(color: Color(0xFFCBD5E1))),
+              const Spacer(),
+              const Icon(Icons.home_work_rounded, color: Color(0xFFFDBA74)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text('$acceptedPetSize kabul • $responseTime yanıt', style: const TextStyle(color: Color(0xFFE2E8F0))),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: FilledButton.icon(
+              style: FilledButton.styleFrom(backgroundColor: const Color(0xFFFDBA74), foregroundColor: const Color(0xFF431407), padding: const EdgeInsets.symmetric(vertical: 14)),
+              onPressed: onRequest,
+              icon: const Icon(Icons.send_rounded),
+              label: const Text('Konaklama talebi gönder'),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BnbProfileSection extends StatelessWidget {
+  const _BnbProfileSection({required this.title, required this.child});
+  final String title;
+  final Widget child;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(22), border: Border.all(color: const Color(0xFFFED7AA))),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900)),
+        const SizedBox(height: 12),
+        child,
+      ]),
+    );
+  }
+}
+
+class _BnbChecklistRow extends StatelessWidget {
+  const _BnbChecklistRow({required this.text});
+  final String text;
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(children: [
+        const Icon(Icons.check_circle_rounded, color: Color(0xFFF97316), size: 20),
+        const SizedBox(width: 8),
+        Expanded(child: Text(text, style: const TextStyle(fontWeight: FontWeight.w700))),
+      ]),
+    );
   }
 }
 
@@ -947,14 +1102,14 @@ class _MiniTrustChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FDFA),
+        color: const Color(0xFFFFF7ED),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: const Color(0xFFBFEFE7)),
+        border: Border.all(color: const Color(0xFFFED7AA)),
       ),
       child: Text(
         label,
         style: const TextStyle(
-          color: Color(0xFF0F766E),
+          color: Color(0xFFC2410C),
           fontSize: 11,
           fontWeight: FontWeight.w800,
         ),
@@ -962,6 +1117,3 @@ class _MiniTrustChip extends StatelessWidget {
     );
   }
 }
-
-
-
