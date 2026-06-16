@@ -10,6 +10,7 @@ import 'identity_verification_page.dart';
 import 'login_page.dart';
 import 'notifications_page.dart';
 import 'payments_page.dart';
+import 'requests_page.dart';
 import 'role_selection_page.dart';
 import 'service_provider_profile_page.dart';
 
@@ -246,6 +247,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 MaterialPageRoute(
                   builder: (_) => const ServiceProviderProfilePage(),
                 ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.assignment_turned_in_rounded),
+            title: const Text('Taleplerim'),
+            subtitle: const Text(
+              'Gelen ve gönderdiğin hizmet taleplerini yönet',
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const RequestsPage()),
               );
             },
           ),
