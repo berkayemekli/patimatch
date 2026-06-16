@@ -80,6 +80,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 - Veriff hosted KYC adapter kodu eklendi; `VERIFF_API_KEY` secret ve Blaze plan sonrasi gercek kimlik/yuz dogrulama linki acilacak.
 - Laptop branch'indeki veteriner klinikleri ve pet dostu mekan seed verileri main'e tasindi; data mapping raporuna eklendi.
 - `docs/data_mapping.html` icin tekrar uretilebilir generator eklendi: `scripts/generate_data_mapping_report.py`.
+- PatiBnB ve PatiFamily kart/profil gorunurlugu duzeltildi; Firestore kayitlari ile zengin demo ornekleri birlikte gosteriliyor.
 
 ## Ownership Template
 

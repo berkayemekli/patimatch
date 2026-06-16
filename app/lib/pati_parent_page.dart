@@ -44,12 +44,18 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'vaccineStatus': 'Tam',
       'size': 'K\u00FC\u00E7\u00FCk',
       'badge': 'Acil yuva',
-      'bio': 'Ev ortam\u0131na al\u0131\u015Fk\u0131n, oyuncu ve insan odakl\u0131 bir yavru. Sakin bir ailede h\u0131zla g\u00FCven kurar.',
-      'ownerNote': 'D\u00FCzenli veteriner takibi ve ilk ay yak\u0131n ileti\u015Fim bizim i\u00E7in \u00F6nemli.',
+      'bio':
+          'Ev ortam\u0131na al\u0131\u015Fk\u0131n, oyuncu ve insan odakl\u0131 bir yavru. Sakin bir ailede h\u0131zla g\u00FCven kurar.',
+      'ownerNote':
+          'D\u00FCzenli veteriner takibi ve ilk ay yak\u0131n ileti\u015Fim bizim i\u00E7in \u00F6nemli.',
       'imageUrl': 'https://placedog.net/900/700?id=81',
       'ownerUserId': 'demo-family-owner-1',
       'trustBadges': ['A\u015F\u0131 kart\u0131', 'Sahip do\u011Fruland\u0131'],
-      'careNeeds': ['G\u00FCnl\u00FCk k\u0131sa y\u00FCr\u00FCy\u00FC\u015F', 'Sakin ev', '\u0130lk ay takip'],
+      'careNeeds': [
+        'G\u00FCnl\u00FCk k\u0131sa y\u00FCr\u00FCy\u00FC\u015F',
+        'Sakin ev',
+        '\u0130lk ay takip',
+      ],
     },
     {
       'id': 'family_demo_02',
@@ -64,12 +70,49 @@ class _PatiParentPageState extends State<PatiParentPage> {
       'vaccineStatus': 'Tam',
       'size': 'Orta',
       'badge': 'Do\u011Frulanm\u0131\u015F',
-      'bio': 'Temel komutlar\u0131 biliyor, \u00E7ocuklarla kontroll\u00FC \u015Fekilde iyi anla\u015F\u0131yor. D\u00FCzenli y\u00FCr\u00FCy\u00FC\u015F ister.',
-      'ownerNote': 'Bah\u00E7eli ev tercihimiz var ama en \u00F6nemlisi sabit rutin ve sevgi dolu ortam.',
+      'bio':
+          'Temel komutlar\u0131 biliyor, \u00E7ocuklarla kontroll\u00FC \u015Fekilde iyi anla\u015F\u0131yor. D\u00FCzenli y\u00FCr\u00FCy\u00FC\u015F ister.',
+      'ownerNote':
+          'Bah\u00E7eli ev tercihimiz var ama en \u00F6nemlisi sabit rutin ve sevgi dolu ortam.',
       'imageUrl': 'https://placedog.net/900/700?id=82',
       'ownerUserId': 'demo-family-owner-2',
       'trustBadges': ['A\u015F\u0131 kart\u0131', 'Sahiplendirme formu'],
-      'careNeeds': ['Uzun y\u00FCr\u00FCy\u00FC\u015F', 'Oyun rutini', 'Deneyimli aile'],
+      'careNeeds': [
+        'Uzun y\u00FCr\u00FCy\u00FC\u015F',
+        'Oyun rutini',
+        'Deneyimli aile',
+      ],
+    },
+    {
+      'id': 'family_demo_03',
+      'dogName': 'Boncuk',
+      'city': '\u0130stanbul',
+      'district': 'Be\u015Fikta\u015F',
+      'animalType': 'Kedi',
+      'breed': 'Tekir',
+      'ageMonths': 14,
+      'ageRange': '1-3 ya\u015F',
+      'sex': 'Di\u015Fi',
+      'vaccineStatus': 'Tam',
+      'size': 'K\u00FC\u00E7\u00FCk',
+      'badge': 'Ge\u00E7ici yuva',
+      'bio':
+          'Ev i\u00E7i ya\u015Fama al\u0131\u015Fk\u0131n, sakin ve insan\u0131n\u0131 se\u00E7ince \u00E7ok sevgi dolu bir Tekir. Sessiz bir evde h\u0131zl\u0131 uyum sa\u011Flar.',
+      'ownerNote':
+          'Cam ve balkon g\u00FCvenli\u011Fi olan, ilk hafta sab\u0131rl\u0131 yakla\u015Fabilecek bir aile ar\u0131yoruz.',
+      'imageUrl':
+          'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1200&q=80',
+      'ownerUserId': 'demo-family-owner-3',
+      'trustBadges': [
+        'A\u015F\u0131 kart\u0131',
+        'K\u0131s\u0131r',
+        'Sahiplendirme formu',
+      ],
+      'careNeeds': [
+        'Cam/balkon g\u00FCvenli\u011Fi',
+        'Sakin adaptasyon',
+        'Kum rutini',
+      ],
     },
   ];
 
@@ -102,23 +145,34 @@ class _PatiParentPageState extends State<PatiParentPage> {
           'sex': data['sex'] as String? ?? 'Fark etmez',
           'vaccineStatus': data['vaccinated'] == true ? 'Tam' : 'Bilinmiyor',
           'size': data['size'] as String? ?? 'Orta',
-          'badge': data['urgency'] as String? ??
-              (data['featured'] == true ? 'Do\u011Frulanm\u0131\u015F' : 'Yeni'),
+          'badge':
+              data['urgency'] as String? ??
+              (data['featured'] == true
+                  ? 'Do\u011Frulanm\u0131\u015F'
+                  : 'Yeni'),
           'bio': data['bio'] as String? ?? '',
           'ownerNote': data['ownerNote'] as String? ?? '',
           'ownerUserId': data['ownerUserId'] as String? ?? 'demo-owner',
-          'imageUrl': data['imageUrl'] as String? ??
+          'imageUrl':
+              data['imageUrl'] as String? ??
               'https://placedog.net/900/700?id=${doc.id.hashCode.abs() % 100}',
           'trustBadges':
-              (data['trustBadges'] as List<dynamic>? ?? const <dynamic>[
-            'A\u015F\u0131 kart\u0131',
-            'Sahiplendirme formu',
-          ]).whereType<String>().toList(),
-          'careNeeds': (data['careNeeds'] as List<dynamic>? ?? const <dynamic>[
-            '\u0130lk ay takip',
-            'Sabit rutin',
-            'Veteriner kontrol\u00FC',
-          ]).whereType<String>().toList(),
+              (data['trustBadges'] as List<dynamic>? ??
+                      const <dynamic>[
+                        'A\u015F\u0131 kart\u0131',
+                        'Sahiplendirme formu',
+                      ])
+                  .whereType<String>()
+                  .toList(),
+          'careNeeds':
+              (data['careNeeds'] as List<dynamic>? ??
+                      const <dynamic>[
+                        '\u0130lk ay takip',
+                        'Sabit rutin',
+                        'Veteriner kontrol\u00FC',
+                      ])
+                  .whereType<String>()
+                  .toList(),
         };
       }).toList();
       setState(() => _publishedPosts = posts);
@@ -147,8 +201,9 @@ class _PatiParentPageState extends State<PatiParentPage> {
   }
 
   Future<void> _setCity(String city) async {
-    final districts =
-        city == 'All' ? <String>[] : await MasterDataRepository.loadDistricts(city);
+    final districts = city == 'All'
+        ? <String>[]
+        : await MasterDataRepository.loadDistricts(city);
     if (!mounted) return;
     setState(() {
       _city = city;
@@ -167,14 +222,18 @@ class _PatiParentPageState extends State<PatiParentPage> {
   @override
   Widget build(BuildContext context) {
     final query = _searchQuery.trim().toLowerCase();
-    final source = _publishedPosts.isEmpty ? _familyPets : _publishedPosts;
+    final source = <Map<String, dynamic>>[..._publishedPosts, ..._familyPets];
     final filteredPets = source.where((pet) {
-      final values = pet.values.map((v) => v.toString().toLowerCase()).join(' ');
+      final values = pet.values
+          .map((v) => v.toString().toLowerCase())
+          .join(' ');
       return (_city == 'All' || pet['city'] == _city) &&
-          (_district == 'T\u00FCm il\u00E7eler' || pet['district'] == _district) &&
+          (_district == 'T\u00FCm il\u00E7eler' ||
+              pet['district'] == _district) &&
           pet['animalType'] == _animalType &&
           (_breed == 'T\u00FCm cinsler' || pet['breed'] == _breed) &&
-          (_ageRange == 'T\u00FCm ya\u015Flar' || pet['ageRange'] == _ageRange) &&
+          (_ageRange == 'T\u00FCm ya\u015Flar' ||
+              pet['ageRange'] == _ageRange) &&
           (_sex == 'Fark etmez' || pet['sex'] == _sex) &&
           (_vaccineStatus == 'Fark etmez' ||
               pet['vaccineStatus'] == _vaccineStatus) &&
@@ -294,7 +353,11 @@ class _FamilyPetCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(top: 12, left: 12, child: _FamilyBadge(label: badge)),
+                  Positioned(
+                    top: 12,
+                    left: 12,
+                    child: _FamilyBadge(label: badge),
+                  ),
                   Positioned(
                     left: 14,
                     right: 14,
@@ -332,7 +395,10 @@ class _FamilyPetCard extends StatelessWidget {
                     bio,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Color(0xFF475569), height: 1.35),
+                    style: const TextStyle(
+                      color: Color(0xFF475569),
+                      height: 1.35,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Wrap(
@@ -355,10 +421,9 @@ class _FamilyPetCard extends StatelessWidget {
   }
 
   void _openDetails(BuildContext context) {
-    final trust =
-        (pet['trustBadges'] as List<dynamic>? ?? const <dynamic>[])
-            .whereType<String>()
-            .toList();
+    final trust = (pet['trustBadges'] as List<dynamic>? ?? const <dynamic>[])
+        .whereType<String>()
+        .toList();
     final needs = (pet['careNeeds'] as List<dynamic>? ?? const <dynamic>[])
         .whereType<String>()
         .toList();
@@ -398,7 +463,9 @@ class _FamilyPetCard extends StatelessWidget {
                       top: 14,
                       right: 14,
                       child: IconButton.filled(
-                        style: IconButton.styleFrom(backgroundColor: Colors.white),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                        ),
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.close_rounded),
                       ),
@@ -438,7 +505,9 @@ class _FamilyPetCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _FamilyActionPanel(onApply: () => _sendApplication(context)),
+                    _FamilyActionPanel(
+                      onApply: () => _sendApplication(context),
+                    ),
                     const SizedBox(height: 14),
                     _FamilySection(
                       title: 'Yuva hikayesi',
@@ -469,15 +538,18 @@ class _FamilyPetCard extends StatelessWidget {
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 8,
-                        children: trust.map((e) => _FamilyChip(label: e)).toList(),
+                        children: trust
+                            .map((e) => _FamilyChip(label: e))
+                            .toList(),
                       ),
                     ),
                     const SizedBox(height: 14),
                     _FamilySection(
                       title: 'Bak\u0131m ihtiya\u00E7lar\u0131',
                       child: Column(
-                        children:
-                            needs.map((e) => _FamilyChecklistRow(text: e)).toList(),
+                        children: needs
+                            .map((e) => _FamilyChecklistRow(text: e))
+                            .toList(),
                       ),
                     ),
                   ],
@@ -493,9 +565,9 @@ class _FamilyPetCard extends StatelessWidget {
   Future<void> _sendApplication(BuildContext context) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
-      await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const LoginPage()),
-      );
+      await Navigator.of(
+        context,
+      ).push(MaterialPageRoute(builder: (_) => const LoginPage()));
       return;
     }
     try {
@@ -709,18 +781,18 @@ class _FamilySearchField extends StatelessWidget {
   final ValueChanged<String> onChanged;
   @override
   Widget build(BuildContext context) => TextFormField(
-        key: const ValueKey('family-filter-search'),
-        initialValue: value,
-        onChanged: onChanged,
-        textInputAction: TextInputAction.search,
-        decoration: InputDecoration(
-          hintText: hintText,
-          prefixIcon: const Icon(Icons.search_rounded),
-          filled: true,
-          fillColor: const Color(0xFFF8FAFC),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
-        ),
-      );
+    key: const ValueKey('family-filter-search'),
+    initialValue: value,
+    onChanged: onChanged,
+    textInputAction: TextInputAction.search,
+    decoration: InputDecoration(
+      hintText: hintText,
+      prefixIcon: const Icon(Icons.search_rounded),
+      filled: true,
+      fillColor: const Color(0xFFF8FAFC),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(18)),
+    ),
+  );
 }
 
 class _FamilyDrop extends StatelessWidget {
@@ -736,40 +808,40 @@ class _FamilyDrop extends StatelessWidget {
   final ValueChanged<String> onChanged;
   @override
   Widget build(BuildContext context) => SizedBox(
-        width: 220,
-        child: DropdownButtonFormField<String>(
-          key: ValueKey('$label-$value-${items.length}'),
-          initialValue: items.contains(value) ? value : items.first,
-          decoration: InputDecoration(
-            labelText: label,
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-          items: items
-              .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-              .toList(),
-          onChanged: (value) {
-            if (value != null) onChanged(value);
-          },
-        ),
-      );
+    width: 220,
+    child: DropdownButtonFormField<String>(
+      key: ValueKey('$label-$value-${items.length}'),
+      initialValue: items.contains(value) ? value : items.first,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      items: items
+          .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+          .toList(),
+      onChanged: (value) {
+        if (value != null) onChanged(value);
+      },
+    ),
+  );
 }
 
 class _EmptyFamilyState extends StatelessWidget {
   const _EmptyFamilyState();
   @override
   Widget build(BuildContext context) => Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: const Color(0xFFE7ECF3)),
-        ),
-        child: const Text(
-          'Bu filtrelere uygun ilan hen\u00FCz yok. T\u00FCr, cins veya konum filtresini de\u011Fi\u015Ftirebilirsin.',
-          style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-        ),
-      );
+    width: double.infinity,
+    padding: const EdgeInsets.all(24),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      border: Border.all(color: const Color(0xFFE7ECF3)),
+    ),
+    child: const Text(
+      'Bu filtrelere uygun ilan hen\u00FCz yok. T\u00FCr, cins veya konum filtresini de\u011Fi\u015Ftirebilirsin.',
+      style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
+    ),
+  );
 }
 
 class _FamilyActionPanel extends StatelessWidget {
@@ -777,44 +849,44 @@ class _FamilyActionPanel extends StatelessWidget {
   final VoidCallback onApply;
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF111827),
-          borderRadius: BorderRadius.circular(24),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: const Color(0xFF111827),
+      borderRadius: BorderRadius.circular(24),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Yuva ba\u015Fvurusu',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.w900,
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Yuva ba\u015Fvurusu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.w900,
-              ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Ba\u015Fvurudan sonra sahip notlar\u0131 ve uyum s\u00FCreci Taleplerim ekran\u0131nda takip edilebilir.',
-              style: TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
-            ),
-            const SizedBox(height: 14),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFFFDE68A),
-                  foregroundColor: const Color(0xFF422006),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: onApply,
-                icon: const Icon(Icons.favorite_rounded),
-                label: const Text('Sahiplenme ba\u015Fvurusu g\u00F6nder'),
-              ),
-            ),
-          ],
+        const SizedBox(height: 8),
+        const Text(
+          'Ba\u015Fvurudan sonra sahip notlar\u0131 ve uyum s\u00FCreci Taleplerim ekran\u0131nda takip edilebilir.',
+          style: TextStyle(color: Color(0xFFE2E8F0), height: 1.35),
         ),
-      );
+        const SizedBox(height: 14),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton.icon(
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFFFDE68A),
+              foregroundColor: const Color(0xFF422006),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+            ),
+            onPressed: onApply,
+            icon: const Icon(Icons.favorite_rounded),
+            label: const Text('Sahiplenme ba\u015Fvurusu g\u00F6nder'),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _FamilySection extends StatelessWidget {
@@ -823,24 +895,24 @@ class _FamilySection extends StatelessWidget {
   final Widget child;
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: const Color(0xFFFDE68A)),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(22),
+      border: Border.all(color: const Color(0xFFFDE68A)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 12),
-            child,
-          ],
-        ),
-      );
+        const SizedBox(height: 12),
+        child,
+      ],
+    ),
+  );
 }
 
 class _FamilyChecklistRow extends StatelessWidget {
@@ -848,24 +920,24 @@ class _FamilyChecklistRow extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.check_circle_rounded,
-              color: Color(0xFFEAB308),
-              size: 20,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-            ),
-          ],
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      children: [
+        const Icon(
+          Icons.check_circle_rounded,
+          color: Color(0xFFEAB308),
+          size: 20,
         ),
-      );
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 class _FamilyBadge extends StatelessWidget {
@@ -873,31 +945,27 @@ class _FamilyBadge extends StatelessWidget {
   final String label;
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.94),
-          borderRadius: BorderRadius.circular(999),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+    decoration: BoxDecoration(
+      color: Colors.white.withValues(alpha: 0.94),
+      borderRadius: BorderRadius.circular(999),
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(Icons.favorite_rounded, size: 15, color: Color(0xFFE11D48)),
+        const SizedBox(width: 5),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Color(0xFF881337),
+            fontWeight: FontWeight.w900,
+            fontSize: 12,
+          ),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              Icons.favorite_rounded,
-              size: 15,
-              color: Color(0xFFE11D48),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              label,
-              style: const TextStyle(
-                color: Color(0xFF881337),
-                fontWeight: FontWeight.w900,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-      );
+      ],
+    ),
+  );
 }
 
 class _FamilyChip extends StatelessWidget {
@@ -905,19 +973,19 @@ class _FamilyChip extends StatelessWidget {
   final String label;
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFFFBEB),
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: const Color(0xFFFDE68A)),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            color: Color(0xFF92400E),
-            fontSize: 12,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+    decoration: BoxDecoration(
+      color: const Color(0xFFFFFBEB),
+      borderRadius: BorderRadius.circular(999),
+      border: Border.all(color: const Color(0xFFFDE68A)),
+    ),
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Color(0xFF92400E),
+        fontSize: 12,
+        fontWeight: FontWeight.w800,
+      ),
+    ),
+  );
 }
