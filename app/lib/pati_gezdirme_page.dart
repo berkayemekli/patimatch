@@ -159,8 +159,16 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           'rating': (data['rating'] as num?)?.toDouble() ?? 0.0,
           'walks': data['walkCount'] as int? ?? 0,
           'price': data['pricePerHour'] as int? ?? 0,
-          'badge': 'Telefon onayli',
-          'imageUrl': 'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
+          'badge': data['verificationStatus'] == 'verified'
+              ? 'Kimlik doğrulandı'
+              : 'Telefon onaylı',
+          'badges': (data['trustBadges'] as List<dynamic>? ?? const <dynamic>[])
+              .whereType<String>()
+              .toList(),
+          'availability': data['availability'] as String? ?? '',
+          'bio': data['bio'] as String? ?? '',
+          'imageUrl': data['imageUrl'] as String? ??
+              'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80',
         };
       }).toList();
       setState(() => _publishedWalkers = published);
@@ -256,7 +264,7 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
             searchQuery: _searchQuery,
             cities: _cities,
             districts: _districts,
-            breeds: _breedsByType['K?pek'] ?? const <String>[],
+            breeds: _dogBreedOptions,
             onToggle: () => setState(() => _filtersOpen = !_filtersOpen),
             onCityChanged: _setCity,
             onDistrictChanged: (v) => setState(() => _district = v),
@@ -307,10 +315,16 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
                   walkerOwnerUserId: walker['ownerUserId'] as String? ?? 'demo-walker-owner',
                   name: walker['name'] as String,
                   city: walker['city'] as String,
+                  district: walker['district'] as String? ?? '',
                   price: walker['price'] as int,
                   rating: walker['rating'] as double,
                   walks: walker['walks'] as int,
                   badge: walker['badge'] as String,
+                  badges: (walker['badges'] as List<dynamic>? ?? const <dynamic>[])
+                      .whereType<String>()
+                      .toList(),
+                  availability: walker['availability'] as String? ?? '',
+                  bio: walker['bio'] as String? ?? '',
                   imageUrl: walker['imageUrl'] as String,
                 );
               },
@@ -318,6 +332,17 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
         ],
       ),
     );
+  }
+
+  List<String> get _dogBreedOptions {
+    if (_breedsByType.isEmpty) return const <String>[];
+    for (final entry in _breedsByType.entries) {
+      final key = entry.key.toLowerCase();
+      if (key.contains('köpek') || key.contains('kopek') || key.contains('pek')) {
+        return entry.value;
+      }
+    }
+    return _breedsByType.values.first;
   }
 }
 
@@ -620,10 +645,14 @@ class _WalkerCard extends StatelessWidget {
     required this.walkerOwnerUserId,
     required this.name,
     required this.city,
+    required this.district,
     required this.price,
     required this.rating,
     required this.walks,
     required this.badge,
+    required this.badges,
+    required this.availability,
+    required this.bio,
     required this.imageUrl,
   });
 
@@ -631,10 +660,14 @@ class _WalkerCard extends StatelessWidget {
   final String walkerOwnerUserId;
   final String name;
   final String city;
+  final String district;
   final int price;
   final double rating;
   final int walks;
   final String badge;
+  final List<String> badges;
+  final String availability;
+  final String bio;
   final String imageUrl;
 
   @override
@@ -699,7 +732,22 @@ class _WalkerCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    Text('$city - $walks yuruyus'),
+                    Text(
+                      [
+                        city,
+                        if (district.trim().isNotEmpty) district,
+                        '$walks yürüyüş',
+                      ].join(' - '),
+                    ),
+                    if (availability.trim().isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        availability,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(color: Color(0xFF64748B)),
+                      ),
+                    ],
                     const SizedBox(height: 6),
                     Text(
                       '$price TL / saat',
@@ -729,21 +777,54 @@ class _WalkerCard extends StatelessWidget {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
             ),
             const SizedBox(height: 8),
-            Text('$city - $walks yuruyus - $price TL/saat'),
+            Text(
+              [
+                city,
+                if (district.trim().isNotEmpty) district,
+                '$walks yürüyüş',
+                '$price TL/saat',
+              ].join(' - '),
+            ),
             const SizedBox(height: 12),
+            if (bio.trim().isNotEmpty) ...[
+              Text(
+                bio,
+                style: const TextStyle(height: 1.45, color: Color(0xFF475569)),
+              ),
+              const SizedBox(height: 12),
+            ],
+            if (availability.trim().isNotEmpty)
+              ListTile(
+                leading: const Icon(Icons.schedule_rounded),
+                title: Text(availability),
+              ),
+            if (badges.isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: badges
+                    .map(
+                      (item) => Chip(
+                        avatar: const Icon(Icons.verified_rounded, size: 16),
+                        label: Text(item),
+                      ),
+                    )
+                    .toList(),
+              ),
+            const SizedBox(height: 8),
             const ListTile(
               leading: Icon(Icons.map_rounded),
-              title: Text('Canli konum paylasimi'),
+              title: Text('Canlı konum paylaşımı'),
             ),
             const ListTile(
               leading: Icon(Icons.verified_user_rounded),
-              title: Text('Dogrulanmis profil'),
+              title: Text('Doğrulanmış profil'),
             ),
             const SizedBox(height: 8),
             FilledButton.icon(
               onPressed: () => _sendWalkRequest(context),
               icon: const Icon(Icons.send_rounded),
-              label: const Text('Gezdirme talebi gonder'),
+              label: const Text('Gezdirme talebi gönder'),
             ),
           ],
         ),
@@ -765,7 +846,7 @@ class _WalkerCard extends StatelessWidget {
         if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Talep icin once pet profilini olusturmalisin.'),
+            content: Text('Talep için önce pet profilini oluşturmalısın.'),
           ),
         );
         return;
@@ -784,12 +865,12 @@ class _WalkerCard extends StatelessWidget {
       if (!context.mounted) return;
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gezdirme talebi gonderildi.')),
+        const SnackBar(content: Text('Gezdirme talebi gönderildi.')),
       );
     } catch (e) {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Talep gonderilemedi: $e')),
+        SnackBar(content: Text('Talep gönderilemedi: $e')),
       );
     }
   }}

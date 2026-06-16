@@ -161,7 +161,7 @@ class _ServiceProviderProfilePageState
         availability.isEmpty) {
       setState(() {
         _status =
-            'Il, ilce, fiyat, deneyim, uygunluk ve en az 20 karakterlik aciklama gerekli.';
+            '\u0130l, il\u00e7e, fiyat, deneyim, uygunluk ve en az 20 karakterlik a\u00e7\u0131klama gerekli.';
       });
       return;
     }
@@ -178,7 +178,7 @@ class _ServiceProviderProfilePageState
       'ownerUserId': user.uid,
       'name': user.displayName?.trim().isNotEmpty == true
           ? user.displayName!.trim()
-          : (user.email ?? user.phoneNumber ?? 'PatiParent kullanicisi'),
+          : (user.email ?? user.phoneNumber ?? 'PatiParent kullan\u0131c\u0131s\u0131'),
       'city': _city,
       'district': _district,
       priceField: price,
@@ -214,8 +214,8 @@ class _ServiceProviderProfilePageState
       if (!mounted) return;
       setState(() {
         _status = _serviceType == 'walker'
-            ? 'Gezdirici profilin yayina alindi.'
-            : 'PatiBnB host profilin yayina alindi.';
+            ? 'Gezdirici profilin yay\u0131na al\u0131nd\u0131.'
+            : 'PatiBnB host profilin yay\u0131na al\u0131nd\u0131.';
       });
     } catch (e) {
       if (!mounted) return;
@@ -239,6 +239,8 @@ class _ServiceProviderProfilePageState
                   children: [
                     _Header(serviceType: _serviceType),
                     const SizedBox(height: 16),
+                    const _OnboardingTips(),
+                    const SizedBox(height: 16),
                     SegmentedButton<String>(
                       segments: const [
                         ButtonSegment(
@@ -259,14 +261,14 @@ class _ServiceProviderProfilePageState
                     ),
                     const SizedBox(height: 14),
                     _SearchableSelect(
-                      label: 'Il',
+                      label: '\u0130l',
                       value: _city,
                       options: _cities,
                       onSelected: _setCity,
                     ),
                     const SizedBox(height: 12),
                     _SearchableSelect(
-                      label: 'Ilce',
+                      label: '\u0130l\u00e7e',
                       value: _district,
                       options: _districts,
                       enabled: _city.isNotEmpty && _districts.isNotEmpty,
@@ -288,7 +290,7 @@ class _ServiceProviderProfilePageState
                       controller: _experienceController,
                       decoration: const InputDecoration(
                         labelText: 'Deneyim',
-                        hintText: 'Orn: 2 yildir duzenli kopek gezdiriyorum',
+                        hintText: '\u00d6rn: 2 y\u0131ld\u0131r d\u00fczenli k\u00f6pek gezdiriyorum',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -307,9 +309,9 @@ class _ServiceProviderProfilePageState
                       minLines: 4,
                       maxLines: 7,
                       decoration: const InputDecoration(
-                        labelText: 'Profil aciklamasi',
+                        labelText: 'Profil a\u00e7\u0131klamas\u0131',
                         hintText:
-                            'Guven veren, net ve samimi bir hizmet aciklamasi yaz.',
+                            'G\u00fcven veren, net ve samimi bir hizmet a\u00e7\u0131klamas\u0131 yaz.',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -320,7 +322,7 @@ class _ServiceProviderProfilePageState
                           ? null
                           : (value) => setState(() => _instantBooking = value),
                       title: const Text('Hizli talep kabul ediyorum'),
-                      subtitle: const Text('Musaitlik uygunsa kullanici direkt talep gonderebilir.'),
+                      subtitle: const Text('M\u00fcsaitlik uygunsa kullan\u0131c\u0131 direkt talep g\u00f6nderebilir.'),
                     ),
                     if (_serviceType == 'bnb')
                       SwitchListTile(
@@ -329,7 +331,7 @@ class _ServiceProviderProfilePageState
                             ? null
                             : (value) => setState(() => _yard = value),
                         title: const Text('Bahce / dis alan var'),
-                        subtitle: const Text('Konaklama profilinde guven sinyali olarak gorunur.'),
+                        subtitle: const Text('Konaklama profilinde g\u00fcven sinyali olarak g\u00f6r\u00fcn\u00fcr.'),
                       ),
                     const SizedBox(height: 14),
                     FilledButton.icon(
@@ -341,7 +343,7 @@ class _ServiceProviderProfilePageState
                               child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Icon(Icons.publish_rounded),
-                      label: Text(_saving ? 'Kaydediliyor...' : 'Yayina Al'),
+                      label: Text(_saving ? 'Kaydediliyor...' : 'Yay\u0131na Al'),
                     ),
                     if (_status.isNotEmpty) ...[
                       const SizedBox(height: 12),
@@ -351,6 +353,81 @@ class _ServiceProviderProfilePageState
                 ),
               ),
             ),
+    );
+  }
+}
+
+class _OnboardingTips extends StatelessWidget {
+  const _OnboardingTips();
+
+  @override
+  Widget build(BuildContext context) {
+    const tips = [
+      ('1', 'Konum ve fiyat', 'Kullan\u0131c\u0131 \u00f6nce yak\u0131nl\u0131k ve b\u00fct\u00e7eye bak\u0131yor.'),
+      ('2', 'Uygunluk', 'Net saat yazmak gereksiz mesaj trafi\u011fini azalt\u0131yor.'),
+      ('3', 'G\u00fcven a\u00e7\u0131klamas\u0131', 'Deneyim, rutin ve acil durumda ne yapaca\u011f\u0131n\u0131 anlat.'),
+    ];
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            '\u0130yi bir hizmet profili 3 \u015feyi net s\u00f6yler',
+            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+          ),
+          const SizedBox(height: 10),
+          ...tips.map(
+            (tip) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    radius: 13,
+                    backgroundColor: const Color(0xFFE7F7F2),
+                    child: Text(
+                      tip.$1,
+                      style: const TextStyle(
+                        color: Color(0xFF0F766E),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        style: const TextStyle(
+                          color: Color(0xFF475569),
+                          height: 1.35,
+                        ),
+                        children: [
+                          TextSpan(
+                            text: '${tip.$2}: ',
+                            style: const TextStyle(
+                              color: Color(0xFF111827),
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
+                          TextSpan(text: tip.$3),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -384,7 +461,7 @@ class _Header extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isWalker ? 'Gezdirici olarak katil' : 'Host olarak katil',
+                  isWalker ? 'Gezdirici olarak kat\u0131l' : 'Host olarak kat\u0131l',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
@@ -393,8 +470,8 @@ class _Header extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   isWalker
-                      ? 'Konum, fiyat ve deneyimini ekleyerek yuruyus talepleri almaya basla.'
-                      : 'Ev tipi konaklama profilini olustur ve guvenli talepler al.',
+                      ? 'Konum, fiyat ve deneyimini ekleyerek y\u00fcr\u00fcy\u00fc\u015f talepleri almaya ba\u015fla.'
+                      : 'Ev tipi konaklama profilini olu\u015ftur ve g\u00fcvenli talepler al.',
                   style: const TextStyle(color: Color(0xFF475569), height: 1.35),
                 ),
               ],
@@ -527,7 +604,7 @@ class _OptionSearchDelegate extends SearchDelegate<String> {
             .toList();
 
     if (fallback.isEmpty) {
-      return const Center(child: Text('Sonuc bulunamadi'));
+      return const Center(child: Text('Sonu? bulunamad?'));
     }
 
     return ListView.builder(
@@ -547,12 +624,12 @@ String _normalizeTurkishSearch(String value) {
   return value
       .trim()
       .toLowerCase()
-      .replaceAll('ı', 'i')
-      .replaceAll('İ', 'i')
-      .replaceAll('i̇', 'i')
-      .replaceAll('ğ', 'g')
-      .replaceAll('ü', 'u')
-      .replaceAll('ş', 's')
-      .replaceAll('ö', 'o')
-      .replaceAll('ç', 'c');
+      .replaceAll('\u0131', 'i')
+      .replaceAll('\u0130', 'i')
+      .replaceAll('i\u0307', 'i')
+      .replaceAll('\u011f', 'g')
+      .replaceAll('\u00fc', 'u')
+      .replaceAll('\u015f', 's')
+      .replaceAll('\u00f6', 'o')
+      .replaceAll('\u00e7', 'c');
 }
