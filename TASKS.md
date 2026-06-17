@@ -59,12 +59,11 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - Firestore rules: kullanici kendi `blueBadge` veya `verificationStatus` alanlarini dogrudan yazamasin.
    - Backend webhook: provider sonucuyla `users/{userId}` guncellensin.
 
-10. Staging load test sonuclarini gece kosusundan sonra incele.
-   - `npm run load-test:staging` ile staging Firestore test datas? basilir.
-   - `docs/load_test_seed_report.json` cikti raporu kontrol edilir.
-   - PatiGezdirme/PatiBnB/PatiMatch/PatiFamily filtre, liste, takvim ve eslesme performans? gozden gecirilir.
-
 ## Done Recently
+
+- Gece load-test kosusu tamamlandi: staging Firestore API/database acildi, 2720 dokuman yazildi, `flutter analyze lib` temiz gecti.
+- `docs/data_mapping.html` ust sekmeleri tam tablo listelerine baglandi; veteriner/kuafor/egitmen/pet dostu mekanlar isim-adres-telefon-web-harita alanlariyla kontrol edilebilir hale geldi.
+- Takvim ana shell ust barinda yazili aksiyon olarak gorunur hale getirildi.
 
 - Staging load-test seed script eklendi; 4 modul icin 250ser profil ve PatiMatch eslesme/chat simulasyonu dry-run ile dogrulandi.
 

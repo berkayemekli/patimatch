@@ -73,20 +73,18 @@ class _MainShellPageState extends State<MainShellPage> {
         elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: const Color(0xFFF5F7FA),
-        leading: isGuest
-            ? null
-            : IconButton(
-                tooltip: 'Takvim',
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const CalendarPage()),
-                  );
-                },
-                icon: const Icon(Icons.calendar_month_outlined),
-              ),
         title: const Text('PatiParent'),
         actions: isGuest
             ? [
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const CalendarPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_month_outlined),
+                  label: const Text('Takvim'),
+                ),
                 TextButton.icon(
                   onPressed: () async {
                     await Navigator.of(context).push(
@@ -99,6 +97,15 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ]
             : [
+                TextButton.icon(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const CalendarPage()),
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_month_outlined),
+                  label: const Text('Takvim'),
+                ),
                 IconButton(
                   onPressed: () {
                     Navigator.of(context).push(

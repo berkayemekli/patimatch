@@ -77,6 +77,8 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Staging Firestore API/database acildi; load-test staging datasina 2720 dokuman yazildi. Data mapping raporu tam tablo sekmeleriyle yenilendi ve Takvim ust barda yazili aksiyon olarak gorunur hale getirildi.
+
 - Load-test seed script eklendi; staging icin 4 modulde 250ser profil ve PatiMatch eslesme/chat simulasyonu uretebiliyor.
 
 - Kopek egitmeni seed datasi eklendi; data mapping raporu bunu ileride PatiTraining alt basligi veya PatiCare destek katmani olarak konumlandiriyor.
