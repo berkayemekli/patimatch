@@ -48,9 +48,10 @@ jobs:
             walk_requests: 10,
             bnb_requests: 10,
             adoption_applications: 10,
+            service_engagements: 30,
             swipes: 10,
             matches: 5,
-            chats: 5,
+            chats: 35,
             load_test_runs: 1,
           };
           for (const [key, value] of Object.entries(expected)) {

@@ -70,6 +70,16 @@ function buildDocumentNames() {
     add("walk_requests", `${runId}_walk_request_${id}`);
     add("bnb_requests", `${runId}_bnb_request_${id}`);
     add("adoption_applications", `${runId}_family_application_${id}`);
+    for (const module of ["pati_gezdirme", "pati_bnb", "pati_family"]) {
+      const requestId = module === "pati_gezdirme"
+        ? `${runId}_walk_request_${id}`
+        : module === "pati_bnb"
+        ? `${runId}_bnb_request_${id}`
+        : `${runId}_family_application_${id}`;
+      const engagementId = `${module}_${requestId}`;
+      add("service_engagements", engagementId);
+      add("chats", `service_${engagementId}`);
+    }
   }
 
   const pairs = Math.min(matchPairs, Math.floor(count / 2));

@@ -407,7 +407,7 @@ function simulateRequestsAndMatches(docs, counters, timestamp, expiresAt) {
       walkerName: `PatiGezdirme Test ${id}`,
       preferredAt: addDays(1 + (i % 21), 8 + (i % 10)),
       note: "Load test tarihli gezdirme talebi.",
-      status: i % 4 === 0 ? "accepted" : "pending",
+      status: "accepted",
       createdAt: timestamp,
       updatedAt: timestamp,
     });
@@ -421,7 +421,7 @@ function simulateRequestsAndMatches(docs, counters, timestamp, expiresAt) {
       checkIn: addDays(7 + (i % 30), 14),
       checkOut: addDays(8 + (i % 30), 11),
       note: "Load test konaklama talebi.",
-      status: i % 5 === 0 ? "accepted" : "pending",
+      status: "accepted",
       createdAt: timestamp,
       updatedAt: timestamp,
     });
@@ -433,9 +433,45 @@ function simulateRequestsAndMatches(docs, counters, timestamp, expiresAt) {
       ownerUserId: `${prefix}_family_owner_${id}`,
       dogName: `Mavi ${id}`,
       note: `Load test sahiplenme başvurusu. Tanışma/adaptasyon görüşmesi: ${addDays(3 + (i % 20), 12).toISOString()}`,
-      status: "pending",
+      status: "accepted",
       createdAt: timestamp,
       updatedAt: timestamp,
+    });
+    addServiceEngagement({
+      add,
+      id,
+      module: "pati_gezdirme",
+      requestId: `${prefix}_walk_request_${id}`,
+      requestCollection: "walk_requests",
+      requesterUserId: requester,
+      providerUserId: `${prefix}_walk_user_${id}`,
+      title: `PatiGezdirme - Test ${id}`,
+      timestamp,
+      sequence: i,
+    });
+    addServiceEngagement({
+      add,
+      id,
+      module: "pati_bnb",
+      requestId: `${prefix}_bnb_request_${id}`,
+      requestCollection: "bnb_requests",
+      requesterUserId: requester,
+      providerUserId: `${prefix}_bnb_user_${id}`,
+      title: `PatiBnB - Test ${id}`,
+      timestamp,
+      sequence: i + count,
+    });
+    addServiceEngagement({
+      add,
+      id,
+      module: "pati_family",
+      requestId: `${prefix}_family_application_${id}`,
+      requestCollection: "adoption_applications",
+      requesterUserId: requester,
+      providerUserId: `${prefix}_family_owner_${id}`,
+      title: `PatiFamily - Mavi ${id}`,
+      timestamp,
+      sequence: i + count * 2,
     });
   }
 
@@ -510,6 +546,62 @@ function simulateRequestsAndMatches(docs, counters, timestamp, expiresAt) {
       updatedAt: timestamp,
     });
   }
+}
+
+function addServiceEngagement({
+  add,
+  module,
+  requestId,
+  requestCollection,
+  requesterUserId,
+  providerUserId,
+  title,
+  timestamp,
+  sequence,
+}) {
+  const engagementId = `${module}_${requestId}`;
+  const chatId = `service_${engagementId}`;
+  const stages = ["conversation", "scheduled", "in_progress", "completed"];
+  const stage = pick(stages, sequence);
+  add("service_engagements", engagementId, {
+    engagementId,
+    requestId,
+    requestCollection,
+    module,
+    requesterUserId,
+    providerUserId,
+    participantUserIds: [requesterUserId, providerUserId],
+    chatId,
+    title,
+    status: stage === "completed" ? "completed" : "accepted",
+    stage,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  });
+  add("chats", chatId, {
+    chatId,
+    conversationType: "service",
+    serviceEngagementId: engagementId,
+    serviceModule: module,
+    participantOwnerIds: [requesterUserId, providerUserId],
+    participantUserIds: [requesterUserId, providerUserId],
+    title,
+    status: "active",
+    lastMessage: serviceStageMessage(stage),
+    lastMessageAt: addDays(0, 9 + (sequence % 10)),
+    lastSenderUserId: sequence % 2 === 0 ? requesterUserId : providerUserId,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  });
+}
+
+function serviceStageMessage(stage) {
+  return {
+    conversation: "Talep kabul edildi, detayları konuşalım.",
+    scheduled: "Tarih ve saat netleşti.",
+    in_progress: "Hizmet şu anda devam ediyor.",
+    completed: "Hizmet tamamlandı, değerlendirme bekleniyor.",
+  }[stage];
 }
 
 function swipe(swipeId, fromDogId, fromOwnerId, toDogId, toOwnerId, liked, timestamp) {

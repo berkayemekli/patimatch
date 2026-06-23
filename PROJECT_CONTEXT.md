@@ -77,6 +77,7 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Hizmet alan/veren eslesme akisi kuruldu: talep kabulunde service engagement ve hizmet chat'i aciliyor; sohbet icinde konusma-planlandi-devam ediyor-tamamlandi asamalari izleniyor.
 - Load-test onerileri uygulandi: preflight, runId/TTL/cleanup, pipeline/CI, Auth Emulator, UI kontrat testleri, PatiMatch ag profilleri, yerel staging gorselleri, merkezi modul uyeligi ve HTML saglik paneli eklendi.
 - Dort modulde 250'ser aktif staging uyeligi ve tam islem hacmi dogrulandi. Bagimsiz Firestore validator ve `docs/LOAD_TEST_PROCESS_RECOMMENDATIONS.md` surec raporu eklendi.
 - Ana sayfa scroll hiyerarsisi duzeltildi; scrollbar artik dar icerik kolonunda degil viewport'un en saginda gorunuyor.

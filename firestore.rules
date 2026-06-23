@@ -115,12 +115,22 @@ service cloud.firestore {
       allow read: if isSignedIn() && request.auth.uid in resource.data.participantOwnerIds;
       allow create: if isSignedIn()
         && request.auth.uid in request.resource.data.participantOwnerIds
-        && hasKeys(request.resource.data, ['chatId', 'matchId', 'participantDogIds', 'participantOwnerIds', 'status'])
         && request.resource.data.chatId is string
-        && request.resource.data.matchId is string
-        && request.resource.data.participantDogIds is list
         && request.resource.data.participantOwnerIds is list
-        && request.resource.data.status == 'active';
+        && request.resource.data.status == 'active'
+        && (
+          (
+            hasKeys(request.resource.data, ['matchId', 'participantDogIds'])
+            && request.resource.data.matchId is string
+            && request.resource.data.participantDogIds is list
+          )
+          ||
+          (
+            request.resource.data.conversationType == 'service'
+            && request.resource.data.serviceEngagementId is string
+            && request.resource.data.serviceModule is string
+          )
+        );
       allow update: if isSignedIn() && request.auth.uid in resource.data.participantOwnerIds;
       allow delete: if false;
 
@@ -132,12 +142,39 @@ service cloud.firestore {
           && request.resource.data.messageId is string
           && request.resource.data.chatId == chatId
           && request.resource.data.text is string
-          && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds;
+          && request.auth.uid in getAfter(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds;
         allow update: if isSignedIn()
           && request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.participantOwnerIds
           && request.auth.uid == resource.data.senderUserId;
         allow delete: if false;
       }
+    }
+
+    match /service_engagements/{engagementId} {
+      allow read: if isSignedIn() && request.auth.uid in resource.data.participantUserIds;
+      allow create: if isSignedIn()
+        && request.auth.uid in request.resource.data.participantUserIds
+        && request.resource.data.engagementId == engagementId
+        && hasKeys(request.resource.data, [
+          'engagementId',
+          'requestId',
+          'module',
+          'requesterUserId',
+          'providerUserId',
+          'participantUserIds',
+          'chatId',
+          'status',
+          'stage'
+        ]);
+      allow update: if isSignedIn()
+        && request.auth.uid in resource.data.participantUserIds
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          'stage',
+          'status',
+          'updatedAt',
+          'completedAt'
+        ]);
+      allow delete: if false;
     }
 
     match /reports/{reportId} {
@@ -223,7 +260,10 @@ service cloud.firestore {
         && request.resource.data.requesterUserId == request.auth.uid
         && hasKeys(request.resource.data, ['applicationId', 'requesterUserId', 'requesterDogId', 'postId', 'ownerUserId', 'dogName', 'status'])
         && request.resource.data.status == 'pending';
-      allow update, delete: if false;
+      allow update: if isSignedIn()
+        && resource.data.ownerUserId == request.auth.uid
+        && isRequestDecisionUpdate();
+      allow delete: if false;
     }
   }
 }

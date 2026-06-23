@@ -22,6 +22,7 @@ const collections = [
   "walk_requests",
   "bnb_requests",
   "adoption_applications",
+  "service_engagements",
   "swipes",
   "matches",
   "chats",
@@ -113,7 +114,8 @@ function expectedCounts() {
     adoption_applications: expectedPerModule,
     swipes: expectedSwipes,
     matches: expectedPairs,
-    chats: expectedPairs,
+    service_engagements: expectedPerModule * 3,
+    chats: expectedPairs + expectedPerModule * 3,
     load_test_runs: 1,
   };
 }
@@ -125,6 +127,7 @@ async function run() {
   const accessToken = await getFirebaseCliToken();
   const actual = {};
   const membershipByModule = {};
+  const serviceStageCounts = {};
   const collectionReadMs = {};
 
   for (const collection of collections) {
@@ -142,6 +145,12 @@ async function run() {
       for (const document of loadTestDocuments) {
         const module = document.data.module || "unknown";
         membershipByModule[module] = (membershipByModule[module] || 0) + 1;
+      }
+    }
+    if (collection === "service_engagements") {
+      for (const document of loadTestDocuments) {
+        const stage = document.data.stage || "unknown";
+        serviceStageCounts[stage] = (serviceStageCounts[stage] || 0) + 1;
       }
     }
     console.log(`${collection}: ${actual[collection]}`);
@@ -184,6 +193,7 @@ async function run() {
     expected,
     actual,
     membershipByModule,
+    serviceStageCounts,
     collectionReadMs,
     totalReadMs: Object.values(collectionReadMs).reduce((sum, value) => sum + value, 0),
     mismatches,

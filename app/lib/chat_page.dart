@@ -291,6 +291,7 @@ class _ChatPageState extends State<ChatPage> {
       ),
       body: Column(
         children: [
+          _ServiceProgress(chatId: widget.chatId),
           Expanded(
             child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: messagesStream,
@@ -445,3 +446,104 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 }
+
+class _ServiceProgress extends StatelessWidget {
+  const _ServiceProgress({required this.chatId});
+
+  final String chatId;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream: FirebaseFirestore.instance.collection('chats').doc(chatId).snapshots(),
+      builder: (context, chatSnapshot) {
+        final chatData = chatSnapshot.data?.data();
+        if (chatData?['conversationType'] != 'service') {
+          return const SizedBox.shrink();
+        }
+        final engagementId =
+            chatData?['serviceEngagementId'] as String? ?? '';
+        if (engagementId.isEmpty) return const SizedBox.shrink();
+        return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection('service_engagements')
+              .doc(engagementId)
+              .snapshots(),
+          builder: (context, engagementSnapshot) {
+            final data = engagementSnapshot.data?.data() ?? const {};
+            final stage = data['stage'] as String? ?? 'conversation';
+            return Container(
+              width: double.infinity,
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+              color: const Color(0xFFF8FAFC),
+              child: Row(
+                children: [
+                  Expanded(child: _StageIndicator(stage: stage)),
+                  if (stage != 'completed')
+                    TextButton.icon(
+                      onPressed: () async {
+                        final next = switch (stage) {
+                          'conversation' => 'scheduled',
+                          'scheduled' => 'in_progress',
+                          _ => 'completed',
+                        };
+                        await AppProviders.serviceEngagementRepository.updateStage(
+                          engagementId: engagementId,
+                          stage: next,
+                        );
+                      },
+                      icon: const Icon(Icons.arrow_forward_rounded),
+                      label: Text(_nextStageLabel(stage)),
+                    ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class _StageIndicator extends StatelessWidget {
+  const _StageIndicator({required this.stage});
+
+  final String stage;
+
+  @override
+  Widget build(BuildContext context) {
+    const stages = ['conversation', 'scheduled', 'in_progress', 'completed'];
+    final activeIndex = stages.indexOf(stage).clamp(0, stages.length - 1);
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: List.generate(stages.length, (index) {
+        final active = index <= activeIndex;
+        return Chip(
+          avatar: Icon(
+            active ? Icons.check_circle_rounded : Icons.circle_outlined,
+            size: 16,
+            color: active ? const Color(0xFF0F766E) : const Color(0xFF94A3B8),
+          ),
+          label: Text(_stageLabel(stages[index])),
+          side: BorderSide.none,
+          backgroundColor:
+              active ? const Color(0xFFE7F7F2) : const Color(0xFFF1F5F9),
+        );
+      }),
+    );
+  }
+}
+
+String _stageLabel(String stage) => switch (stage) {
+  'scheduled' => 'Planlandı',
+  'in_progress' => 'Devam ediyor',
+  'completed' => 'Tamamlandı',
+  _ => 'Konuşma',
+};
+
+String _nextStageLabel(String stage) => switch (stage) {
+  'conversation' => 'Planlandı',
+  'scheduled' => 'Başlat',
+  _ => 'Tamamla',
+};

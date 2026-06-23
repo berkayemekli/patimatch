@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'chat_page.dart';
+import 'data/app_providers.dart';
 import 'login_page.dart';
 
 class RequestsPage extends StatefulWidget {
@@ -71,6 +73,15 @@ class _RequestsPageState extends State<RequestsPage> {
               ),
               const SizedBox(height: 16),
               _RequestSection(
+                title: 'PatiFamily',
+                icon: Icons.pets_rounded,
+                color: const Color(0xFF4F46E5),
+                collection: 'adoption_applications',
+                userId: user.uid,
+                view: _view,
+              ),
+              const SizedBox(height: 16),
+              _RequestSection(
                 title: 'PatiBnB',
                 icon: Icons.home_work_rounded,
                 color: const Color(0xFFF97316),
@@ -103,8 +114,11 @@ class _RequestSection extends StatelessWidget {
   final String userId;
   final String view;
 
-  String get _ownerField =>
-      collection == 'walk_requests' ? 'walkerOwnerUserId' : 'hostOwnerUserId';
+  String get _ownerField => switch (collection) {
+    'walk_requests' => 'walkerOwnerUserId',
+    'bnb_requests' => 'hostOwnerUserId',
+    _ => 'ownerUserId',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -212,27 +226,69 @@ class _RequestTileState extends State<_RequestTile> {
   Future<void> _setStatus(String status) async {
     setState(() => _saving = true);
     try {
-      await widget.doc.reference.update({
-        'status': status,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
+      if (status == 'accepted') {
+        final data = widget.doc.data();
+        await AppProviders.serviceEngagementRepository
+            .acceptRequestAndCreateConversation(
+              requestReference: widget.doc.reference,
+              requestId: widget.doc.id,
+              module: _module,
+              requesterUserId: data['requesterUserId'] as String? ?? '',
+              providerUserId: _providerUserId(data),
+              title: _conversationTitle(data),
+            );
+      } else {
+        await widget.doc.reference.update({
+          'status': status,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
     } finally {
       if (mounted) setState(() => _saving = false);
     }
   }
 
+  String get _module => switch (widget.collection) {
+    'walk_requests' => 'pati_gezdirme',
+    'bnb_requests' => 'pati_bnb',
+    _ => 'pati_family',
+  };
+
+  String _providerUserId(Map<String, dynamic> data) =>
+      switch (widget.collection) {
+        'walk_requests' => data['walkerOwnerUserId'] as String? ?? '',
+        'bnb_requests' => data['hostOwnerUserId'] as String? ?? '',
+        _ => data['ownerUserId'] as String? ?? '',
+      };
+
+  String _conversationTitle(Map<String, dynamic> data) =>
+      switch (widget.collection) {
+        'walk_requests' =>
+          'PatiGezdirme · ${data['walkerName'] as String? ?? 'Gezdirici'}',
+        'bnb_requests' =>
+          'PatiBnB · ${data['hostName'] as String? ?? 'Host'}',
+        _ => 'PatiFamily · ${data['dogName'] as String? ?? 'Sahiplendirme'}',
+      };
+
+  String _chatId() => 'service_${_module}_${widget.doc.id}';
+
   @override
   Widget build(BuildContext context) {
     final data = widget.doc.data();
     final isWalk = widget.collection == 'walk_requests';
+    final isBnb = widget.collection == 'bnb_requests';
     final name = isWalk
         ? (data['walkerName'] as String? ?? 'Gezdirici')
-        : (data['hostName'] as String? ?? 'Host');
+        : isBnb
+        ? (data['hostName'] as String? ?? 'Host')
+        : (data['dogName'] as String? ?? 'Sahiplendirme');
     final status = data['status'] as String? ?? 'pending';
     final note = data['note'] as String? ?? '';
     final when = isWalk
         ? _formatTimestamp(data['preferredAt'])
-        : '${_formatTimestamp(data['checkIn'])} - ${_formatTimestamp(data['checkOut'])}';
+        : isBnb
+        ? '${_formatTimestamp(data['checkIn'])} - ${_formatTimestamp(data['checkOut'])}'
+        : 'Sahiplendirme başvurusu';
 
     return Column(
       children: [
@@ -284,6 +340,25 @@ class _RequestTileState extends State<_RequestTile> {
                   ),
                 ),
               ],
+            ),
+          ),
+        if (status == 'accepted')
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+            child: SizedBox(
+              width: double.infinity,
+              child: FilledButton.tonalIcon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => ChatPage(
+                      chatId: _chatId(),
+                      title: _conversationTitle(data),
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.chat_bubble_outline_rounded),
+                label: const Text('Sohbete geç'),
+              ),
             ),
           ),
         const Divider(height: 1),

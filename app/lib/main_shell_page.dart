@@ -13,6 +13,7 @@ import 'pati_parent_page.dart';
 import 'payments_page.dart';
 import 'settings_page.dart';
 import 'identity_verification_page.dart';
+import 'service_conversations_page.dart';
 
 class MainShellPage extends StatefulWidget {
   const MainShellPage({super.key, this.guestMode = false});
@@ -112,6 +113,17 @@ class _MainShellPageState extends State<MainShellPage> {
                   },
                   icon: const Icon(Icons.calendar_month_outlined),
                   label: const Text('Takvim'),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const ServiceConversationsPage(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.handshake_outlined),
+                  tooltip: 'Hizmet Mesajları',
                 ),
                 IconButton(
                   onPressed: () {

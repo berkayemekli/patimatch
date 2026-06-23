@@ -36,6 +36,9 @@ const rows = Object.entries(validation.actual || {})
     return `<tr><td>${name}</td><td>${expected}</td><td>${value}</td><td>${duration}</td><td>${status}</td></tr>`;
   })
   .join("");
+const stageRows = Object.entries(validation.serviceStageCounts || {})
+  .map(([stage, value]) => `<tr><td>${stage}</td><td>${value}</td></tr>`)
+  .join("");
 
 const html = `<!doctype html>
 <html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -54,6 +57,8 @@ th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}th{backgr
 <header><div>PatiParent · staging</div><h1>Load test sağlık paneli</h1><p class="muted">Seed, doğrulama, Auth Emulator ve cleanup sonuçlarının tek görünümü.</p></header>
 <section class="grid">${cards.map(([label, value]) => `<div class="card"><span>${label}</span><b>${value}</b></div>`).join("")}</section>
 <section class="table"><table><thead><tr><th>Koleksiyon</th><th>Beklenen</th><th>Gerçek</th><th>Okuma ms</th><th>Durum</th></tr></thead><tbody>${rows}</tbody></table></section>
+<h2>Hizmet yaşam döngüsü</h2>
+<section class="table"><table><thead><tr><th>Aşama</th><th>Eşleşme</th></tr></thead><tbody>${stageRows || '<tr><td colspan="2">Doğrulama sonrası oluşacak</td></tr>'}</tbody></table></section>
 <p>Oluşturulma: ${new Date().toISOString()}</p>
 </main></body></html>`;
 
