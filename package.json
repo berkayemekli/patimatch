@@ -4,9 +4,17 @@
   "private": true,
   "scripts": {
     "seed": "node scripts/seed.js",
+    "load-test:preflight": "node scripts/load_test_preflight.js --project patimatch-staging",
     "load-test:dry": "node scripts/load_test_seed.js",
     "load-test:staging": "node scripts/load_test_seed.js --project patimatch-staging --write",
-    "load-test:validate": "node scripts/validate_load_test.js --project patimatch-staging"
+    "load-test:validate": "node scripts/validate_load_test.js --project patimatch-staging",
+    "load-test:cleanup": "node scripts/cleanup_load_test.js --project patimatch-staging",
+    "load-test:pipeline": "node scripts/run_load_test_pipeline.js --project patimatch-staging",
+    "load-test:match:sparse": "node scripts/load_test_seed.js --run-id lt_match_sparse --count 250 --match-pairs 50 --network-profile sparse",
+    "load-test:match:normal": "node scripts/load_test_seed.js --run-id lt_match_normal --count 250 --match-pairs 125 --network-profile normal",
+    "load-test:match:dense": "node scripts/load_test_seed.js --run-id lt_match_dense --count 250 --match-pairs 125 --network-profile dense",
+    "load-test:dashboard": "node scripts/generate_load_test_dashboard.js",
+    "auth-test:emulator": "firebase emulators:exec --only auth --project demo-patiparent \"node scripts/seed_auth_emulator.js --count 1000 --project demo-patiparent\""
   },
   "dependencies": {
     "firebase-admin": "^13.0.0"

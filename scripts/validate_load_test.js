@@ -4,14 +4,17 @@ const path = require("path");
 
 const projectId = readArg("--project") || "patimatch-staging";
 const prefix = readArg("--prefix") || "lt_2026";
+const runId = readArg("--run-id") || prefix;
 const expectedPerModule = Number(readArg("--count") || 250);
 const expectedPairs = Number(readArg("--match-pairs") || 125);
+const networkProfile = readArg("--network-profile") || "paired";
 const root = path.resolve(__dirname, "..");
 const reportPath = path.join(root, "docs", "load_test_validation_report.json");
 
 const collections = [
   "users",
   "module_memberships",
+  "activity_events",
   "walkers",
   "bnb_hosts",
   "dogs",
@@ -22,6 +25,7 @@ const collections = [
   "swipes",
   "matches",
   "chats",
+  "load_test_runs",
 ];
 
 function readArg(name) {
@@ -91,9 +95,15 @@ async function readCollection(collection, accessToken) {
 }
 
 function expectedCounts() {
+  const swipesPerUser = { sparse: 2, normal: 12, dense: 50 }[networkProfile];
+  const expectedSwipes =
+    networkProfile === "paired"
+      ? expectedPairs * 2
+      : expectedPerModule * Math.min(swipesPerUser, expectedPerModule - 1);
   return {
     users: expectedPerModule * 4,
     module_memberships: expectedPerModule * 4,
+    activity_events: expectedPerModule * 4,
     walkers: expectedPerModule,
     bnb_hosts: expectedPerModule,
     dogs: expectedPerModule,
@@ -101,9 +111,10 @@ function expectedCounts() {
     walk_requests: expectedPerModule,
     bnb_requests: expectedPerModule,
     adoption_applications: expectedPerModule,
-    swipes: expectedPairs * 2,
+    swipes: expectedSwipes,
     matches: expectedPairs,
     chats: expectedPairs,
+    load_test_runs: 1,
   };
 }
 
@@ -114,15 +125,19 @@ async function run() {
   const accessToken = await getFirebaseCliToken();
   const actual = {};
   const membershipByModule = {};
+  const collectionReadMs = {};
 
   for (const collection of collections) {
+    const startedAt = Date.now();
     const documents = await readCollection(collection, accessToken);
     const loadTestDocuments = documents.filter(
       (document) =>
         document.id.startsWith(`${prefix}_`) ||
+        document.data.loadTestRunId === runId ||
         document.data.loadTestPrefix === prefix,
     );
     actual[collection] = loadTestDocuments.length;
+    collectionReadMs[collection] = Date.now() - startedAt;
     if (collection === "module_memberships") {
       for (const document of loadTestDocuments) {
         const module = document.data.module || "unknown";
@@ -161,12 +176,16 @@ async function run() {
     generatedAt: new Date().toISOString(),
     projectId,
     prefix,
+    runId,
     expectedPerModule,
     expectedPairs,
+    networkProfile,
     passed: mismatches.length === 0,
     expected,
     actual,
     membershipByModule,
+    collectionReadMs,
+    totalReadMs: Object.values(collectionReadMs).reduce((sum, value) => sum + value, 0),
     mismatches,
   };
   fs.writeFileSync(reportPath, `${JSON.stringify(report, null, 2)}\n`, "utf8");

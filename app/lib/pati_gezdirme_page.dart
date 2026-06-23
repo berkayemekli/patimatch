@@ -6,6 +6,7 @@ import 'data/master_data/master_data_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 import 'login_page.dart';
+import 'widgets/smart_pet_image.dart';
 
 class PatiGezdirmePage extends StatefulWidget {
   const PatiGezdirmePage({super.key});
@@ -769,7 +770,7 @@ class _WalkerCard extends StatelessWidget {
               child: Stack(
                 fit: StackFit.expand,
                 children: [
-                  Image.network(imageUrl, fit: BoxFit.cover),
+                  SmartPetImage(source: imageUrl),
                   const DecoratedBox(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
@@ -1143,7 +1144,7 @@ class _ProfileHero extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(imageUrl, fit: BoxFit.cover),
+          SmartPetImage(source: imageUrl),
           const DecoratedBox(
             decoration: BoxDecoration(
               gradient: LinearGradient(

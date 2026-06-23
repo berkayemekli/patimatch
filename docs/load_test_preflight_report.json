@@ -1,0 +1,37 @@
+{
+  "generatedAt": "2026-06-23T11:52:36.311Z",
+  "projectId": "patimatch-staging",
+  "passed": true,
+  "checks": [
+    {
+      "name": "production_guard",
+      "passed": true,
+      "detail": "Target project: patimatch-staging"
+    },
+    {
+      "name": "staging_name",
+      "passed": true,
+      "detail": "Project id should clearly identify staging."
+    },
+    {
+      "name": "firebase_cli_auth",
+      "passed": true,
+      "detail": "Firebase CLI session is available."
+    },
+    {
+      "name": "project_access",
+      "passed": true,
+      "detail": "Project is accessible."
+    },
+    {
+      "name": "firestore_api",
+      "passed": true,
+      "detail": "State: ENABLED"
+    },
+    {
+      "name": "firestore_database",
+      "passed": true,
+      "detail": "Location: eur3; type: FIRESTORE_NATIVE"
+    }
+  ]
+}

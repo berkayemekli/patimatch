@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PatiParent Load Test Dashboard</title>
+<style>
+:root{--bg:#f7f5f1;--ink:#111827;--muted:#64748b;--line:#e2e8f0;--ok:#0f766e}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#f8fafc,#f7f5f1);font-family:system-ui,sans-serif;color:var(--ink)}
+main{max-width:1120px;margin:auto;padding:36px 20px 70px}header{padding:30px;border-radius:28px;background:#111827;color:white}
+h1{font-size:clamp(34px,6vw,62px);line-height:1;margin:8px 0 12px;letter-spacing:-2px}.muted{color:#cbd5e1}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card{padding:18px;border:1px solid var(--line);border-radius:20px;background:white}
+.card b{display:block;font-size:25px;margin-top:5px}.card span{color:var(--muted);font-size:13px;font-weight:700}
+.table{overflow:auto;background:white;border:1px solid var(--line);border-radius:20px}table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}th{background:#f8fafc}.pass{color:var(--ok)}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><main>
+<header><div>PatiParent · staging</div><h1>Load test sağlık paneli</h1><p class="muted">Seed, doğrulama, Auth Emulator ve cleanup sonuçlarının tek görünümü.</p></header>
+<section class="grid"><div class="card"><span>Preflight</span><b>PASS</b></div><div class="card"><span>Firestore doğrulama</span><b>PASS</b></div><div class="card"><span>Hedef modül üyeliği</span><b>250</b></div><div class="card"><span>Hedef toplam profil</span><b>1000</b></div><div class="card"><span>Hedef toplam üyelik</span><b>1000</b></div><div class="card"><span>Son doğrulama run</span><b>lt_pipeline_smoke_20260623</b></div><div class="card"><span>Auth login smoke</span><b>PASS</b></div><div class="card"><span>Son cleanup</span><b>69 silindi</b></div><div class="card"><span>Firestore okuma</span><b>eski rapor</b></div></section>
+<section class="table"><table><thead><tr><th>Koleksiyon</th><th>Beklenen</th><th>Gerçek</th><th>Okuma ms</th><th>Durum</th></tr></thead><tbody><tr><td>users</td><td>16</td><td>16</td><td>-</td><td>PASS</td></tr><tr><td>module_memberships</td><td>16</td><td>16</td><td>-</td><td>PASS</td></tr><tr><td>walkers</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>bnb_hosts</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>dogs</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>adoption_posts</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>walk_requests</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>bnb_requests</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>adoption_applications</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>swipes</td><td>4</td><td>4</td><td>-</td><td>PASS</td></tr><tr><td>matches</td><td>2</td><td>2</td><td>-</td><td>PASS</td></tr><tr><td>chats</td><td>2</td><td>2</td><td>-</td><td>PASS</td></tr><tr><td>load_test_runs</td><td>1</td><td>1</td><td>-</td><td>PASS</td></tr></tbody></table></section>
+<p>Oluşturulma: 2026-06-23T12:08:50.377Z</p>
+</main></body></html>

@@ -1,6 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 
 import 'data/master_data/master_data_repository.dart';
+import 'widgets/smart_pet_image.dart';
 
 class PatiMatchPage extends StatefulWidget {
   const PatiMatchPage({super.key});
@@ -317,11 +318,10 @@ class _FloatingMiniCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(18),
-            child: Image.network(
-              active.photo,
+            child: SmartPetImage(
+              source: active.photo,
               width: 64,
               height: 64,
-              fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => const ColoredBox(
                 color: Color(0xFFFFE4E6),
                 child: SizedBox(width: 64, height: 64),
@@ -555,9 +555,8 @@ class _ProfileCard extends StatelessWidget {
       child: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
-            profile.photo,
-            fit: BoxFit.cover,
+          SmartPetImage(
+            source: profile.photo,
             errorBuilder: (context, error, stackTrace) =>
                 const ColoredBox(color: Color(0xFFFFEEF3)),
           ),
@@ -959,9 +958,8 @@ class _QueuePreview extends StatelessWidget {
                             borderRadius: BorderRadius.circular(18),
                             child: AspectRatio(
                               aspectRatio: 1.2,
-                              child: Image.network(
-                                profile.photo,
-                                fit: BoxFit.cover,
+                              child: SmartPetImage(
+                                source: profile.photo,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const ColoredBox(color: Color(0xFFFFEEF3)),
                               ),

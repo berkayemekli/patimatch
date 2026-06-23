@@ -49,6 +49,16 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /module_memberships/{membershipId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create, update: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.membershipId == membershipId
+        && hasKeys(request.resource.data, ['membershipId', 'userId', 'module', 'role', 'status'])
+        && request.resource.data.status == 'active';
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
     match /verificationSessions/{sessionId} {
       allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
       allow create: if isSignedIn()

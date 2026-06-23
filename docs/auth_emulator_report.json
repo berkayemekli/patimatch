@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-06-23T12:04:23.922Z",
+  "projectId": "demo-patiparent",
+  "host": "127.0.0.1:9099",
+  "requested": 1000,
+  "created": 1000,
+  "processed": 1000,
+  "verifiedLogins": [
+    "loadtest-0001@patiparent.test",
+    "loadtest-0500@patiparent.test",
+    "loadtest-1000@patiparent.test"
+  ],
+  "passed": true,
+  "note": "Emulator-only accounts; no real email or SMS is sent."
+}

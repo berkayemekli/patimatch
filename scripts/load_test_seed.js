@@ -5,7 +5,16 @@ const path = require("path");
 const projectId = readArg("--project") || process.env.FIREBASE_PROJECT_ID || "patimatch-staging";
 const count = Number(readArg("--count") || process.env.LOAD_TEST_COUNT || 250);
 const matchPairs = Number(readArg("--match-pairs") || process.env.LOAD_TEST_MATCH_PAIRS || 125);
-const prefix = readArg("--prefix") || process.env.LOAD_TEST_PREFIX || "lt_2026";
+const networkProfile =
+  readArg("--network-profile") || process.env.LOAD_TEST_NETWORK_PROFILE || "paired";
+const runId =
+  readArg("--run-id") ||
+  process.env.LOAD_TEST_RUN_ID ||
+  readArg("--prefix") ||
+  process.env.LOAD_TEST_PREFIX ||
+  "lt_2026";
+const prefix = runId;
+const ttlDays = Number(readArg("--ttl-days") || process.env.LOAD_TEST_TTL_DAYS || 7);
 const writeEnabled = hasFlag("--write") || process.env.LOAD_TEST_WRITE === "1";
 const allowProd = hasFlag("--allow-prod") || process.env.ALLOW_PROD_LOAD_TEST === "1";
 
@@ -20,6 +29,12 @@ if (projectId === "patimatch-app-2026-berkay" && !allowProd) {
 
 if (!Number.isInteger(count) || count < 1 || count > 500) {
   throw new Error("--count must be an integer between 1 and 500.");
+}
+if (!Number.isInteger(ttlDays) || ttlDays < 1 || ttlDays > 30) {
+  throw new Error("--ttl-days must be an integer between 1 and 30.");
+}
+if (!["paired", "sparse", "normal", "dense"].includes(networkProfile)) {
+  throw new Error("--network-profile must be paired, sparse, normal, or dense.");
 }
 
 function readArg(name) {
@@ -126,6 +141,7 @@ async function writeWithRest(documents) {
 
 function buildDocuments() {
   const timestamp = nowIso();
+  const expiresAt = addDays(ttlDays);
   const cities = [
     ["İstanbul", "Kadıköy"],
     ["İstanbul", "Beşiktaş"],
@@ -142,7 +158,17 @@ function buildDocuments() {
   const counters = {};
 
   function add(collection, id, data) {
-    docs.push({ collection, id, data });
+    docs.push({
+      collection,
+      id,
+      data: {
+        ...data,
+        isLoadTest: true,
+        loadTestPrefix: prefix,
+        loadTestRunId: runId,
+        expiresAt,
+      },
+    });
     counters[collection] = (counters[collection] || 0) + 1;
   }
 
@@ -153,6 +179,7 @@ function buildDocuments() {
     const userId = `${prefix}_walk_user_${id}`;
     add("users", userId, baseUser(userId, `Gezdirici ${id}`, city, district, ["provider"], timestamp, verified));
     add("module_memberships", `${prefix}_walk_membership_${id}`, moduleMembership(`${prefix}_walk_membership_${id}`, userId, "pati_gezdirme", "provider", timestamp));
+    add("activity_events", `${prefix}_walk_activity_${id}`, activityEvent(`${prefix}_walk_activity_${id}`, userId, "pati_gezdirme", "profile_view", timestamp, i));
     add("walkers", `${prefix}_walker_${id}`, {
       id: `${prefix}_walker_${id}`,
       ownerUserId: userId,
@@ -171,7 +198,7 @@ function buildDocuments() {
       specialties: [pick(["Küçük ırklar", "Büyük ırklar", "Yavru köpek", "Yaşlı köpek"], i), "Canlı takip"],
       safetyChecklist: ["Canlı konum", "Su molası", "Yürüyüş sonrası özet"],
       bio: `Load test gezdirici ${id}. Şehir içi güvenli rota, düzenli saat, davranış notu ve fotoğraflı takip sunan test profilidir.`,
-      imageUrl: `https://placedog.net/900/700?id=${1000 + i}`,
+      imageUrl: "asset:assets/images/load_test_walk.jpg",
       instantBooking: i % 4 === 0,
       featured: i % 11 === 0,
       status: "active",
@@ -189,6 +216,7 @@ function buildDocuments() {
     const userId = `${prefix}_bnb_user_${id}`;
     add("users", userId, baseUser(userId, `PatiBnB Host ${id}`, city, district, ["provider"], timestamp, verified));
     add("module_memberships", `${prefix}_bnb_membership_${id}`, moduleMembership(`${prefix}_bnb_membership_${id}`, userId, "pati_bnb", "provider", timestamp));
+    add("activity_events", `${prefix}_bnb_activity_${id}`, activityEvent(`${prefix}_bnb_activity_${id}`, userId, "pati_bnb", "availability_updated", timestamp, i));
     add("bnb_hosts", `${prefix}_bnb_${id}`, {
       id: `${prefix}_bnb_${id}`,
       ownerUserId: userId,
@@ -208,7 +236,7 @@ function buildDocuments() {
       dailyRoutine: "Sabah adaptasyon, gün içinde fotoğraflı durum, akşam sakin oyun.",
       responseTime: i % 3 === 0 ? "1 saat içinde" : "2 saat içinde",
       acceptedPetSize: pick(["Küçük ve orta", "Tüm boyutlar", "Kedi odaklı", "Orta ve büyük"], i),
-      imageUrl: `https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1200&q=80&sig=${i}`,
+      imageUrl: "asset:assets/images/load_test_bnb.jpg",
       status: "active",
       verificationStatus: verified ? "verified" : "phone_email",
       trustBadges: verified ? ["Kimlik doğrulandı", "Ev ön kontrolü"] : ["Telefon doğrulandı"],
@@ -225,6 +253,7 @@ function buildDocuments() {
     const animalCategory = i % 5 === 0 ? "Kedi" : "Köpek";
     add("users", userId, baseUser(userId, `PatiMatch Üye ${id}`, city, district, ["customer"], timestamp, i % 7 === 0));
     add("module_memberships", `${prefix}_match_membership_${id}`, moduleMembership(`${prefix}_match_membership_${id}`, userId, "pati_match", "member", timestamp));
+    add("activity_events", `${prefix}_match_activity_${id}`, activityEvent(`${prefix}_match_activity_${id}`, userId, "pati_match", "discovery_opened", timestamp, i));
     add("dogs", dogId, {
       dogId,
       ownerId: userId,
@@ -242,7 +271,7 @@ function buildDocuments() {
       isProfileComplete: true,
       isVaccinated: i % 8 !== 0,
       vaccineStatus: i % 8 === 0 ? "Eksik" : "Tam",
-      photoUrls: [`https://placedog.net/900/700?id=${2000 + i}`],
+      photoUrls: ["asset:assets/images/load_test_match.jpg"],
       matchGoal: pick(["oyun arkadaşı", "sosyal tanışma", "yürüyüş arkadaşı"], i),
       status: "active",
       createdAt: timestamp,
@@ -259,6 +288,7 @@ function buildDocuments() {
     const petName = `${animalCategory === "Kedi" ? "Boncuk" : "Mavi"} ${id}`;
     add("users", userId, baseUser(userId, `PatiFamily Sahip ${id}`, city, district, ["provider"], timestamp, i % 9 === 0));
     add("module_memberships", `${prefix}_family_membership_${id}`, moduleMembership(`${prefix}_family_membership_${id}`, userId, "pati_family", "listing_owner", timestamp));
+    add("activity_events", `${prefix}_family_activity_${id}`, activityEvent(`${prefix}_family_activity_${id}`, userId, "pati_family", "listing_viewed", timestamp, i));
     add("adoption_posts", postId, {
       id: postId,
       ownerUserId: userId,
@@ -277,16 +307,25 @@ function buildDocuments() {
       ownerNote: "İlk ay takip, veteriner kontrolü ve sakin adaptasyon süreci önerilir.",
       trustBadges: ["Aşı kartı", "Sahiplendirme formu"],
       careNeeds: ["Sabit rutin", "Veteriner kontrolü", "İlk hafta sabır"],
-      imageUrl: animalCategory === "Kedi"
-        ? `https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?auto=format&fit=crop&w=1200&q=80&sig=${i}`
-        : `https://placedog.net/900/700?id=${3000 + i}`,
+      imageUrl: "asset:assets/images/load_test_family.jpg",
       status: "active",
       createdAt: timestamp,
       updatedAt: timestamp,
     });
   }
 
-  simulateRequestsAndMatches(docs, counters, timestamp);
+  simulateRequestsAndMatches(docs, counters, timestamp, expiresAt);
+  add("load_test_runs", runId, {
+    runId,
+    projectId,
+    status: writeEnabled ? "writing" : "dry_run",
+    countPerModule: count,
+    matchPairs,
+    networkProfile,
+    ttlDays,
+    startedAt: timestamp,
+    expectedCounters: { ...counters },
+  });
   return { docs, counters };
 }
 
@@ -327,9 +366,30 @@ function moduleMembership(membershipId, userId, module, role, timestamp) {
   };
 }
 
-function simulateRequestsAndMatches(docs, counters, timestamp) {
+function activityEvent(eventId, userId, module, eventType, timestamp, sequence) {
+  return {
+    eventId,
+    userId,
+    module,
+    eventType,
+    sessionId: `${runId}_session_${pad(sequence)}`,
+    occurredAt: timestamp,
+  };
+}
+
+function simulateRequestsAndMatches(docs, counters, timestamp, expiresAt) {
   const add = (collection, id, data) => {
-    docs.push({ collection, id, data });
+    docs.push({
+      collection,
+      id,
+      data: {
+        ...data,
+        isLoadTest: true,
+        loadTestPrefix: prefix,
+        loadTestRunId: runId,
+        expiresAt,
+      },
+    });
     counters[collection] = (counters[collection] || 0) + 1;
   };
 
@@ -380,6 +440,42 @@ function simulateRequestsAndMatches(docs, counters, timestamp) {
   }
 
   const pairs = Math.min(matchPairs, Math.floor(count / 2));
+  if (networkProfile === "paired") {
+    for (let i = 1; i <= pairs; i += 1) {
+      const a = pad(i);
+      const b = pad(count - i + 1);
+      const dogA = `${prefix}_match_dog_${a}`;
+      const dogB = `${prefix}_match_dog_${b}`;
+      const ownerA = `${prefix}_match_user_${a}`;
+      const ownerB = `${prefix}_match_user_${b}`;
+      add("swipes", `${dogA}_${dogB}`, swipe(`${dogA}_${dogB}`, dogA, ownerA, dogB, ownerB, true, timestamp));
+      add("swipes", `${dogB}_${dogA}`, swipe(`${dogB}_${dogA}`, dogB, ownerB, dogA, ownerA, true, timestamp));
+    }
+  } else {
+    const swipesPerUser = { sparse: 2, normal: 12, dense: 50 }[networkProfile];
+    for (let from = 1; from <= count; from += 1) {
+      for (let offset = 1; offset <= Math.min(swipesPerUser, count - 1); offset += 1) {
+        const to = ((from - 1 + offset) % count) + 1;
+        const fromId = pad(from);
+        const toId = pad(to);
+        const fromDog = `${prefix}_match_dog_${fromId}`;
+        const toDog = `${prefix}_match_dog_${toId}`;
+        add(
+          "swipes",
+          `${fromDog}_${toDog}`,
+          swipe(
+            `${fromDog}_${toDog}`,
+            fromDog,
+            `${prefix}_match_user_${fromId}`,
+            toDog,
+            `${prefix}_match_user_${toId}`,
+            offset % 3 !== 0,
+            timestamp,
+          ),
+        );
+      }
+    }
+  }
   for (let i = 1; i <= pairs; i += 1) {
     const a = pad(i);
     const b = pad(count - i + 1);
@@ -388,8 +484,6 @@ function simulateRequestsAndMatches(docs, counters, timestamp) {
     const ownerA = `${prefix}_match_user_${a}`;
     const ownerB = `${prefix}_match_user_${b}`;
     const matchId = [dogA, dogB].sort().join("_");
-    add("swipes", `${dogA}_${dogB}`, swipe(`${dogA}_${dogB}`, dogA, ownerA, dogB, ownerB, true, timestamp));
-    add("swipes", `${dogB}_${dogA}`, swipe(`${dogB}_${dogA}`, dogB, ownerB, dogA, ownerA, true, timestamp));
     add("matches", matchId, {
       matchId,
       dogAId: dogA,
@@ -439,8 +533,11 @@ function writeReport(counters, written) {
     generatedAt: nowIso(),
     projectId,
     prefix,
+    runId,
+    ttlDays,
     countPerModule: count,
     matchPairs,
+    networkProfile,
     writeEnabled,
     written,
     counters,
@@ -465,6 +562,27 @@ async function run() {
     return;
   }
   await writeWithRest(docs);
+  await writeWithRest([
+    {
+      collection: "load_test_runs",
+      id: runId,
+      data: {
+        runId,
+        projectId,
+        status: "completed",
+        countPerModule: count,
+        matchPairs,
+        networkProfile,
+        ttlDays,
+        actualCounters: counters,
+        isLoadTest: true,
+        loadTestPrefix: prefix,
+        loadTestRunId: runId,
+        completedAt: nowIso(),
+        expiresAt: addDays(ttlDays),
+      },
+    },
+  ]);
   writeReport(counters, true);
   console.log("Load test seed completed.");
 }

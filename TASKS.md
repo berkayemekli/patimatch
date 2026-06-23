@@ -8,6 +8,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Blocked / Needs External Action
 
+- Firestore membership rules deploy: 23 Haziran 2026'da staging ve prod Firebase Rules API istekleri bağlantı seviyesinde başarısız oldu; kod hazır, yeniden deploy edilmeli.
 - Google login: Firebase Google provider acildiysa popup akisi kullaniliyor. Hala calismazsa Chrome popup izni ve Firebase Authentication > Sign-in method > Google ayarlari kontrol edilmeli.
 - Apple login: Simdilik aktif edilmeyecek. Apple Developer, Service ID, Team ID, Key ID ve private key gerektirir.
 - Cloud Functions deploy: Firebase Blaze plan gerekli. KYC backend scaffold hazir ama functions deploy Blaze olmadan tamamlanmiyor.
@@ -61,6 +62,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Load-test süreç önerileri sırayla uygulandı; uygulama kaydı `docs/LOAD_TEST_IMPLEMENTATION_PROGRESS.md` altında tutuluyor.
 - Dört modül için 250'şer staging üyeliği ve işlem hacmi doğrulandı; bağımsız validator ve süreç geliştirme raporu eklendi.
 - Ana modül sayfalarının scrollbar alanı içerik kutusundan çıkarıldı; web'de ekranın en sağında görünür ve tek sayfa scroll'u olarak çalışıyor.
 - Gece load-test kosusu tamamlandi: staging Firestore API/database acildi, 2720 dokuman yazildi, `flutter analyze lib` temiz gecti.

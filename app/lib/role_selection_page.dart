@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'data/app_providers.dart';
+
 class RoleSelectionPage extends StatefulWidget {
   const RoleSelectionPage({super.key});
 
@@ -99,6 +101,14 @@ class _RoleSelectionPageState extends State<RoleSelectionPage> {
       'updatedAt': FieldValue.serverTimestamp(),
       'createdAt': FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
+    try {
+      await AppProviders.moduleMembershipRepository.syncMemberships(
+        userId: user.uid,
+        moduleRoles: _moduleRoles,
+      );
+    } catch (_) {
+      // Membership rules deploy edilene kadar mevcut users.moduleRoles akışı korunur.
+    }
 
     if (mounted) Navigator.of(context).pop(true);
   }

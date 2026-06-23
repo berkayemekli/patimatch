@@ -1,0 +1,77 @@
+name: Load Test Contract
+
+on:
+  push:
+    paths:
+      - "scripts/load_test_*.js"
+      - "scripts/cleanup_load_test.js"
+      - "scripts/run_load_test_pipeline.js"
+      - "package.json"
+      - ".github/workflows/load-test-contract.yml"
+  pull_request:
+    paths:
+      - "scripts/load_test_*.js"
+      - "scripts/cleanup_load_test.js"
+      - "scripts/run_load_test_pipeline.js"
+      - "package.json"
+  workflow_dispatch:
+
+jobs:
+  validate-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Syntax check
+        run: |
+          node --check scripts/load_test_seed.js
+          node --check scripts/validate_load_test.js
+          node --check scripts/load_test_preflight.js
+          node --check scripts/cleanup_load_test.js
+          node --check scripts/run_load_test_pipeline.js
+      - name: Generate dry-run contract
+        run: node scripts/load_test_seed.js --run-id lt_ci_contract --count 10 --match-pairs 5
+      - name: Assert expected counters
+        shell: node {0}
+        run: |
+          const report = require("./docs/load_test_seed_report.json");
+          const expected = {
+            users: 40,
+            module_memberships: 40,
+            activity_events: 40,
+            walkers: 10,
+            bnb_hosts: 10,
+            dogs: 10,
+            adoption_posts: 10,
+            walk_requests: 10,
+            bnb_requests: 10,
+            adoption_applications: 10,
+            swipes: 10,
+            matches: 5,
+            chats: 5,
+            load_test_runs: 1,
+          };
+          for (const [key, value] of Object.entries(expected)) {
+            if (report.counters[key] !== value) {
+              throw new Error(`${key}: expected ${value}, got ${report.counters[key]}`);
+            }
+          }
+
+  flutter-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Flutter dependencies
+        working-directory: app
+        run: flutter pub get
+      - name: Analyze and test
+        working-directory: app
+        run: |
+          flutter analyze lib test
+          flutter test

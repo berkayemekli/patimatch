@@ -1,14 +1,18 @@
 {
-  "generatedAt": "2026-06-23T11:44:25.158Z",
+  "generatedAt": "2026-06-23T12:08:50.283Z",
   "projectId": "patimatch-staging",
   "prefix": "lt_2026",
+  "runId": "lt_2026",
+  "ttlDays": 7,
   "countPerModule": 250,
   "matchPairs": 125,
-  "writeEnabled": true,
-  "written": true,
+  "networkProfile": "paired",
+  "writeEnabled": false,
+  "written": false,
   "counters": {
     "users": 1000,
     "module_memberships": 1000,
+    "activity_events": 1000,
     "walkers": 250,
     "bnb_hosts": 250,
     "dogs": 250,
@@ -18,7 +22,8 @@
     "adoption_applications": 250,
     "swipes": 250,
     "matches": 125,
-    "chats": 125
+    "chats": 125,
+    "load_test_runs": 1
   },
   "notes": [
     "Use staging by default; production requires --allow-prod.",

@@ -13,6 +13,7 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  static const _calendarQueryLimit = 250;
   late Future<List<_CalendarEvent>> _eventsFuture;
 
   @override
@@ -30,22 +31,22 @@ class _CalendarPageState extends State<CalendarPage> {
       db
           .collection('walk_requests')
           .where('requesterUserId', isEqualTo: user.uid)
-          .limit(50)
+          .limit(_calendarQueryLimit)
           .get(),
       db
           .collection('walk_requests')
           .where('walkerOwnerUserId', isEqualTo: user.uid)
-          .limit(50)
+          .limit(_calendarQueryLimit)
           .get(),
       db
           .collection('bnb_requests')
           .where('requesterUserId', isEqualTo: user.uid)
-          .limit(50)
+          .limit(_calendarQueryLimit)
           .get(),
       db
           .collection('bnb_requests')
           .where('hostOwnerUserId', isEqualTo: user.uid)
-          .limit(50)
+          .limit(_calendarQueryLimit)
           .get(),
     ]);
 

@@ -77,6 +77,7 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Load-test onerileri uygulandi: preflight, runId/TTL/cleanup, pipeline/CI, Auth Emulator, UI kontrat testleri, PatiMatch ag profilleri, yerel staging gorselleri, merkezi modul uyeligi ve HTML saglik paneli eklendi.
 - Dort modulde 250'ser aktif staging uyeligi ve tam islem hacmi dogrulandi. Bagimsiz Firestore validator ve `docs/LOAD_TEST_PROCESS_RECOMMENDATIONS.md` surec raporu eklendi.
 - Ana sayfa scroll hiyerarsisi duzeltildi; scrollbar artik dar icerik kolonunda degil viewport'un en saginda gorunuyor.
 - Staging Firestore API/database acildi; load-test staging datasina 2720 dokuman yazildi. Data mapping raporu tam tablo sekmeleriyle yenilendi ve Takvim ust barda yazili aksiyon olarak gorunur hale getirildi.

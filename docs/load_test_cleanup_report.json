@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-06-23T11:54:07.116Z",
+  "projectId": "patimatch-staging",
+  "runId": "lt_pipeline_smoke_20260623",
+  "count": 4,
+  "matchPairs": 2,
+  "execute": true,
+  "deleted": 69,
+  "wouldDelete": 69,
+  "found": {
+    "users": 16,
+    "module_memberships": 16,
+    "walkers": 4,
+    "bnb_hosts": 4,
+    "dogs": 4,
+    "adoption_posts": 4,
+    "walk_requests": 4,
+    "bnb_requests": 4,
+    "adoption_applications": 4,
+    "swipes": 4,
+    "matches": 2,
+    "chats": 2,
+    "load_test_runs": 1
+  }
+}
