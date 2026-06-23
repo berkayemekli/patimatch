@@ -77,6 +77,7 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Ana sayfa scroll hiyerarsisi duzeltildi; scrollbar artik dar icerik kolonunda degil viewport'un en saginda gorunuyor.
 - Staging Firestore API/database acildi; load-test staging datasina 2720 dokuman yazildi. Data mapping raporu tam tablo sekmeleriyle yenilendi ve Takvim ust barda yazili aksiyon olarak gorunur hale getirildi.
 
 - Load-test seed script eklendi; staging icin 4 modulde 250ser profil ve PatiMatch eslesme/chat simulasyonu uretebiliyor.

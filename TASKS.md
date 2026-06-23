@@ -61,6 +61,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Ana modül sayfalarının scrollbar alanı içerik kutusundan çıkarıldı; web'de ekranın en sağında görünür ve tek sayfa scroll'u olarak çalışıyor.
 - Gece load-test kosusu tamamlandi: staging Firestore API/database acildi, 2720 dokuman yazildi, `flutter analyze lib` temiz gecti.
 - `docs/data_mapping.html` ust sekmeleri tam tablo listelerine baglandi; veteriner/kuafor/egitmen/pet dostu mekanlar isim-adres-telefon-web-harita alanlariyla kontrol edilebilir hale geldi.
 - Takvim ana shell ust barinda yazili aksiyon olarak gorunur hale getirildi.

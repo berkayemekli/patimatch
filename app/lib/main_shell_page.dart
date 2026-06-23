@@ -25,6 +25,7 @@ class MainShellPage extends StatefulWidget {
 
 class _MainShellPageState extends State<MainShellPage> {
   int _selectedModuleIndex = 0;
+  final ScrollController _pageScrollController = ScrollController();
 
   static const List<_ModuleItem> _modules = <_ModuleItem>[
     _ModuleItem(
@@ -60,6 +61,12 @@ class _MainShellPageState extends State<MainShellPage> {
       softColor: Color(0xFFEDEBFF),
     ),
   ];
+
+  @override
+  void dispose() {
+    _pageScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -150,26 +157,39 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ],
       ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxWidth),
-          child: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 24),
-            children: [
-              _HeroModuleChooser(
-                modules: _modules,
-                selectedIndex: _selectedModuleIndex,
-                onSelected: (index) =>
-                    setState(() => _selectedModuleIndex = index),
+      body: Scrollbar(
+        controller: _pageScrollController,
+        thumbVisibility: true,
+        trackVisibility: true,
+        child: ListView(
+          controller: _pageScrollController,
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 24),
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: maxWidth),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      _HeroModuleChooser(
+                        modules: _modules,
+                        selectedIndex: _selectedModuleIndex,
+                        onSelected: (index) =>
+                            setState(() => _selectedModuleIndex = index),
+                      ),
+                      const SizedBox(height: 14),
+                      _ModuleInfoCard(module: _modules[_selectedModuleIndex]),
+                      const SizedBox(height: 20),
+                      _TrustCenterStrip(userId: user?.uid, isGuest: isGuest),
+                      const SizedBox(height: 20),
+                      _ModuleBody(index: _selectedModuleIndex),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 14),
-              _ModuleInfoCard(module: _modules[_selectedModuleIndex]),
-              const SizedBox(height: 20),
-              _TrustCenterStrip(userId: user?.uid, isGuest: isGuest),
-              const SizedBox(height: 20),
-              _ModuleBody(index: _selectedModuleIndex),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
