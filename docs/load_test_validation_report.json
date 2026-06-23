@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-06-23T11:47:12.523Z",
+  "projectId": "patimatch-staging",
+  "prefix": "lt_2026",
+  "expectedPerModule": 250,
+  "expectedPairs": 125,
+  "passed": true,
+  "expected": {
+    "users": 1000,
+    "module_memberships": 1000,
+    "walkers": 250,
+    "bnb_hosts": 250,
+    "dogs": 250,
+    "adoption_posts": 250,
+    "walk_requests": 250,
+    "bnb_requests": 250,
+    "adoption_applications": 250,
+    "swipes": 250,
+    "matches": 125,
+    "chats": 125
+  },
+  "actual": {
+    "users": 1000,
+    "module_memberships": 1000,
+    "walkers": 250,
+    "bnb_hosts": 250,
+    "dogs": 250,
+    "adoption_posts": 250,
+    "walk_requests": 250,
+    "bnb_requests": 250,
+    "adoption_applications": 250,
+    "swipes": 250,
+    "matches": 125,
+    "chats": 125
+  },
+  "membershipByModule": {
+    "pati_bnb": 250,
+    "pati_family": 250,
+    "pati_match": 250,
+    "pati_gezdirme": 250
+  },
+  "mismatches": []
+}

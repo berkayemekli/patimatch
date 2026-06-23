@@ -4,7 +4,7 @@ const path = require("path");
 
 const projectId = readArg("--project") || process.env.FIREBASE_PROJECT_ID || "patimatch-staging";
 const count = Number(readArg("--count") || process.env.LOAD_TEST_COUNT || 250);
-const matchPairs = Number(readArg("--match-pairs") || process.env.LOAD_TEST_MATCH_PAIRS || 120);
+const matchPairs = Number(readArg("--match-pairs") || process.env.LOAD_TEST_MATCH_PAIRS || 125);
 const prefix = readArg("--prefix") || process.env.LOAD_TEST_PREFIX || "lt_2026";
 const writeEnabled = hasFlag("--write") || process.env.LOAD_TEST_WRITE === "1";
 const allowProd = hasFlag("--allow-prod") || process.env.ALLOW_PROD_LOAD_TEST === "1";
@@ -152,6 +152,7 @@ function buildDocuments() {
     const verified = i % 5 === 0;
     const userId = `${prefix}_walk_user_${id}`;
     add("users", userId, baseUser(userId, `Gezdirici ${id}`, city, district, ["provider"], timestamp, verified));
+    add("module_memberships", `${prefix}_walk_membership_${id}`, moduleMembership(`${prefix}_walk_membership_${id}`, userId, "pati_gezdirme", "provider", timestamp));
     add("walkers", `${prefix}_walker_${id}`, {
       id: `${prefix}_walker_${id}`,
       ownerUserId: userId,
@@ -187,6 +188,7 @@ function buildDocuments() {
     const verified = i % 6 === 0;
     const userId = `${prefix}_bnb_user_${id}`;
     add("users", userId, baseUser(userId, `PatiBnB Host ${id}`, city, district, ["provider"], timestamp, verified));
+    add("module_memberships", `${prefix}_bnb_membership_${id}`, moduleMembership(`${prefix}_bnb_membership_${id}`, userId, "pati_bnb", "provider", timestamp));
     add("bnb_hosts", `${prefix}_bnb_${id}`, {
       id: `${prefix}_bnb_${id}`,
       ownerUserId: userId,
@@ -222,6 +224,7 @@ function buildDocuments() {
     const dogId = `${prefix}_match_dog_${id}`;
     const animalCategory = i % 5 === 0 ? "Kedi" : "Köpek";
     add("users", userId, baseUser(userId, `PatiMatch Üye ${id}`, city, district, ["customer"], timestamp, i % 7 === 0));
+    add("module_memberships", `${prefix}_match_membership_${id}`, moduleMembership(`${prefix}_match_membership_${id}`, userId, "pati_match", "member", timestamp));
     add("dogs", dogId, {
       dogId,
       ownerId: userId,
@@ -255,6 +258,7 @@ function buildDocuments() {
     const animalCategory = i % 4 === 0 ? "Kedi" : "Köpek";
     const petName = `${animalCategory === "Kedi" ? "Boncuk" : "Mavi"} ${id}`;
     add("users", userId, baseUser(userId, `PatiFamily Sahip ${id}`, city, district, ["provider"], timestamp, i % 9 === 0));
+    add("module_memberships", `${prefix}_family_membership_${id}`, moduleMembership(`${prefix}_family_membership_${id}`, userId, "pati_family", "listing_owner", timestamp));
     add("adoption_posts", postId, {
       id: postId,
       ownerUserId: userId,
@@ -306,13 +310,30 @@ function baseUser(userId, displayName, city, district, roles, timestamp, verifie
   };
 }
 
+function moduleMembership(membershipId, userId, module, role, timestamp) {
+  return {
+    membershipId,
+    userId,
+    module,
+    role,
+    status: "active",
+    plan: "load_test_standard",
+    source: "staging_load_test",
+    isLoadTest: true,
+    loadTestPrefix: prefix,
+    joinedAt: timestamp,
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
+}
+
 function simulateRequestsAndMatches(docs, counters, timestamp) {
   const add = (collection, id, data) => {
     docs.push({ collection, id, data });
     counters[collection] = (counters[collection] || 0) + 1;
   };
 
-  const requestCount = Math.min(80, count);
+  const requestCount = count;
   for (let i = 1; i <= requestCount; i += 1) {
     const id = pad(i);
     const requester = `${prefix}_match_user_${id}`;

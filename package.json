@@ -5,7 +5,8 @@
   "scripts": {
     "seed": "node scripts/seed.js",
     "load-test:dry": "node scripts/load_test_seed.js",
-    "load-test:staging": "node scripts/load_test_seed.js --project patimatch-staging --write"
+    "load-test:staging": "node scripts/load_test_seed.js --project patimatch-staging --write",
+    "load-test:validate": "node scripts/validate_load_test.js --project patimatch-staging"
   },
   "dependencies": {
     "firebase-admin": "^13.0.0"
