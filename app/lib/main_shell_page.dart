@@ -157,10 +157,19 @@ class _MainShellPageState extends State<MainShellPage> {
                 ),
               ],
       ),
-      body: Scrollbar(
+      body: RawScrollbar(
         controller: _pageScrollController,
         thumbVisibility: true,
         trackVisibility: true,
+        scrollbarOrientation: ScrollbarOrientation.right,
+        thickness: 10,
+        radius: const Radius.circular(0),
+        mainAxisMargin: 0,
+        crossAxisMargin: 0,
+        minThumbLength: 64,
+        thumbColor: const Color(0xFF64748B),
+        trackColor: const Color(0xFFE2E8F0),
+        trackBorderColor: const Color(0xFFCBD5E1),
         child: ListView(
           controller: _pageScrollController,
           padding: const EdgeInsets.fromLTRB(0, 10, 0, 24),
