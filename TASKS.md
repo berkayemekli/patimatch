@@ -62,6 +62,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Ürün akışlarını sayfa sayfa gösteren slayt/storyboard HTML'i eklendi: `docs/product_flow_slideshow.html`.
 - Hizmet talebi kabul edilince alan/veren eşleşmesi, hizmet konuşması ve yaşam döngüsü takibi oluşturuluyor; ayrıntı `docs/SERVICE_MATCHING_FLOW_REPORT.md`.
 - Load-test süreç önerileri sırayla uygulandı; uygulama kaydı `docs/LOAD_TEST_IMPLEMENTATION_PROGRESS.md` altında tutuluyor.
 - Dört modül için 250'şer staging üyeliği ve işlem hacmi doğrulandı; bağımsız validator ve süreç geliştirme raporu eklendi.

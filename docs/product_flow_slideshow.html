@@ -1,0 +1,591 @@
+﻿<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PatiParent Akış Filmi</title>
+  <style>
+    :root {
+      --ink: #14212f;
+      --muted: #607084;
+      --line: rgba(20, 33, 47, 0.1);
+      --paper: #fbfaf7;
+      --card: rgba(255, 255, 255, 0.82);
+      --teal: #0f8f83;
+      --blue: #2563eb;
+      --rose: #e11d48;
+      --amber: #d97706;
+      --violet: #635bff;
+      --shadow: 0 28px 80px rgba(20, 33, 47, 0.14);
+      --soft-shadow: 0 16px 45px rgba(20, 33, 47, 0.1);
+      --radius-xl: 34px;
+      --radius-lg: 26px;
+      --radius-md: 18px;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(15, 143, 131, 0.16), transparent 34rem),
+        radial-gradient(circle at top right, rgba(234, 179, 8, 0.12), transparent 30rem),
+        linear-gradient(180deg, #fffaf3 0%, #f5f8fb 48%, #fbfaf7 100%);
+    }
+
+    a { color: inherit; }
+    .shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+
+    .hero {
+      min-height: 72vh;
+      display: grid;
+      align-items: center;
+      padding: 42px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 38px;
+      padding: 12px 14px 12px 18px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.64);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; letter-spacing: -0.03em; }
+    .brand-mark {
+      width: 34px; height: 34px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, #c8f4ea, #fff);
+      color: var(--teal); font-size: 19px;
+    }
+    .top-actions { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.72);
+      border-radius: 999px;
+      padding: 9px 13px;
+      font-weight: 700;
+    }
+
+    .hero-grid { display: grid; grid-template-columns: 1fr 0.9fr; gap: 34px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: #0f766e; font-weight: 800; font-size: 13px;
+      background: rgba(15, 143, 131, .11);
+      border: 1px solid rgba(15, 143, 131, .16);
+      padding: 9px 13px; border-radius: 999px;
+      margin-bottom: 20px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(46px, 7vw, 86px);
+      line-height: .93;
+      letter-spacing: -0.075em;
+      max-width: 780px;
+    }
+    .lead {
+      margin: 24px 0 30px;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 23px);
+      line-height: 1.55;
+      max-width: 680px;
+    }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; }
+    .button {
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-weight: 850;
+      cursor: pointer;
+      transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .primary { color: white; background: #101827; box-shadow: 0 16px 34px rgba(16, 24, 39, .23); }
+    .secondary { color: var(--ink); background: rgba(255,255,255,.78); border: 1px solid var(--line); }
+
+    .phone-preview {
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      border-radius: 44px;
+      background: #101827;
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+    .phone-preview::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: linear-gradient(180deg, rgba(16, 24, 39, .08), rgba(16,24,39,.78)), url("../app/assets/images/rony_login_story.jpg");
+      background-size: cover;
+      background-position: 76% 62%;
+      transform: scale(1.03);
+      z-index: -1;
+    }
+    .floating-card {
+      position: absolute;
+      left: 28px; right: 28px; bottom: 28px;
+      padding: 22px;
+      border-radius: 28px;
+      color: white;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.22);
+      backdrop-filter: blur(22px);
+    }
+    .metric-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+    .metric { padding: 12px; border-radius: 18px; background: rgba(255,255,255,.15); }
+    .metric strong { display: block; font-size: 20px; }
+    .metric span { font-size: 12px; opacity: .84; }
+
+    .section { padding: 62px 0; }
+    .section-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 22px; }
+    .section h2 { margin: 0; font-size: clamp(32px, 4vw, 54px); line-height: 1; letter-spacing: -0.055em; }
+    .section p { color: var(--muted); line-height: 1.65; }
+
+    .module-nav {
+      position: sticky; top: 14px; z-index: 5;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(22px);
+      box-shadow: var(--soft-shadow);
+      margin: -14px auto 34px;
+    }
+    .module-button {
+      border: 0; cursor: pointer; border-radius: 999px;
+      padding: 14px 16px;
+      background: transparent;
+      color: var(--muted);
+      font-weight: 850;
+      transition: .25s ease;
+    }
+    .module-button.active { color: #fff; background: #101827; box-shadow: 0 14px 32px rgba(16,24,39,.2); }
+
+    .story-stage {
+      display: grid;
+      grid-template-columns: 1fr .76fr;
+      gap: 22px;
+      align-items: stretch;
+      min-height: 540px;
+    }
+    .slide {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      background: #101827;
+      color: white;
+      min-height: 540px;
+    }
+    .slide::before {
+      content: "";
+      position: absolute; inset: 0;
+      background-image: var(--photo);
+      background-size: cover;
+      background-position: center;
+      filter: saturate(.96) contrast(.98);
+      transform: scale(1.03);
+      transition: transform .7s ease, opacity .4s ease;
+    }
+    .slide::after {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(10, 16, 26, .08), rgba(10,16,26,.82));
+    }
+    .slide-content { position: absolute; inset: auto 30px 30px; z-index: 1; max-width: 640px; }
+    .slide-kicker { display: inline-flex; padding: 8px 12px; border-radius: 999px; background: rgba(255,255,255,.17); backdrop-filter: blur(16px); font-size: 13px; font-weight: 850; margin-bottom: 14px; }
+    .slide h3 { margin: 0; font-size: clamp(34px, 5vw, 64px); line-height: .96; letter-spacing: -0.06em; }
+    .slide p { color: rgba(255,255,255,.82); font-size: 18px; margin: 16px 0 0; max-width: 590px; }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--soft-shadow);
+      padding: 24px;
+      backdrop-filter: blur(18px);
+    }
+    .panel h3 { margin: 0 0 10px; font-size: 26px; letter-spacing: -0.04em; }
+    .timeline { display: grid; gap: 12px; margin-top: 18px; }
+    .step-card {
+      display: grid; grid-template-columns: 42px 1fr; gap: 14px;
+      padding: 16px;
+      border-radius: 22px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(20,33,47,.07);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .step-card:hover { transform: translateY(-2px); box-shadow: 0 14px 28px rgba(20,33,47,.08); }
+    .num { width: 42px; height: 42px; border-radius: 16px; display: grid; place-items: center; color: white; background: var(--accent, #101827); font-weight: 900; }
+    .step-card h4 { margin: 0 0 4px; font-size: 16px; }
+    .step-card p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.5; }
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; }
+    .control { border: 1px solid var(--line); background: white; border-radius: 999px; padding: 10px 13px; font-weight: 850; cursor: pointer; }
+
+    .examples { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .example {
+      overflow: hidden;
+      border-radius: 28px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(20,33,47,.08);
+      box-shadow: var(--soft-shadow);
+    }
+    .example-photo { height: 190px; background-image: var(--photo); background-size: cover; background-position: center; transition: transform .45s ease; }
+    .example:hover .example-photo { transform: scale(1.04); }
+    .example-body { padding: 18px; }
+    .tag { display: inline-flex; border-radius: 999px; padding: 7px 10px; font-size: 12px; font-weight: 850; background: rgba(15,143,131,.11); color: #0f766e; margin-bottom: 12px; }
+    .example h3 { margin: 0 0 8px; letter-spacing: -0.035em; }
+    .example p { margin: 0; font-size: 14px; }
+
+    .flow-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .flow-card { padding: 18px; border-radius: 24px; background: rgba(255,255,255,.74); border: 1px solid rgba(20,33,47,.08); box-shadow: var(--soft-shadow); }
+    .flow-card strong { display: block; margin-bottom: 8px; font-size: 18px; }
+    .flow-card span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+
+    .footer { padding: 50px 0 70px; color: var(--muted); }
+    .footer-card { border-radius: var(--radius-xl); padding: 28px; background: #101827; color: white; box-shadow: var(--shadow); }
+    .footer-card p { color: rgba(255,255,255,.74); }
+    code { background: rgba(15, 23, 42, .06); padding: 2px 6px; border-radius: 8px; }
+
+    @media (max-width: 920px) {
+      .hero-grid, .story-stage { grid-template-columns: 1fr; }
+      .phone-preview, .slide { min-height: 420px; }
+      .module-nav { grid-template-columns: repeat(2, 1fr); border-radius: 28px; }
+      .examples, .flow-grid { grid-template-columns: 1fr; }
+      .section-head { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero" id="top">
+      <div class="topbar">
+        <div class="brand"><span class="brand-mark">🐾</span> PatiParent Akış Filmi</div>
+        <div class="top-actions"><span class="pill">Prod vizyon</span><span class="pill">Staging test akışı</span></div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">🎬 Sayfa sayfa deneyim gösterimi</div>
+          <h1>Ürünü film gibi izleyelim.</h1>
+          <p class="lead">Bu HTML, PatiParent’in dört ana modülünde kullanıcının ne gördüğünü, neye bastığını ve sistemin arkada ne oluşturduğunu foto geçişli bir storyboard olarak anlatır.</p>
+          <div class="hero-buttons">
+            <a class="button primary" href="#slideshow">Slayt gösterimini başlat →</a>
+            <a class="button secondary" href="#examples">3’er örnekleri gör</a>
+          </div>
+        </div>
+        <div class="phone-preview" aria-label="PatiParent görsel deneyim önizlemesi">
+          <div class="floating-card">
+            <strong>Canlı ürün mantığı</strong>
+            <p style="margin:8px 0 0;color:rgba(255,255,255,.78)">Talep, kabul, konuşma, takvim ve güven sinyalleri tek servis yaşam döngüsünde birleşir.</p>
+            <div class="metric-row">
+              <div class="metric"><strong>4</strong><span>ana modül</span></div>
+              <div class="metric"><strong>3</strong><span>örnek/senaryo</span></div>
+              <div class="metric"><strong>1</strong><span>güven katmanı</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="module-nav" id="slideshow">
+      <button class="module-button active" data-module="walk">🚶 PatiGezdirme</button>
+      <button class="module-button" data-module="bnb">🏠 PatiBnB</button>
+      <button class="module-button" data-module="match">❤️ PatiMatch</button>
+      <button class="module-button" data-module="family">🐾 PatiFamily</button>
+    </nav>
+
+    <section class="section">
+      <div class="story-stage">
+        <article class="slide" id="slidePhoto" style="--photo: linear-gradient(180deg, rgba(0,0,0,.1), rgba(0,0,0,.4)), url('../app/assets/images/load_test_walk.jpg')">
+          <div class="slide-content">
+            <span class="slide-kicker" id="slideKicker">PatiGezdirme · Sahne 1</span>
+            <h3 id="slideTitle">Güvenli yürüyüş arayan kullanıcı ana sayfadan başlar.</h3>
+            <p id="slideText">Kullanıcı siteyi önce giriş yapmadan görür; şehir, ilçe, pet türü ve ihtiyaç filtreleriyle alttaki listeyi daraltır.</p>
+          </div>
+        </article>
+
+        <aside class="panel">
+          <h3 id="panelTitle">Bu sahnede ne oluyor?</h3>
+          <p id="panelCopy">Ürün kullanıcıya “önce gör, sonra güven duyunca işlem yap” hissi verir. Login akışı işlem anında devreye girer.</p>
+          <div class="timeline" id="stepList"></div>
+          <div class="controls">
+            <button class="control" id="prevSlide">← Geri</button>
+            <button class="control" id="playPause">Durdur</button>
+            <button class="control" id="nextSlide">İleri →</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="examples">
+      <div class="section-head">
+        <div>
+          <h2>Her alt başlığa 3 örnek</h2>
+          <p>Bu bölüm ürün datasının nasıl “gerçek kişi / gerçek ihtiyaç / gerçek işlem” hissine dönüşeceğini gösterir.</p>
+        </div>
+      </div>
+      <div class="examples" id="exampleGrid"></div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Film gibi kullanıcı akışı</h2>
+          <p>Hizmet alan, hizmet veren ve PatiMatch tarafında sürecin sayfa sayfa nasıl ilerlediği.</p>
+        </div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><strong>1. Ana sayfa</strong><span>Kullanıcı dört modülü görür, filtreyi açar, kartları inceler. Zorunlu profil modalı yoktur.</span></div>
+        <div class="flow-card"><strong>2. Kart detayı</strong><span>Gezdirici, host, yuva veya match kartına girer; güven rozetleri, fiyat, uygunluk ve açıklamalar görünür.</span></div>
+        <div class="flow-card"><strong>3. Talep / eşleşme</strong><span>Servis modüllerinde tarihli talep oluşur. PatiMatch’te beğeni karşılıklı olursa sosyal sohbet açılır.</span></div>
+        <div class="flow-card"><strong>4. Konuşma ve takvim</strong><span>Talep kabul edilince hizmet sohbeti açılır; aşama, tarih ve Google Takvim bağlantısı takip edilir.</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Operasyon gözüyle takip</h2>
+          <p>Bir girişimci olarak bakınca izlenecek funnel: görüntüleme → talep → kabul → konuşma → planlandı → tamamlandı.</p>
+        </div>
+      </div>
+      <div class="flow-grid">
+        <div class="flow-card"><strong>Güven Merkezi</strong><span>Telefon, e-posta, kimlik doğrulama, aşı kartı, referans ve mavi tik aynı çatı altında toplanır.</span></div>
+        <div class="flow-card"><strong>Takvim</strong><span>PatiGezdirme ve PatiBnB tarihli rezervasyonları tek görünümde toplanır; Google Takvim linkiyle dışarı açılır.</span></div>
+        <div class="flow-card"><strong>Yakınımda</strong><span>Veteriner, pet kuaför, köpek eğitmeni ve pet dostu mekanlar PatiCare destek katmanı olarak konumlanır.</span></div>
+        <div class="flow-card"><strong>Load-test</strong><span>Staging’de her modül için yüksek hacimli profil ve işlem simülasyonu süreci kırılmadan denemek için kullanılır.</span></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-card">
+        <h2 style="margin:0;letter-spacing:-.05em">Bunu nerede kullanacağız?</h2>
+        <p>Bu dosya ürün akışını kaybetmemek için yaşayan storyboard olacak. Yeni özellik eklenince buraya yeni sahne ve örnek ekleyebiliriz. Kaynak dosya: <code>docs/product_flow_slideshow.html</code></p>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const modules = {
+      walk: {
+        accent: '#0f8f83',
+        photo: "url('../app/assets/images/load_test_walk.jpg')",
+        slides: [
+          {
+            kicker: 'PatiGezdirme · Sahne 1',
+            title: 'Güvenli yürüyüş arayan kullanıcı ana sayfadan başlar.',
+            text: 'Kullanıcı siteyi önce giriş yapmadan görür; şehir, ilçe, köpek cinsi ve ihtiyaç filtreleriyle listeyi daraltır.',
+            copy: 'Bu sahnede ürün “önce keşfet, sonra talep oluştur” mantığıyla çalışır.',
+            steps: ['PatiGezdirme sekmesi seçilir.', 'Filtre açılır: il, ilçe, köpek cinsi, yaş, cinsiyet ve aşı durumu seçilir.', 'Liste altta canlı olarak daralır ve kullanıcı uygun gezdiriciye girer.']
+          },
+          {
+            kicker: 'PatiGezdirme · Sahne 2',
+            title: 'Kullanıcı yürüyüş tarihini ve ihtiyacını netleştirir.',
+            text: 'Kart detayında fiyat, yorum, tamamlanan yürüyüş, doğrulama rozeti ve uygun tarih birlikte görünür.',
+            copy: 'Talep burada “rastgele mesaj” değil, tarihli ve takip edilebilir bir servis isteğine dönüşür.',
+            steps: ['Gezdirici detay kartı açılır.', 'Tarih ve saat seçilir.', '“Yürüyüş Planla” ile Firestore’da talep kaydı oluşur.']
+          },
+          {
+            kicker: 'PatiGezdirme · Sahne 3',
+            title: 'Hizmet veren kabul eder, sohbet ve takvim açılır.',
+            text: 'Kabul sonrası service engagement ve hizmet sohbeti oluşur; konuşma, planlandı, devam ediyor, tamamlandı aşamaları izlenir.',
+            copy: 'Burada marketplace deneyimi güvenli operasyon akışına dönüşür.',
+            steps: ['Hizmet veren “Taleplerim > Bana gelen” ekranında talebi görür.', 'Kabul edince hizmet konuşması açılır.', 'Takvim ve sohbet üzerinden süreç takip edilir.']
+          }
+        ],
+        examples: [
+          ['Top Rated', 'Kadıköy sabah yürüyüşü', 'Maltese ve küçük ırklar için 30 dakikalık sakin rota.', "url('../app/assets/images/load_test_walk.jpg')"],
+          ['Available Today', 'İzmit öğle molası', 'Evden kısa çıkış, fotoğraflı durum güncellemesi ve su molası.', "url('../app/assets/images/rony_login_story.jpg')"],
+          ['Verified', 'Beşiktaş düzenli paket', 'Haftada 3 gün aynı gezdiriciyle güvenli rutin yürüyüş.', "url('../app/assets/images/load_test_walk.jpg')"]
+        ]
+      },
+      bnb: {
+        accent: '#d97706',
+        photo: "url('../app/assets/images/load_test_bnb.jpg')",
+        slides: [
+          {
+            kicker: 'PatiBnB · Sahne 1',
+            title: 'Seyahate çıkacak kullanıcı ev ortamı arar.',
+            text: 'Kullanıcı şehir, ilçe, pet türü, cins ve ev koşullarıyla konaklama hostlarını inceler.',
+            copy: 'Airbnb hissi burada: ev, güven, kurallar, fotoğraf ve uygunluk aynı yerde.',
+            steps: ['PatiBnB sekmesi açılır.', 'Kedi/köpek, il, ilçe ve cins filtresi seçilir.', 'Bahçeli ev, tek pet kabulü, gece bakım gibi detaylar incelenir.']
+          },
+          {
+            kicker: 'PatiBnB · Sahne 2',
+            title: 'Host profili güven sinyalleriyle okunur.',
+            text: 'Ev kuralları, başka pet var mı, veteriner yakınlığı, deneyim ve fotoğraflar karar vermeyi kolaylaştırır.',
+            copy: 'Kullanıcı “hayvanımı emanet edebilir miyim?” sorusuna hızlı cevap almalı.',
+            steps: ['Host detay profili açılır.', 'Ev kuralları ve bakım rutini okunur.', 'Tarih aralığı seçilir ve konaklama talebi gönderilir.']
+          },
+          {
+            kicker: 'PatiBnB · Sahne 3',
+            title: 'Rezervasyon konuşmaya ve takvime bağlanır.',
+            text: 'Kabul edilince hizmet sohbeti açılır; giriş-çıkış saati, mama notu ve acil iletişim konuşmada netleşir.',
+            copy: 'PatiBnB için kritik nokta, sıcak ev hissini operasyon güveniyle birleştirmek.',
+            steps: ['Host talebi kabul eder.', 'Hizmet chat’i otomatik açılır.', 'Takvimde konaklama tarihi görünür.']
+          }
+        ],
+        examples: [
+          ['Ev Ortamı', 'Ataşehir sakin konaklama', 'Küçük köpekler için tek pet kabul eden sıcak ev.', "url('../app/assets/images/load_test_bnb.jpg')"],
+          ['Kedi Dostu', 'Moda cam önü rutinleri', 'Kediler için sessiz oda, günlük oyun ve fotoğraf güncellemesi.', "url('../app/assets/images/load_test_bnb.jpg')"],
+          ['Bahçeli', 'Urla hafta sonu bakımı', 'Bahçeli ev, kısa yürüyüş ve düzenli beslenme takibi.', "url('../app/assets/images/load_test_bnb.jpg')"]
+        ]
+      },
+      match: {
+        accent: '#e11d48',
+        photo: "url('../app/assets/images/load_test_match.jpg')",
+        slides: [
+          {
+            kicker: 'PatiMatch · Sahne 1',
+            title: 'Üye olmadan kartlar keşfedilir.',
+            text: 'Bumble benzeri kart yapısında kullanıcı pet profillerini, şehir ve güven notlarını görür.',
+            copy: 'Burada amaç önce canlı ve sosyal bir deneyim hissettirmek; login işlemi aksiyon anında gelir.',
+            steps: ['PatiMatch sekmesi açılır.', 'Kart stack görünür.', 'Kullanıcı beğen/geç mantığını anlar.']
+          },
+          {
+            kicker: 'PatiMatch · Sahne 2',
+            title: 'Karşılıklı ilgi sosyal eşleşmeye dönüşür.',
+            text: 'İki taraf birbirini beğenirse match ve sosyal chat oluşur; servis chatlerinden ayrı tutulur.',
+            copy: 'PatiMatch hizmet satın alma değil, güvenli sosyal tanışma katmanı.',
+            steps: ['Kullanıcı pet profilini beğenir.', 'Karşı taraf da beğenirse match oluşur.', 'Matches listesinde yeni sohbet belirir.']
+          },
+          {
+            kicker: 'PatiMatch · Sahne 3',
+            title: 'Güvenli buluşma ve moderasyon katmanı devrededir.',
+            text: 'Raporla, engelle, doğrulanmış profil ve güvenli buluşma önerileri sosyal riski azaltır.',
+            copy: 'Sosyal modül büyüdükçe güven merkezi daha da değerli hale gelir.',
+            steps: ['Sohbet açılır.', 'Profil güven rozetleri görünür.', 'Gerekirse report/block aksiyonları kullanılır.']
+          }
+        ],
+        examples: [
+          ['Yakın Çevre', 'Sahil yürüyüş arkadaşı', 'Aynı ilçede yaşayan uyumlu enerji seviyesinde iki pet.', "url('../app/assets/images/load_test_match.jpg')"],
+          ['Oyun Arkadaşı', 'Sosyalleşme eşleşmesi', 'Genç ve oyuncu köpekler için güvenli tanışma önerisi.', "url('../app/assets/images/load_test_match.jpg')"],
+          ['Verified', 'Doğrulanmış sahip profili', 'Profil, aşı ve iletişim doğrulamasıyla daha güvenli eşleşme.', "url('../app/assets/images/rony_login_story.jpg')"]
+        ]
+      },
+      family: {
+        accent: '#635bff',
+        photo: "url('../app/assets/images/load_test_family.jpg')",
+        slides: [
+          {
+            kicker: 'PatiFamily · Sahne 1',
+            title: 'Sahiplendirme ve geçici yuva ilanları sıcak dille keşfedilir.',
+            text: 'Kullanıcı acil yuva, geçici bakım, yaş, tür, cins ve şehir filtreleriyle doğru profillere ulaşır.',
+            copy: 'Bu modülün dili marketplace değil; daha şefkatli, dikkatli ve sorumlu olmalı.',
+            steps: ['PatiFamily sekmesi açılır.', 'İlan türü ve pet bilgileri filtrelenir.', 'Acil durum ve bakım ihtiyaçları net görünür.']
+          },
+          {
+            kicker: 'PatiFamily · Sahne 2',
+            title: 'Başvuru öncesi uyum ve sorumluluk bilgisi okunur.',
+            text: 'Veteriner durumu, aşı, karakter, ev koşulu ve takip görüşmesi beklentisi açıkça anlatılır.',
+            copy: 'Amaç hızlı tıklama değil, doğru aileyle güvenli karar.',
+            steps: ['Pet detay profili açılır.', 'Bakım ihtiyacı ve uyum notları okunur.', 'Başvuru formu veya geçici yuva talebi gönderilir.']
+          },
+          {
+            kicker: 'PatiFamily · Sahne 3',
+            title: 'Başvuru konuşmaya ve takip planına dönüşür.',
+            text: 'Kabul sonrası taraflar konuşur; tanışma, ev ziyareti ve takip aşamaları planlanabilir.',
+            copy: 'PatiFamily için güven merkezi, başvuru kalitesi ve takip disiplini ürünün kalbi.',
+            steps: ['İlan sahibi başvuruyu görür.', 'Uygun bulursa konuşma açılır.', 'Takip ve değerlendirme notları süreçte kalır.']
+          }
+        ],
+        examples: [
+          ['Acil Yuva', 'İzmir geçici yuva arıyor', 'Kısa süreli bakım ihtiyacı olan sakin yetişkin köpek.', "url('../app/assets/images/load_test_family.jpg')"],
+          ['Sahiplendirme', 'İstanbul sevgi dolu aile', 'Aşıları tamamlanmış, ev yaşamına alışkın kedi profili.', "url('../app/assets/images/load_test_family.jpg')"],
+          ['Takipli Süreç', 'Kontrollü aile eşleşmesi', 'Ön görüşme, veteriner belgesi ve takip görüşmesiyle ilerleyen başvuru.', "url('../app/assets/images/rony_login_story.jpg')"]
+        ]
+      }
+    };
+
+    let activeModule = 'walk';
+    let activeSlide = 0;
+    let playing = true;
+    let timer = null;
+
+    const buttons = document.querySelectorAll('.module-button');
+    const slidePhoto = document.getElementById('slidePhoto');
+    const slideKicker = document.getElementById('slideKicker');
+    const slideTitle = document.getElementById('slideTitle');
+    const slideText = document.getElementById('slideText');
+    const panelCopy = document.getElementById('panelCopy');
+    const stepList = document.getElementById('stepList');
+    const exampleGrid = document.getElementById('exampleGrid');
+    const playPause = document.getElementById('playPause');
+
+    function render() {
+      const mod = modules[activeModule];
+      const slide = mod.slides[activeSlide];
+      slidePhoto.style.setProperty('--photo', `linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.4)), ${mod.photo}`);
+      slideKicker.textContent = slide.kicker;
+      slideTitle.textContent = slide.title;
+      slideText.textContent = slide.text;
+      panelCopy.textContent = slide.copy;
+      stepList.innerHTML = slide.steps.map((step, index) => `
+        <div class="step-card">
+          <div class="num" style="--accent:${mod.accent}">${index + 1}</div>
+          <div><h4>${['Aç', 'Seç', 'İlerle'][index]}</h4><p>${step}</p></div>
+        </div>
+      `).join('');
+      exampleGrid.innerHTML = mod.examples.map((item) => `
+        <article class="example">
+          <div class="example-photo" style="--photo:${item[3]}"></div>
+          <div class="example-body">
+            <span class="tag">${item[0]}</span>
+            <h3>${item[1]}</h3>
+            <p>${item[2]}</p>
+          </div>
+        </article>
+      `).join('');
+      buttons.forEach((btn) => btn.classList.toggle('active', btn.dataset.module === activeModule));
+    }
+
+    function next() {
+      const count = modules[activeModule].slides.length;
+      activeSlide = (activeSlide + 1) % count;
+      render();
+    }
+
+    function prev() {
+      const count = modules[activeModule].slides.length;
+      activeSlide = (activeSlide - 1 + count) % count;
+      render();
+    }
+
+    function restartTimer() {
+      clearInterval(timer);
+      if (playing) timer = setInterval(next, 4200);
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeModule = btn.dataset.module;
+        activeSlide = 0;
+        render();
+        restartTimer();
+      });
+    });
+    document.getElementById('nextSlide').addEventListener('click', () => { next(); restartTimer(); });
+    document.getElementById('prevSlide').addEventListener('click', () => { prev(); restartTimer(); });
+    playPause.addEventListener('click', () => {
+      playing = !playing;
+      playPause.textContent = playing ? 'Durdur' : 'Oynat';
+      restartTimer();
+    });
+
+    render();
+    restartTimer();
+  </script>
+</body>
+</html>
