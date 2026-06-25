@@ -1,0 +1,245 @@
+﻿<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PatiParent Canlı UX Deneyim Kaydı</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --ink: #111827;
+      --muted: #617086;
+      --card: #ffffff;
+      --line: rgba(17, 24, 39, .1);
+      --teal: #0f8f83;
+      --orange: #f97316;
+      --pink: #e11d48;
+      --violet: #635bff;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at top left, rgba(15,143,131,.15), transparent 36rem),
+        radial-gradient(circle at top right, rgba(249,115,22,.12), transparent 34rem),
+        var(--bg);
+      color: var(--ink);
+    }
+    .shell { width: min(1240px, calc(100% - 32px)); margin: 0 auto; }
+    header { padding: 42px 0 28px; }
+    .badge { display: inline-flex; gap: 8px; align-items: center; padding: 8px 12px; border-radius: 999px; background: rgba(15,143,131,.12); color: #0f766e; font-weight: 850; font-size: 13px; }
+    h1 { margin: 18px 0 12px; font-size: clamp(42px, 7vw, 78px); line-height: .94; letter-spacing: -.07em; max-width: 880px; }
+    .lead { color: var(--muted); font-size: 20px; line-height: 1.6; max-width: 860px; }
+    .summary { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin: 28px 0; }
+    .summary div { background: rgba(255,255,255,.76); border: 1px solid var(--line); border-radius: 24px; padding: 18px; box-shadow: 0 18px 45px rgba(17,24,39,.08); }
+    .summary strong { display: block; font-size: 26px; letter-spacing: -.04em; }
+    .summary span { color: var(--muted); font-size: 14px; }
+    .toc { position: sticky; top: 0; z-index: 3; padding: 10px 0 14px; background: rgba(245,247,251,.78); backdrop-filter: blur(18px); }
+    .toc-inner { display: flex; gap: 8px; overflow-x: auto; padding: 8px; border-radius: 999px; background: rgba(255,255,255,.72); border: 1px solid var(--line); }
+    .toc a { white-space: nowrap; text-decoration: none; color: var(--ink); font-weight: 850; padding: 10px 13px; border-radius: 999px; background: rgba(17,24,39,.04); }
+    .frame { padding: 34px 0; display: grid; grid-template-columns: .52fr 1fr; gap: 22px; align-items: start; }
+    .note { position: sticky; top: 88px; background: var(--card); border: 1px solid var(--line); border-radius: 28px; padding: 24px; box-shadow: 0 20px 55px rgba(17,24,39,.09); }
+    .kicker { color: var(--teal); font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; }
+    h2 { margin: 8px 0 10px; font-size: 34px; line-height: 1; letter-spacing: -.05em; }
+    p { color: var(--muted); line-height: 1.62; }
+    .meta { display: grid; gap: 10px; margin-top: 18px; }
+    .meta div { padding: 13px 14px; border-radius: 18px; background: #f7f8fb; border: 1px solid rgba(17,24,39,.06); }
+    .meta b { display: block; color: var(--ink); margin-bottom: 4px; }
+    .screen { background: #111827; border-radius: 30px; padding: 12px; box-shadow: 0 28px 80px rgba(17,24,39,.18); }
+    .screen img { display: block; width: 100%; border-radius: 22px; background: white; }
+    .finding { border-left: 4px solid var(--orange); padding-left: 13px; margin-top: 16px; color: #6b4b11; }
+    .good { border-left-color: var(--teal); color: #0f766e; }
+    .risk { border-left-color: var(--pink); color: #8f1238; }
+    .next { padding: 48px 0 70px; }
+    .next-card { border-radius: 34px; padding: 28px; background: #111827; color: white; box-shadow: 0 28px 80px rgba(17,24,39,.22); }
+    .next-card p { color: rgba(255,255,255,.74); }
+    .next-card li { margin-bottom: 10px; color: rgba(255,255,255,.84); }
+    @media (max-width: 960px) {
+      .summary { grid-template-columns: repeat(2,1fr); }
+      .frame { grid-template-columns: 1fr; }
+      .note { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <span class="badge">🎥 Canlı site üzerinde süreç kaydı</span>
+    <h1>PatiParent canlı UX filmi</h1>
+    <p class="lead">Bu rapor doküman ekranından değil, doğrudan <b>patiparent.com</b> canlı sitesinde gerçek kullanıcı gibi tıklayarak hazırlandı. Bankadaki süreç tasarım kayıtları gibi: hangi ekran açıldı, neye basıldı, ne beklendi, ne görüldü?</p>
+    <div class="summary">
+      <div><strong>22</strong><span>canlı ekran görüntüsü yakalandı</span></div>
+      <div><strong>4</strong><span>ana modül gezildi</span></div>
+      <div><strong>3</strong><span>kritik UX bulgusu çıktı</span></div>
+      <div><strong>1</strong><span>işlem/login bariyeri doğrulandı</span></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="shell toc-inner">
+      <a href="#f01">01 Ana Sayfa</a>
+      <a href="#f02">02 Filtre</a>
+      <a href="#f03">03 Liste</a>
+      <a href="#f04">04 Detay</a>
+      <a href="#f05">05 Login Gate</a>
+      <a href="#f06">06 Misafir</a>
+      <a href="#f07">07 PatiBnB</a>
+      <a href="#f08">08 PatiFamily</a>
+      <a href="#f09">09 PatiMatch</a>
+      <a href="#next">Öneriler</a>
+    </div>
+  </nav>
+
+  <main class="shell">
+    <section class="frame" id="f01">
+      <aside class="note">
+        <div class="kicker">Frame 01 · Açılış</div>
+        <h2>Ana sayfa ürünü doğru anlatıyor.</h2>
+        <p>Kullanıcı giriş yapmadan hero, dört modül, güven merkezi, filtre ve kart grid’i görebiliyor. Bu daha önce istediğimiz “önce siteyi görsün” yaklaşımıyla uyumlu.</p>
+        <div class="meta">
+          <div><b>Açılan ekran</b>Ana sayfa / PatiGezdirme default görünüm.</div>
+          <div><b>Kullanıcı aksiyonu</b>Siteyi açar, modülleri ve ilk kartları görür.</div>
+          <div><b>Gözlem</b>Premium his var; sağ üstte Takvim ve Giriş Yap net.</div>
+        </div>
+        <p class="finding good">İyi: İlk ekranda login zorlaması yok, ürün anlaşılır.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/01_live_home.png" alt="Canlı ana sayfa" /></div>
+    </section>
+
+    <section class="frame" id="f02">
+      <aside class="note">
+        <div class="kicker">Frame 02 · Filtre açılır</div>
+        <h2>Filtre güçlü ama sonuç boşalınca kullanıcı takılabilir.</h2>
+        <p>Filtre alanı açılınca il, ilçe, köpek cinsi, yaş, cinsiyet, aşı ve boyut seçenekleri görünüyor. Ancak “Kimlik doğrulandı” chip’i seçili kalınca liste boşalabiliyor.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>Filtre satırının sağındaki ok.</div>
+          <div><b>Beklenen</b>Liste altta kalır ve seçime göre daralır.</div>
+          <div><b>Gözlenen</b>Kimlik doğrulandı chip’i aktifken “uygun gezdirici yok” mesajı çıktı.</div>
+        </div>
+        <p class="finding risk">Risk: Boş sonuç durumunda kullanıcı ürün boş sanabilir. Chip filtresi daha görünür/geri alınabilir olmalı.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/08_walk_detail_or_action.png" alt="Filtre açılmış ve boş sonuç" /></div>
+    </section>
+
+    <section class="frame" id="f03">
+      <aside class="note">
+        <div class="kicker">Frame 03 · Listeye dönüş</div>
+        <h2>“Tümü” seçilince kartlar geri geliyor.</h2>
+        <p>Kullanıcı Tümü chip’ine dönünce gezdirici kartları tekrar görünüyor. Bu doğru davranış, fakat filtre açıkken kart alanıyla etkileşim biraz karışabiliyor.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>Tümü chip’i.</div>
+          <div><b>Beklenen</b>Filtre resetlenir, kartlar gelir.</div>
+          <div><b>Gözlenen</b>Kartlar geldi; ancak filtre paneli açık kaldığında dropdown kartların üstüne biniyor.</div>
+        </div>
+        <p class="finding">Öneri: Filtre seçimi sonrası panel kompakt moda dönebilir veya “Sonuçları göster” butonu eklenebilir.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/12_card_click_attempt_after_reset.png" alt="Filtre sonrası kartlar" /></div>
+    </section>
+
+    <section class="frame" id="f04">
+      <aside class="note">
+        <div class="kicker">Frame 04 · Kart detayı</div>
+        <h2>Detay paneli ürünün en güçlü yeri.</h2>
+        <p>Filtre kapatılıp karta basınca detay modalı açılıyor. Tarih, saat, fiyat, güven sinyali, tekrar oranı, profil özeti ve yürüyüş yaklaşımı aynı panelde görünüyor.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>Gezdirici kartı.</div>
+          <div><b>Beklenen</b>Talep öncesi yeterli karar bilgisi gelsin.</div>
+          <div><b>Gözlenen</b>Bu beklenti karşılanıyor; modal premium ve anlaşılır.</div>
+        </div>
+        <p class="finding good">İyi: Tarihli talep butonu ve güven içeriği kullanıcıyı işlem yapmaya yaklaştırıyor.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/14_card_click_after_filter_closed.png" alt="Gezdirici detay paneli" /></div>
+    </section>
+
+    <section class="frame" id="f05">
+      <aside class="note">
+        <div class="kicker">Frame 05 · İşlem bariyeri</div>
+        <h2>Talep gönderince login ekranı açılıyor.</h2>
+        <p>Bu doğru ürün davranışı: kullanıcı önce keşfediyor, ancak gerçek talep oluşturacağı anda güvenli giriş isteniyor. Giriş ekranında Google, Apple, e-posta, telefon ve misafir seçenekleri var.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>Tarihli yürüyüş talebi gönder.</div>
+          <div><b>Beklenen</b>Login gerekiyorsa bağlamı kaybetmeden girişe git.</div>
+          <div><b>Gözlenen</b>Login ekranı açıldı; görsel sıcak ve marka hissi iyi.</div>
+        </div>
+        <p class="finding">Kontrol edilmesi gereken: Giriş tamamlanınca önceki talep bağlamı korunuyor mu?</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/15_request_click_login_gate.png" alt="Talep sonrası login ekranı" /></div>
+    </section>
+
+    <section class="frame" id="f06">
+      <aside class="note">
+        <div class="kicker">Frame 06 · Misafir devam</div>
+        <h2>Misafir akışı ana deneyime geri döndürüyor.</h2>
+        <p>Misafir olarak devam et seçildiğinde kullanıcı tekrar ana sayfaya ve kart listesine dönüyor. Bu, ürünü login olmadan inceleme hedefiyle uyumlu.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>Misafir olarak devam et.</div>
+          <div><b>Beklenen</b>Ana sayfaya dön ve keşfe devam et.</div>
+          <div><b>Gözlenen</b>Başarılı şekilde PatiGezdirme görünümüne dönüldü.</div>
+        </div>
+        <p class="finding good">İyi: Misafir keşif bariyersiz çalışıyor.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/16_guest_continue_back_to_app.png" alt="Misafir sonrası ana sayfa" /></div>
+    </section>
+
+    <section class="frame" id="f07">
+      <aside class="note">
+        <div class="kicker">Frame 07 · PatiBnB</div>
+        <h2>PatiBnB Airbnb hissine en yakın modül.</h2>
+        <p>Konaklama modülünde ev görselleri, host kartları ve fiyat/gece bilgisi iyi çalışıyor. İki kolon düzeni sakin; fakat çok daha fazla örnekle dolu his güçlenir.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>PatiBnB modül sekmesi.</div>
+          <div><b>Beklenen</b>Ev/host odaklı sıcak listing.</div>
+          <div><b>Gözlenen</b>Super Host, fiyat ve açıklama ile doğru yönde.</div>
+        </div>
+        <p class="finding good">İyi: PatiBnB görsel dili diğer modüllere göre daha net ayrışıyor.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/17_live_patibnb_home.png" alt="PatiBnB canlı ekran" /></div>
+    </section>
+
+    <section class="frame" id="f08">
+      <aside class="note">
+        <div class="kicker">Frame 08 · PatiFamily</div>
+        <h2>PatiFamily daha şefkatli bir dil istiyor.</h2>
+        <p>PatiFamily kartları ve ilan mantığı görünüyor; bu modülde hızlı marketplace dili yerine daha dikkatli, sorumlu ve takipli sahiplendirme hissi öne çıkarılmalı.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>PatiFamily modül sekmesi.</div>
+          <div><b>Beklenen</b>Acil yuva, geçici yuva, bakım ihtiyacı ve başvuru detayları.</div>
+          <div><b>Gözlenen</b>Modül çalışıyor; detay içeriklerinin daha duygusal ve güven odaklı olması gerekir.</div>
+        </div>
+        <p class="finding">Öneri: PatiFamily kartlarında “uygun aile kriterleri” ve “takip süreci” daha görünür olmalı.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/21_patifamily_cards.png" alt="PatiFamily kartları" /></div>
+    </section>
+
+    <section class="frame" id="f09">
+      <aside class="note">
+        <div class="kicker">Frame 09 · PatiMatch</div>
+        <h2>PatiMatch girişsiz preview veriyor.</h2>
+        <p>PatiMatch sekmesinde beta hero, uyum analizi ve kart alanı görünüyor. Bu daha önceki “üye olmadan hiçbir şey göstermiyor” probleminin çözüldüğünü gösteriyor.</p>
+        <div class="meta">
+          <div><b>Tıklanan yer</b>PatiMatch modül sekmesi.</div>
+          <div><b>Beklenen</b>Guest preview ve sosyal eşleşme hissi.</div>
+          <div><b>Gözlenen</b>Kart ve uyum analizi görünüyor; Bumble hissi daha da güçlendirilebilir.</div>
+        </div>
+        <p class="finding good">İyi: Üye olmadan PatiMatch içeriği artık görünüyor.</p>
+      </aside>
+      <div class="screen"><img src="ux_walkthrough_assets/22_live_patimatch_home.png" alt="PatiMatch guest preview" /></div>
+    </section>
+
+    <section class="next" id="next">
+      <div class="next-card">
+        <h2>Bu canlı kayıttan çıkan sıradaki iş listesi</h2>
+        <ol>
+          <li><b>Filtre UX:</b> Boş sonuçta kullanıcıyı kaybetmemek için aktif chipleri daha görünür yap, “filtreleri temizle” CTA’sı ekle.</li>
+          <li><b>Filtre panel davranışı:</b> Seçimden sonra paneli kompakt moda al veya “Sonuçları göster” butonu ile listeye indir.</li>
+          <li><b>Talep sonrası dönüş:</b> Login tamamlanınca kullanıcıyı aynı detay/talep bağlamına geri döndürmeyi doğrula.</li>
+          <li><b>PatiBnB data hacmi:</b> Daha fazla host örneği ve ev tipi/uygunluk datası ekle.</li>
+          <li><b>PatiFamily güven dili:</b> Başvuru kriterleri, takip görüşmesi, veteriner/aşı kanıtı ve aile uyumu alanlarını kartta daha görünür yap.</li>
+          <li><b>PatiMatch polish:</b> Kart stack hareketi, beğen/geç aksiyonu ve match sonrası sosyal chat rotasını canlı kayıtla ayrıca test et.</li>
+        </ol>
+        <p>Bu dosya canlı ekran deneyimi için referans kayıt olarak tutulacak: <code>docs/live_ux_walkthrough.html</code></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
