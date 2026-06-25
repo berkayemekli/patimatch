@@ -218,6 +218,15 @@
     }
     .panel h3 { margin: 0 0 10px; font-size: 26px; letter-spacing: -0.04em; }
     .timeline { display: grid; gap: 12px; margin-top: 18px; }
+    .app-map {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(15, 143, 131, .1), rgba(255, 255, 255, .72));
+      border: 1px solid rgba(15, 143, 131, .14);
+    }
+    .app-map strong { display: block; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .app-map ul { margin: 0; padding-left: 18px; color: var(--muted); line-height: 1.55; font-size: 14px; }
     .step-card {
       display: grid; grid-template-columns: 42px 1fr; gap: 14px;
       padding: 16px;
@@ -252,6 +261,27 @@
     .flow-card { padding: 18px; border-radius: 24px; background: rgba(255,255,255,.74); border: 1px solid rgba(20,33,47,.08); box-shadow: var(--soft-shadow); }
     .flow-card strong { display: block; margin-bottom: 8px; font-size: 18px; }
     .flow-card span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .watch-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 18px; }
+    .watch-card {
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(20,33,47,.08);
+      box-shadow: var(--soft-shadow);
+    }
+    .watch-card h3 { margin: 0 0 12px; font-size: 24px; letter-spacing: -0.04em; }
+    .watch-card ol { margin: 0; padding-left: 20px; color: var(--muted); line-height: 1.75; }
+    .watch-card li { margin-bottom: 8px; }
+    .screen-chip {
+      display: inline-flex;
+      margin: 4px 6px 4px 0;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(16,24,39,.06);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+    }
 
     .footer { padding: 50px 0 70px; color: var(--muted); }
     .footer-card { border-radius: var(--radius-xl); padding: 28px; background: #101827; color: white; box-shadow: var(--shadow); }
@@ -263,6 +293,7 @@
       .phone-preview, .slide { min-height: 420px; }
       .module-nav { grid-template-columns: repeat(2, 1fr); border-radius: 28px; }
       .examples, .flow-grid { grid-template-columns: 1fr; }
+      .watch-grid { grid-template-columns: 1fr; }
       .section-head { display: block; }
     }
   </style>
@@ -320,6 +351,7 @@
           <h3 id="panelTitle">Bu sahnede ne oluyor?</h3>
           <p id="panelCopy">Ürün kullanıcıya “önce gör, sonra güven duyunca işlem yap” hissi verir. Login akışı işlem anında devreye girer.</p>
           <div class="timeline" id="stepList"></div>
+          <div class="app-map" id="appMap"></div>
           <div class="controls">
             <button class="control" id="prevSlide">← Geri</button>
             <button class="control" id="playPause">Durdur</button>
@@ -351,6 +383,54 @@
         <div class="flow-card"><strong>2. Kart detayı</strong><span>Gezdirici, host, yuva veya match kartına girer; güven rozetleri, fiyat, uygunluk ve açıklamalar görünür.</span></div>
         <div class="flow-card"><strong>3. Talep / eşleşme</strong><span>Servis modüllerinde tarihli talep oluşur. PatiMatch’te beğeni karşılıklı olursa sosyal sohbet açılır.</span></div>
         <div class="flow-card"><strong>4. Konuşma ve takvim</strong><span>Talep kabul edilince hizmet sohbeti açılır; aşama, tarih ve Google Takvim bağlantısı takip edilir.</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <h2>Uygulamada bunu nasıl görürsün?</h2>
+          <p>Bu bölüm slayttaki hikayeyi gerçek PatiParent ekranlarına bağlar. Yani “film” sadece fikir değil; uygulamada takip edeceğin tıklama rotası da burada.</p>
+        </div>
+      </div>
+      <div class="watch-grid">
+        <article class="watch-card">
+          <h3>Hizmet alan kullanıcının rotası</h3>
+          <ol>
+            <li><b>Ana sayfayı aç:</b> Kullanıcı önce dört modülü görür; giriş zorunlu olmadan ürün hissini alır.</li>
+            <li><b>Modül seç:</b> PatiGezdirme, PatiBnB veya PatiFamily sekmesine basar.</li>
+            <li><b>Filtre aç:</b> İl, ilçe, pet türü, cins, yaş, cinsiyet, aşı veya ev koşulları gibi alanları seçer.</li>
+            <li><b>Kart detayına gir:</b> Profil, fotoğraf, güven rozeti, fiyat, açıklama ve uygunluğu inceler.</li>
+            <li><b>Tarih seç ve talep gönder:</b> İşlem anında giriş gerekiyorsa login açılır; sonra talep kaydedilir.</li>
+            <li><b>Takip et:</b> Talep kabul edilince Hizmet Mesajları ve Takvim üzerinden süreç izlenir.</li>
+          </ol>
+        </article>
+        <article class="watch-card">
+          <h3>Hizmet veren kullanıcının rotası</h3>
+          <ol>
+            <li><b>Profilini tamamlar:</b> Ayarlar altında hizmet verme rolü, doğrulama ve profil bilgileri girilir.</li>
+            <li><b>Taleplerim ekranına gider:</b> Kendisine gelen PatiGezdirme, PatiBnB veya PatiFamily taleplerini görür.</li>
+            <li><b>Talebi kabul eder:</b> Kabul anında servis ilişkisi ve hizmet konuşması açılır.</li>
+            <li><b>Konuşmayı yönetir:</b> Hizmet Mesajları ekranında kullanıcıyla detayları netleştirir.</li>
+            <li><b>Aşamayı ilerletir:</b> Konuşma, Planlandı, Devam ediyor, Tamamlandı adımları chat içinde görünür.</li>
+            <li><b>Takvimden bakar:</b> Tarihli rezervasyonlar Takvim ekranında listelenir ve Google Takvim’e eklenebilir.</li>
+          </ol>
+        </article>
+      </div>
+      <div class="watch-card" style="margin-top:18px">
+        <h3>Bu akışı bağlayan gerçek ekranlar</h3>
+        <span class="screen-chip">MainShellPage</span>
+        <span class="screen-chip">PatiGezdirmePage</span>
+        <span class="screen-chip">PatiBnbPage</span>
+        <span class="screen-chip">PatiMatchPage</span>
+        <span class="screen-chip">PatiFamilyPage</span>
+        <span class="screen-chip">LoginPage</span>
+        <span class="screen-chip">RequestsPage / Taleplerim</span>
+        <span class="screen-chip">ServiceConversationsPage</span>
+        <span class="screen-chip">ChatPage</span>
+        <span class="screen-chip">CalendarPage</span>
+        <span class="screen-chip">MatchesPage</span>
+        <p style="margin-bottom:0">Arkada takip edilen ana mantık: servis modüllerinde <code>requests</code> → <code>service_engagements</code> → <code>chats</code>; PatiMatch tarafında ise swipe → match → sosyal chat.</p>
       </div>
     </section>
 
@@ -509,6 +589,29 @@
       }
     };
 
+    const appGuides = {
+      walk: [
+        ['Uygulamada nerede?', 'Ana sayfa → PatiGezdirme sekmesi → Filtre alanı.', 'Ekranda şehir, ilçe, köpek cinsi ve detaylı filtre açılır; alttaki gezdirici kartları buna göre değişmelidir.', 'Kontrol: Filtre seçince liste daralıyor mu, kartlar kaybolmadan aşağıda kalıyor mu?'],
+        ['Uygulamada nerede?', 'PatiGezdirme kartı → Detay paneli → Tarih/saat seçimi.', 'Kullanıcı fiyatı, rating’i, güven rozetlerini ve uygunluğu görür; “Yürüyüş Planla” ile talep oluşturur.', 'Kontrol: Giriş yapılmadıysa login ekranı açılıyor mu; giriş sonrası talep devam ediyor mu?'],
+        ['Uygulamada nerede?', 'Ayarlar/üst menü → Taleplerim → Bana gelen → Kabul et → Hizmet Mesajları.', 'Kabul sonrası service_engagement ve chat kaydı oluşur; sohbet içinde aşama çubuğu görünür.', 'Kontrol: Konuşma → Planlandı → Devam ediyor → Tamamlandı ilerliyor mu?']
+      ],
+      bnb: [
+        ['Uygulamada nerede?', 'Ana sayfa → PatiBnB sekmesi → Konaklama filtreleri.', 'Kedi/köpek, il, ilçe, cins, ev tipi, bahçe ve başka pet var mı bilgileriyle host listesi filtrelenir.', 'Kontrol: Kedi seçince kedi cinsleri, köpek seçince köpek cinsleri geliyor mu?'],
+        ['Uygulamada nerede?', 'PatiBnB host kartı → Detay paneli → Tarih aralığı.', 'Ev kuralları, bakım rutini, veteriner yakınlığı ve uygunluk bilgisi tek profilde okunur.', 'Kontrol: Tarih seçilmeden talep gönderme engelleniyor mu; seçilince talep kaydediliyor mu?'],
+        ['Uygulamada nerede?', 'Taleplerim → Kabul edilen konaklama → Hizmet Mesajları ve Takvim.', 'Host kabul edince konaklama konuşması açılır; Takvim sayfasında rezervasyon görünür.', 'Kontrol: Google Takvim’e ekle linki doğru tarih ve başlıkla açılıyor mu?']
+      ],
+      match: [
+        ['Uygulamada nerede?', 'Ana sayfa → PatiMatch sekmesi.', 'Üye olmadan kart önizlemesi görünür; kullanıcı beğen/geç deneyimini anlar.', 'Kontrol: Login zorlamadan kartlar görünüyor mu?'],
+        ['Uygulamada nerede?', 'PatiMatch kartları → Beğen → Karşılıklı beğeni.', 'İki taraf beğenirse match ve sosyal chat oluşur; bu chat hizmet konuşmalarından ayrıdır.', 'Kontrol: Matches listesinde yeni eşleşme ve okunmamış mesaj rozeti çalışıyor mu?'],
+        ['Uygulamada nerede?', 'Matches → Chat → Raporla/Engelle.', 'Sosyal sohbet içinde güven aksiyonları korunur; report/block sonrası kişi Discover/Matches’te filtrelenir.', 'Kontrol: Engellenen kullanıcı tekrar görünmüyor mu?']
+      ],
+      family: [
+        ['Uygulamada nerede?', 'Ana sayfa → PatiFamily sekmesi → Sahiplendirme filtreleri.', 'Acil yuva, geçici yuva, tür, cins, il ve ilçe ile ilan listesi daralır.', 'Kontrol: Filtre sonrasında alttaki pet ilanları gerçekten değişiyor mu?'],
+        ['Uygulamada nerede?', 'PatiFamily ilan kartı → Detay paneli → Başvuru.', 'Aşı durumu, karakter, bakım ihtiyacı, veteriner notu ve takip beklentisi okunur.', 'Kontrol: Başvuru öncesi kritik bilgiler yeterince görünür mü?'],
+        ['Uygulamada nerede?', 'Taleplerim → PatiFamily başvuruları → Kabul et → Hizmet Mesajları.', 'Başvuru kabul edilince görüşme konuşması açılır; tanışma ve takip adımları konuşmada ilerler.', 'Kontrol: PatiFamily başvuruları PatiGezdirme/PatiBnB taleplerinden ayırt edilebiliyor mu?']
+      ]
+    };
+
     let activeModule = 'walk';
     let activeSlide = 0;
     let playing = true;
@@ -521,6 +624,7 @@
     const slideText = document.getElementById('slideText');
     const panelCopy = document.getElementById('panelCopy');
     const stepList = document.getElementById('stepList');
+    const appMap = document.getElementById('appMap');
     const exampleGrid = document.getElementById('exampleGrid');
     const playPause = document.getElementById('playPause');
 
@@ -538,6 +642,15 @@
           <div><h4>${['Aç', 'Seç', 'İlerle'][index]}</h4><p>${step}</p></div>
         </div>
       `).join('');
+      const guide = appGuides[activeModule][activeSlide];
+      appMap.innerHTML = `
+        <strong>${guide[0]}</strong>
+        <ul>
+          <li><b>Aç:</b> ${guide[1]}</li>
+          <li><b>Gör:</b> ${guide[2]}</li>
+          <li><b>Test et:</b> ${guide[3]}</li>
+        </ul>
+      `;
       exampleGrid.innerHTML = mod.examples.map((item) => `
         <article class="example">
           <div class="example-photo" style="--photo:${item[3]}"></div>
