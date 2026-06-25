@@ -62,6 +62,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Canlı UX ekran görüntülerini otomatik oynatan video player eklendi: `docs/live_ux_video_player.html`.
 - Canlı site üzerinde gerçek tıklamalarla UX deneyim kaydı çıkarıldı; ekran görüntülü rapor `docs/live_ux_walkthrough.html` altında tutuluyor.
 - Ürün akışlarını sayfa sayfa gösteren slayt/storyboard HTML'i eklendi: `docs/product_flow_slideshow.html`.
 - Hizmet talebi kabul edilince alan/veren eşleşmesi, hizmet konuşması ve yaşam döngüsü takibi oluşturuluyor; ayrıntı `docs/SERVICE_MATCHING_FLOW_REPORT.md`.

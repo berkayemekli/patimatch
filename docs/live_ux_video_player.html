@@ -1,0 +1,266 @@
+﻿<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PatiParent UX Video Player</title>
+  <style>
+    :root {
+      --bg: #070b12;
+      --panel: rgba(255,255,255,.08);
+      --panel-strong: rgba(255,255,255,.14);
+      --line: rgba(255,255,255,.16);
+      --ink: #f8fafc;
+      --muted: rgba(248,250,252,.72);
+      --accent: #79ead6;
+      --warn: #fbbf24;
+      font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(121,234,214,.18), transparent 30rem),
+        radial-gradient(circle at 88% 4%, rgba(99,102,241,.22), transparent 32rem),
+        linear-gradient(180deg, #101827 0%, var(--bg) 100%);
+      color: var(--ink);
+      overflow: hidden;
+    }
+    .app { min-height: 100vh; display: grid; grid-template-rows: auto 1fr auto; }
+    header {
+      display: flex; justify-content: space-between; align-items: center; gap: 18px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(7,11,18,.58);
+      backdrop-filter: blur(18px);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: -.03em; }
+    .mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 14px; background: rgba(121,234,214,.14); color: var(--accent); }
+    .badge { color: var(--muted); font-size: 13px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 11px; }
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 360px;
+      gap: 18px;
+      padding: 18px 24px 10px;
+      min-height: 0;
+    }
+    .screen-wrap {
+      position: relative;
+      min-width: 0;
+      border-radius: 30px;
+      background: #020617;
+      border: 1px solid var(--line);
+      box-shadow: 0 30px 100px rgba(0,0,0,.45);
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+    .screen-wrap::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(120deg, rgba(255,255,255,.06), transparent 34%, transparent 66%, rgba(255,255,255,.04));
+      z-index: 2;
+    }
+    #shot {
+      max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: contain;
+      opacity: 1; transform: scale(1);
+      transition: opacity .35s ease, transform .65s ease;
+      background: #eef2f7;
+    }
+    #shot.fade { opacity: .15; transform: scale(1.018); }
+    .cursor {
+      position: absolute;
+      width: 34px; height: 34px; border-radius: 999px;
+      border: 2px solid white;
+      background: rgba(121,234,214,.38);
+      box-shadow: 0 0 0 12px rgba(121,234,214,.16), 0 12px 30px rgba(0,0,0,.24);
+      transform: translate(-50%, -50%);
+      transition: left .65s ease, top .65s ease, opacity .3s ease;
+      z-index: 5;
+      pointer-events: none;
+    }
+    .side {
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(20px);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .frame-no { color: var(--accent); font-weight: 900; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 10px 0 12px; font-size: 34px; line-height: 1; letter-spacing: -.055em; }
+    .desc { color: var(--muted); line-height: 1.58; margin: 0 0 16px; }
+    .facts { display: grid; gap: 10px; margin-top: 8px; }
+    .fact { border-radius: 18px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); padding: 12px; }
+    .fact b { display: block; margin-bottom: 4px; color: #fff; }
+    .fact span { color: var(--muted); font-size: 14px; line-height: 1.45; }
+    .finding { margin-top: auto; border-radius: 20px; padding: 14px; border: 1px solid rgba(251,191,36,.24); background: rgba(251,191,36,.12); color: #fde68a; line-height: 1.45; }
+    footer {
+      padding: 12px 24px 20px;
+      display: grid; gap: 12px;
+    }
+    .progress { height: 8px; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+    #bar { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), #a5b4fc); border-radius: inherit; transition: width .2s linear; }
+    .controls { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+    .buttons { display: flex; gap: 9px; flex-wrap: wrap; }
+    button, select {
+      border: 1px solid var(--line); color: var(--ink); background: var(--panel);
+      border-radius: 999px; padding: 11px 14px; font-weight: 850; cursor: pointer;
+      backdrop-filter: blur(14px);
+    }
+    button:hover, select:hover { background: var(--panel-strong); }
+    .primary { background: #f8fafc; color: #111827; }
+    .timeline { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+    .dot { min-width: 30px; height: 30px; border-radius: 999px; display: grid; place-items: center; color: rgba(255,255,255,.62); background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12); font-size: 12px; font-weight: 900; cursor: pointer; }
+    .dot.active { color: #111827; background: var(--accent); }
+    @media (max-width: 1000px) {
+      body { overflow: auto; }
+      .app { min-height: auto; }
+      .stage { grid-template-columns: 1fr; }
+      .screen-wrap { min-height: 52vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand"><span class="mark">🐾</span> PatiParent UX Video Player</div>
+      <div class="badge">Canlı siteden yakalanan ekranlar · otomatik oynatım</div>
+    </header>
+
+    <main class="stage">
+      <section class="screen-wrap" id="screenWrap">
+        <img id="shot" src="" alt="Canlı UX ekran kaydı" />
+        <div class="cursor" id="cursor"></div>
+      </section>
+      <aside class="side">
+        <div class="frame-no" id="frameNo"></div>
+        <h1 id="title"></h1>
+        <p class="desc" id="desc"></p>
+        <div class="facts">
+          <div class="fact"><b>Açılan ekran</b><span id="opened"></span></div>
+          <div class="fact"><b>Kullanıcı aksiyonu</b><span id="action"></span></div>
+          <div class="fact"><b>Gözlenen davranış</b><span id="observed"></span></div>
+        </div>
+        <div class="finding" id="finding"></div>
+      </aside>
+    </main>
+
+    <footer>
+      <div class="progress"><div id="bar"></div></div>
+      <div class="controls">
+        <div class="buttons">
+          <button id="prev">← Geri</button>
+          <button class="primary" id="play">Oynat</button>
+          <button id="next">İleri →</button>
+          <button id="restart">Baştan</button>
+          <button id="fullscreen">Tam ekran</button>
+        </div>
+        <div class="buttons">
+          <select id="speed" aria-label="Oynatma hızı">
+            <option value="4500">Yavaş</option>
+            <option value="3200" selected>Normal</option>
+            <option value="1900">Hızlı</option>
+          </select>
+        </div>
+      </div>
+      <div class="timeline" id="timeline"></div>
+    </footer>
+  </div>
+
+  <script>
+    const frames = [
+      ['01_live_home.png','Frame 01','Ana sayfa açıldı','Kullanıcı siteye gelir ve giriş yapmadan ürün vitrinini görür.','Ana sayfa / PatiGezdirme default görünüm.','Site açılır.','Hero, 4 modül, güven merkezi, filtre ve kartlar aynı ekranda.','İyi: Login zorlamadan ürün anlaşılır.',50,48],
+      ['02_patimatched_tab.png','Frame 02','PatiMatch sekmesine basıldı','Kullanıcı sosyal eşleşme alanını görmek için PatiMatch’e geçer.','Ana sayfa / PatiMatch sekmesi.','PatiMatch modül butonuna tıklanır.','Modül rengi ve içerik değişiyor.','İyi: Sekme geçişi net; beta alanı daha aşağıda kalıyor.',55,29],
+      ['03_patibnb_tab.png','Frame 03','PatiBnB sekmesine basıldı','Kullanıcı konaklama tarafının farklılaşıp farklılaşmadığını görür.','Ana sayfa / PatiBnB sekmesi.','PatiBnB modül butonuna tıklanır.','Turuncu aktif state ve konaklama açıklaması geliyor.','İyi: PatiBnB görsel dili ayrışıyor.',44,29],
+      ['04_patifamily_tab.png','Frame 04','PatiFamily sekmesine basıldı','Kullanıcı sahiplendirme/aile modülünü açar.','Ana sayfa / PatiFamily sekmesi.','PatiFamily modül butonuna tıklanır.','Mor aktif state ve aile açıklaması görünüyor.','Not: PatiFamily dili daha şefkatli ve takipli hale getirilebilir.',66,29],
+      ['05_patigezdirme_back.png','Frame 05','PatiGezdirme’ye geri dönüldü','Yürüyüş akışını test etmek için default modüle dönülür.','Ana sayfa / PatiGezdirme.','PatiGezdirme modül butonuna tıklanır.','Yeşil aktif state geri geliyor.','İyi: Modül geçişleri çalışıyor.',34,29],
+      ['06_filter_expanded.png','Frame 06','Filtre açıldı','Kullanıcı detaylı filtreleri açar.','PatiGezdirme / filtre paneli.','Filtre satırının sağındaki ok tıklanır.','Arama, il, ilçe, cins, yaş, cinsiyet, aşı ve boyut alanları açılıyor.','İyi: Filtre kapsamı güçlü.',80,56],
+      ['08_walk_detail_or_action.png','Frame 07','Filtre sonrası boş sonuç görüldü','Kimlik doğrulandı chip’i aktifken liste boşalıyor.','PatiGezdirme / filtre + sonuç alanı.','Kimlik doğrulandı filtresi aktif kalır.','“Bu filtrelere uygun gezdirici henüz yok” mesajı çıkıyor.','Risk: Kullanıcı site boş sanabilir; aktif filtreleri temizle CTA’sı lazım.',27,74],
+      ['12_card_click_attempt_after_reset.png','Frame 08','Tümü seçilip sonuçlar geri geldi','Kullanıcı filtreyi genişletmişken Tümü chip’iyle kartlara döner.','PatiGezdirme / kart grid.','Tümü chip’i tıklanır.','Kartlar geri geliyor ama filtre açıkken kartla etkileşim karışabiliyor.','Öneri: Filtre seçimi sonrası panel kompakt moda dönsün.',22,51],
+      ['13_filter_closed_before_card_click.png','Frame 09','Filtre kapatıldı','Kart detayını net test etmek için filtre paneli kapanır.','PatiGezdirme / liste görünümü.','Filtre paneli kapatılır.','Kartlar daha rahat tıklanabilir hale geliyor.','İyi: Panel kapalıyken liste okunabilir.',80,47],
+      ['14_card_click_after_filter_closed.png','Frame 10','Kart detayı açıldı','Gezdirici kartına basınca detay modalı açılır.','Gezdirici detay modalı.','İlk kart tıklanır.','Tarih, saat, fiyat, güven nedeni, profil özeti ve yaklaşım görünüyor.','Çok iyi: Ürünün en güçlü karar ekranı burası.',51,70],
+      ['15_request_click_login_gate.png','Frame 11','Talep gönderildi, login açıldı','Kullanıcı işlem yapmak isteyince güvenli giriş ekranına gelir.','Login ekranı.','Tarihli yürüyüş talebi gönder butonuna tıklanır.','Google, Apple, e-posta, telefon ve misafir seçenekleri görünüyor.','Doğru: İşlem anında login istemek ürün akışına uygun.',51,66],
+      ['16_guest_continue_back_to_app.png','Frame 12','Misafir devam edildi','Login ekranından misafir olarak çıkılıp keşfe dönülür.','Ana sayfa / PatiGezdirme.','Misafir olarak devam et tıklanır.','Kullanıcı ana keşif ekranına geri dönüyor.','İyi: Bariyersiz keşif korunuyor.',64,67],
+      ['17_live_patibnb_home.png','Frame 13','PatiBnB açıldı','Konaklama modülünün gerçek kartları izlenir.','PatiBnB ana liste.','PatiBnB sekmesine basılır.','Super Host, ev fotoğrafları, fiyat/gece ve açıklamalar görünüyor.','İyi: Airbnb benzeri hissiyat en çok burada.',44,29],
+      ['18_patibnb_cards.png','Frame 14','PatiBnB listesi aşağı kaydırıldı','Host kartlarının yoğunluğu ve okunurluğu test edilir.','PatiBnB kart grid.','Sayfa aşağı kaydırılır.','Kartlar iki kolon ve sakin görünüyor.','Öneri: Daha fazla host ve uygunluk datası eklenmeli.',44,68],
+      ['19_patibnb_detail_attempt.png','Frame 15','PatiBnB detay denendi','Host kartı tıklanarak detay davranışı kontrol edilir.','PatiBnB detay/kart alanı.','Host kartına tıklanır.','Detay davranışı yakalanır; görsel dil ev odaklı kalıyor.','Not: Rezervasyon tarihi ve ev kuralları daha üstte olmalı.',33,68],
+      ['20_live_patifamily_home.png','Frame 16','PatiFamily açıldı','Aile/sahiplendirme modülü canlıda kontrol edilir.','PatiFamily ana görünüm.','PatiFamily sekmesine basılır.','Mor aktif state ve aile modülü görünür.','Not: Duygusal güven dili artırılmalı.',66,29],
+      ['21_patifamily_cards.png','Frame 17','PatiFamily listesi görüldü','İlan kartlarının içerik zenginliği kontrol edilir.','PatiFamily kart grid.','Sayfa aşağı kaydırılır.','Kartlar geliyor; içerik daha sorumlu/başvuru odaklı olabilir.','Öneri: Aile kriterleri, takip süreci, aşı/vet bilgisi görünür olsun.',48,68],
+      ['22_live_patimatch_home.png','Frame 18','PatiMatch guest preview görüldü','Üye olmadan sosyal eşleşme ekranı kontrol edilir.','PatiMatch ana görünüm.','PatiMatch sekmesine basılır.','Beta hero, uyum analizi ve kart preview görünüyor.','İyi: Üye olmadan içerik görünür; Bumble hissi daha da güçlendirilebilir.',55,29]
+    ];
+
+    let index = 0;
+    let playing = false;
+    let timer = null;
+    const shot = document.getElementById('shot');
+    const cursor = document.getElementById('cursor');
+    const frameNo = document.getElementById('frameNo');
+    const title = document.getElementById('title');
+    const desc = document.getElementById('desc');
+    const opened = document.getElementById('opened');
+    const action = document.getElementById('action');
+    const observed = document.getElementById('observed');
+    const finding = document.getElementById('finding');
+    const bar = document.getElementById('bar');
+    const playBtn = document.getElementById('play');
+    const speed = document.getElementById('speed');
+    const timeline = document.getElementById('timeline');
+
+    function renderDots() {
+      timeline.innerHTML = frames.map((_, i) => `<button class="dot ${i === index ? 'active' : ''}" data-i="${i}">${i + 1}</button>`).join('');
+      timeline.querySelectorAll('.dot').forEach(btn => btn.addEventListener('click', () => { index = Number(btn.dataset.i); render(); resetTimer(); }));
+    }
+
+    function render() {
+      const f = frames[index];
+      shot.classList.add('fade');
+      setTimeout(() => {
+        shot.src = `ux_walkthrough_assets/${f[0]}`;
+        frameNo.textContent = `${f[1]} / ${frames.length}`;
+        title.textContent = f[2];
+        desc.textContent = f[3];
+        opened.textContent = f[4];
+        action.textContent = f[5];
+        observed.textContent = f[6];
+        finding.textContent = f[7];
+        cursor.style.left = `${f[8]}%`;
+        cursor.style.top = `${f[9]}%`;
+        bar.style.width = `${((index + 1) / frames.length) * 100}%`;
+        shot.classList.remove('fade');
+        renderDots();
+      }, 170);
+    }
+
+    function next() {
+      index = (index + 1) % frames.length;
+      render();
+    }
+    function prev() {
+      index = (index - 1 + frames.length) % frames.length;
+      render();
+    }
+    function resetTimer() {
+      clearInterval(timer);
+      if (playing) timer = setInterval(next, Number(speed.value));
+    }
+    document.getElementById('play').addEventListener('click', () => {
+      playing = !playing;
+      playBtn.textContent = playing ? 'Duraklat' : 'Oynat';
+      resetTimer();
+    });
+    document.getElementById('next').addEventListener('click', () => { next(); resetTimer(); });
+    document.getElementById('prev').addEventListener('click', () => { prev(); resetTimer(); });
+    document.getElementById('restart').addEventListener('click', () => { index = 0; render(); resetTimer(); });
+    speed.addEventListener('change', resetTimer);
+    document.getElementById('fullscreen').addEventListener('click', () => {
+      const el = document.documentElement;
+      if (!document.fullscreenElement && el.requestFullscreen) el.requestFullscreen();
+      else if (document.exitFullscreen) document.exitFullscreen();
+    });
+    render();
+  </script>
+</body>
+</html>
