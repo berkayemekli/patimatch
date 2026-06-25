@@ -62,6 +62,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- PatiParent canlı UX akışı dünyadaki 10 güçlü ürünle karşılaştırıldı; analiz raporu `docs/global_ux_benchmark_2026.md` altında.
 - Canlı UX ekran görüntülerini otomatik oynatan video player eklendi: `docs/live_ux_video_player.html`.
 - Canlı site üzerinde gerçek tıklamalarla UX deneyim kaydı çıkarıldı; ekran görüntülü rapor `docs/live_ux_walkthrough.html` altında tutuluyor.
 - Ürün akışlarını sayfa sayfa gösteren slayt/storyboard HTML'i eklendi: `docs/product_flow_slideshow.html`.
