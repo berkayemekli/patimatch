@@ -6,6 +6,7 @@ import 'data/master_data/master_data_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 import 'login_page.dart';
+import 'widgets/no_results_rescue_card.dart';
 import 'widgets/smart_pet_image.dart';
 
 class PatiBnbPage extends StatefulWidget {
@@ -329,6 +330,35 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
     });
   }
 
+  Future<void> _clearFilters() async {
+    final districts = await MasterDataRepository.loadDistricts('İstanbul');
+    if (!mounted) return;
+    setState(() {
+      _filtersOpen = false;
+      _city = 'Ä°stanbul';
+      _district = 'Tüm ilçeler';
+      _animalType = 'Köpek';
+      _breed = 'Tüm cinsler';
+      _ageRange = 'Tüm yaşlar';
+      _sex = 'Fark etmez';
+      _vaccineStatus = 'Fark etmez';
+      _searchQuery = '';
+      _districts = districts;
+    });
+  }
+
+  void _showFlexibleStays() {
+    setState(() {
+      _filtersOpen = false;
+      _district = 'Tüm ilçeler';
+      _breed = 'Tüm cinsler';
+      _ageRange = 'Tüm yaşlar';
+      _sex = 'Fark etmez';
+      _vaccineStatus = 'Fark etmez';
+      _searchQuery = '';
+    });
+  }
+
   String _stayBio(Map<String, dynamic> stay) {
     final existing = stay['bio']?.toString().trim() ?? '';
     if (existing.isNotEmpty) return existing;
@@ -458,7 +488,10 @@ class _PatiBnbPageState extends State<PatiBnbPage> {
           ),
           const SizedBox(height: 24),
           if (filteredStays.isEmpty)
-            const _EmptyStayState()
+            _EmptyStayState(
+              onClearFilters: _clearFilters,
+              onShowFlexible: _showFlexibleStays,
+            )
           else
             GridView.builder(
               itemCount: filteredStays.length,
@@ -724,22 +757,27 @@ class _BnbDrop extends StatelessWidget {
 }
 
 class _EmptyStayState extends StatelessWidget {
-  const _EmptyStayState();
+  const _EmptyStayState({
+    required this.onClearFilters,
+    required this.onShowFlexible,
+  });
+
+  final VoidCallback onClearFilters;
+  final VoidCallback onShowFlexible;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE7ECF3)),
-      ),
-      child: const Text(
-        'Bu filtreye uygun konaklama henüz yok. Farklı cins veya şehir deneyebilirsin.',
-        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-      ),
+    return NoResultsRescueCard(
+      title: 'Bu filtrelerle uygun konaklama bulamad?k',
+      message:
+          'Pet t?r?, cins veya konum filtresini yumu?atarak daha fazla g?venilir host g?sterebiliriz.',
+      suggestion:
+          '?neri: ?lk aramada t?m cinsler ve t?m il?elerle bak; ev kurallar? ve uygunlu?u detay panelinde kar??la?t?r.',
+      primaryActionLabel: 'Filtreleri temizle',
+      onPrimaryAction: onClearFilters,
+      secondaryActionLabel: 'Esnek konaklamalar? g?ster',
+      onSecondaryAction: onShowFlexible,
+      accentColor: const Color(0xFFF97316),
     );
   }
 }

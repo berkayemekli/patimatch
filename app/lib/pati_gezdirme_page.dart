@@ -6,6 +6,7 @@ import 'data/master_data/master_data_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 import 'login_page.dart';
+import 'widgets/no_results_rescue_card.dart';
 import 'widgets/smart_pet_image.dart';
 
 class PatiGezdirmePage extends StatefulWidget {
@@ -221,6 +222,33 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
     });
   }
 
+  Future<void> _clearFilters() async {
+    final districts = await MasterDataRepository.loadDistricts('İstanbul');
+    if (!mounted) return;
+    setState(() {
+      _filtersOpen = false;
+      _city = 'İstanbul';
+      _district = 'Tüm ilçeler';
+      _breed = 'Tüm cinsler';
+      _ageRange = 'Tüm yaşlar';
+      _sex = 'Fark etmez';
+      _vaccineStatus = 'Fark etmez';
+      _size = 'Tüm boyutlar';
+      _badgeFilter = 'All';
+      _searchQuery = '';
+      _districts = districts;
+    });
+  }
+
+  void _showAllDistricts() {
+    setState(() {
+      _filtersOpen = false;
+      _district = 'Tüm ilçeler';
+      _badgeFilter = 'All';
+      _searchQuery = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -320,7 +348,10 @@ class _PatiGezdirmePageState extends State<PatiGezdirmePage> {
           ),
           const SizedBox(height: 14),
           if (filtered.isEmpty)
-            const _EmptyWalkerState()
+            _EmptyWalkerState(
+              onClearFilters: _clearFilters,
+              onShowNearby: _showAllDistricts,
+            )
           else
             GridView.builder(
               itemCount: filtered.length,
@@ -677,22 +708,27 @@ class _FilterDropdown extends StatelessWidget {
 }
 
 class _EmptyWalkerState extends StatelessWidget {
-  const _EmptyWalkerState();
+  const _EmptyWalkerState({
+    required this.onClearFilters,
+    required this.onShowNearby,
+  });
+
+  final VoidCallback onClearFilters;
+  final VoidCallback onShowNearby;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFE7ECF3)),
-      ),
-      child: const Text(
-        'Bu filtrelere uygun gezdirici hen\u{00FC}z yok. \u{015E}ehir, il\u{00E7}e veya cinsi de\u{011F}i\u{015F}tirerek tekrar deneyebilirsin.',
-        style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-      ),
+    return NoResultsRescueCard(
+      title: 'Bu filtrelerle uygun yürüyüş partneri bulamadık',
+      message:
+          'Aktif filtreleri biraz yumuşatarak yakın ilçelerdeki güvenilir gezdiricileri tekrar gösterebiliriz.',
+      suggestion:
+          'Öneri: Önce tüm ilçeler ve tüm rozetlerle bak; sonra cins, yaş veya aşı durumunu daralt.',
+      primaryActionLabel: 'Filtreleri temizle',
+      onPrimaryAction: onClearFilters,
+      secondaryActionLabel: 'Yakın ilçelerde ara',
+      onSecondaryAction: onShowNearby,
+      accentColor: const Color(0xFF0F8F83),
     );
   }
 }

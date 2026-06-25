@@ -37,6 +37,20 @@ Kacinilacaklar:
 - Eski dashboard gorunumu
 - Sert borderlar ve gereksiz renk kalabaligi
 
+## Unicorn strateji tezi
+
+PatiParent sadece dort modullu pet hizmet sitesi olmayacak; hedef AI-native pet parenting operating system kurmak.
+
+Ana stratejik omurga:
+
+- Pet Passport: her pet icin tek dijital kimlik, asi, bakim, karakter ve acil durum profili.
+- Trust Graph: kisi, pet, hizmet veren, veteriner/kuafor/egitmen ve mekanlar icin guven skoru.
+- AI Care Copilot: pet profiline ve hizmet baglamina gore karar destek asistanı.
+- Service OS: talep, kabul, sohbet, takvim, canli takip, report card ve review yasam dongusu.
+- Local Pet Network: veteriner, kuafor, egitmen, pet dostu mekan ve ileride insurance/telehealth partner katmani.
+
+Detayli strateji: `docs/UNICORN_PRODUCT_STRATEGY.md`.
+
 ## Mevcut teknik durum
 
 - Flutter web/app.
@@ -77,6 +91,7 @@ Kacinilacaklar:
 
 ## Son yapilanlar
 
+- Unicorn strateji dosyasi eklendi ve ilk uygulama adimi basladi: PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonuclarinda No Results Rescue karti artik filtre temizleme/esnek sonuc CTA'lari gosteriyor.
 - Hizmet alan/veren eslesme akisi kuruldu: talep kabulunde service engagement ve hizmet chat'i aciliyor; sohbet icinde konusma-planlandi-devam ediyor-tamamlandi asamalari izleniyor.
 - Load-test onerileri uygulandi: preflight, runId/TTL/cleanup, pipeline/CI, Auth Emulator, UI kontrat testleri, PatiMatch ag profilleri, yerel staging gorselleri, merkezi modul uyeligi ve HTML saglik paneli eklendi.
 - Dort modulde 250'ser aktif staging uyeligi ve tam islem hacmi dogrulandi. Bagimsiz Firestore validator ve `docs/LOAD_TEST_PROCESS_RECOMMENDATIONS.md` surec raporu eklendi.

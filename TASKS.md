@@ -15,7 +15,15 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Next Up
 
-1. Master data dosyalarini UI'a bagla.
+1. Unicorn sprint omurgasini baslat.
+   - `docs/UNICORN_PRODUCT_STRATEGY.md` icindeki ilk 5 urun gelistirmesi uygulanacak.
+   - Pet Passport v1: pet profili, asi, bakim notlari, paylasilabilir ozet.
+   - Trust Score v1: kart/detail icinde guven skoru ve "neden guvenilir?" aciklamasi.
+   - No Results Rescue: bos filtre sonucunda filtre temizle, yakin ilce, tumunu goster CTA.
+   - What Happens Next: detay modalinda talep sonrasi surec timeline'i.
+   - Report Card v1: tamamlanan hizmet sonrasi ozet formu ve chat ozeti.
+
+2. Master data dosyalarini UI'a bagla.
    - `seed_marketplace_examples.json` PatiGezdirme/PatiBnB/PatiFamily kartlarina kaynak olsun.
    - `marketplace_product_taxonomy.json` filtre ve form alanlarini beslesin.
    - `trust_safety_framework.json` rozet/checklist alanlarini beslesin.
@@ -23,37 +31,37 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
    - OSM kaynakli kayitlarda eksik il/ilce bilgisi koordinattan veya saglayici API ile zenginlestirilsin.
    - Her master data guncellemesinden sonra `python scripts/generate_data_mapping_report.py` calistirilip `docs/data_mapping.html` guncel tutulacak.
 
-2. Onboarding akisini kur.
+3. Onboarding akisini kur.
    - Hizmet almak istiyorum.
    - Hizmet vermek istiyorum.
    - Ikisini de kullanacagim.
    - Baslangicta zorunlu modal olmasin; ana sayfa gorulsun, login/profil tamamlama sonraya aksin.
 
-3. E-posta ile giris/kayit ekle.
+4. E-posta ile giris/kayit ekle.
    - Google takilirsa MVP icin daha stabil fallback olur.
    - Login ekrani mevcut premium tasarimi korusun.
 
-4. PatiMatch guest preview guclendir.
+5. PatiMatch guest preview guclendir.
    - Uye olmadan kartlar gorulsun.
    - Bumble benzeri swipe hissi.
    - Guvenli eslesme/aciklama katmani.
 
-5. PatiBnB Airbnb benzeri listing derinlestirme.
+6. PatiBnB Airbnb benzeri listing derinlestirme.
    - Ev tipi, bahce, baska pet var mi, ev kurallari, fiyat, uygunluk.
    - Daha gercekci ve yerel fotograf/icerik hissi.
 
-6. PatiFamily sahiplendirme akisini derinlestir.
+7. PatiFamily sahiplendirme akisini derinlestir.
    - Acil yuva, gecici yuva, sahiplendirme formu, veteriner belgesi, takip gorusmesi.
 
-7. Profil tamamlama skoru ekle.
+8. Profil tamamlama skoru ekle.
    - `onboarding_playbook.json` icindeki weight modeli kullanilabilir.
    - Eksik alanlari yumuşak CTA olarak goster.
 
-8. Staging/prod akisini pratiklestir.
+9. Staging/prod akisini pratiklestir.
    - `DEPLOY_ENVIRONMENTS.md` guncel.
    - Riskli isleri staging'e deploy et, onaydan sonra prod.
 
-9. Mavi tik / kimlik dogrulama altyapisini kur.
+10. Mavi tik / kimlik dogrulama altyapisini kur.
    - Ucuncu parti KYC/IDV saglayici sec: Veriff, Sumsub, Persona, Onfido veya Stripe Identity.
    - Ham kimlik/yuz gorseli saklama; sadece verification sonucu ve provider reference tut.
    - Guven Merkezi UI: dogrulama baslat, pending, verified, rejected state.
@@ -62,6 +70,8 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- No Results Rescue v1 eklendi; PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonucunda filtre temizleme ve esnek/yakin sonuc CTA'lari gosteriyor.
+- Unicorn seviyesinde fark yaratacak urun stratejisi cikarildi: `docs/UNICORN_PRODUCT_STRATEGY.md`.
 - PatiParent canlı UX akışı dünyadaki 10 güçlü ürünle karşılaştırıldı; analiz raporu `docs/global_ux_benchmark_2026.md` altında.
 - Canlı UX ekran görüntülerini otomatik oynatan video player eklendi: `docs/live_ux_video_player.html`.
 - Canlı site üzerinde gerçek tıklamalarla UX deneyim kaydı çıkarıldı; ekran görüntülü rapor `docs/live_ux_walkthrough.html` altında tutuluyor.

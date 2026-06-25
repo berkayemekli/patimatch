@@ -6,6 +6,7 @@ import 'data/master_data/master_data_repository.dart';
 import 'data/services_repository.dart';
 import 'data/user_repository.dart';
 import 'login_page.dart';
+import 'widgets/no_results_rescue_card.dart';
 import 'widgets/smart_pet_image.dart';
 
 class PatiParentPage extends StatefulWidget {
@@ -220,6 +221,37 @@ class _PatiParentPageState extends State<PatiParentPage> {
     });
   }
 
+  Future<void> _clearFilters() async {
+    final districts = await MasterDataRepository.loadDistricts('İstanbul');
+    if (!mounted) return;
+    setState(() {
+      _filtersOpen = false;
+      _city = 'İstanbul';
+      _district = 'Tüm ilçeler';
+      _animalType = 'Köpek';
+      _breed = 'Tüm cinsler';
+      _ageRange = 'Tüm yaşlar';
+      _sex = 'Fark etmez';
+      _vaccineStatus = 'Fark etmez';
+      _size = 'Tüm boyutlar';
+      _searchQuery = '';
+      _districts = districts;
+    });
+  }
+
+  void _showAllFamilyPosts() {
+    setState(() {
+      _filtersOpen = false;
+      _district = 'Tüm ilçeler';
+      _breed = 'Tüm cinsler';
+      _ageRange = 'Tüm yaşlar';
+      _sex = 'Fark etmez';
+      _vaccineStatus = 'Fark etmez';
+      _size = 'Tüm boyutlar';
+      _searchQuery = '';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final query = _searchQuery.trim().toLowerCase();
@@ -287,7 +319,10 @@ class _PatiParentPageState extends State<PatiParentPage> {
           ),
           const SizedBox(height: 14),
           if (filteredPets.isEmpty)
-            const _EmptyFamilyState()
+            _EmptyFamilyState(
+              onClearFilters: _clearFilters,
+              onShowAll: _showAllFamilyPosts,
+            )
           else
             GridView.builder(
               itemCount: filteredPets.length,
@@ -833,20 +868,25 @@ class _FamilyDrop extends StatelessWidget {
 }
 
 class _EmptyFamilyState extends StatelessWidget {
-  const _EmptyFamilyState();
+  const _EmptyFamilyState({
+    required this.onClearFilters,
+    required this.onShowAll,
+  });
+  final VoidCallback onClearFilters;
+  final VoidCallback onShowAll;
+
   @override
-  Widget build(BuildContext context) => Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(24),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(24),
-      border: Border.all(color: const Color(0xFFE7ECF3)),
-    ),
-    child: const Text(
-      'Bu filtrelere uygun ilan hen\u00FCz yok. T\u00FCr, cins veya konum filtresini de\u011Fi\u015Ftirebilirsin.',
-      style: TextStyle(color: Color(0xFF64748B), fontWeight: FontWeight.w600),
-    ),
+  Widget build(BuildContext context) => NoResultsRescueCard(
+    title: 'Bu filtrelerle uygun yuva ilanı bulamadık',
+    message:
+        'Tür, cins veya konum filtresini yumuşatarak daha fazla sahiplendirme ve geçici yuva ilanı gösterebiliriz.',
+    suggestion:
+        'Öneri: Önce tüm cinsler ve tüm ilçelerle bak; detayda bakım ihtiyacı, aşı ve uyum notlarını karşılaştır.',
+    primaryActionLabel: 'Filtreleri temizle',
+    onPrimaryAction: onClearFilters,
+    secondaryActionLabel: 'Tüm ilanları göster',
+    onSecondaryAction: onShowAll,
+    accentColor: const Color(0xFF635BFF),
   );
 }
 
