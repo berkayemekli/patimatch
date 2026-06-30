@@ -1,6 +1,6 @@
 # PatiParent SEO / Index Health Report
 
-Generated: 2026-06-30 09:35:01 UTC
+Generated: 2026-06-30 09:38:46 UTC
 
 ## Summary
 

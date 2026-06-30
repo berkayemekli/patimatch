@@ -70,6 +70,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Search engine dagitim katmani eklendi: IndexNow key, submit script, dagitim plani ve canli IndexNow 202 Accepted bildirimi tamamlandi.
 - SEO index saglik raporu ve www canonical hizalamasi eklendi; Google/Bing icin robots, sitemap ve landing sayfalari tek kanonik host uzerinde PASS durumuna getirildi.
 - SEO landing sayfalari eklendi: PatiGezdirme, PatiBnB, PatiMatch, PatiFamily, Pati dostu oteller, veterinerler ve pet kuaforleri icin temiz URL sitemap kayitlari olusturuldu.
 - SEO teknik kimligi duzeltildi: web title/description, canonical, OpenGraph/Twitter kartlari, schema.org JSON-LD, `robots.txt`, `sitemap.xml` ve Search Console checklist eklendi.
