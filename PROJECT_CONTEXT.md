@@ -92,6 +92,7 @@ Detayli strateji: `docs/UNICORN_PRODUCT_STRATEGY.md`.
 
 ## Son yapilanlar
 
+- SEO index saglik raporu eklendi: `scripts/generate_seo_index_report.py` canli `www.patiparent.com` robots/sitemap/canonical kontrollerini uretip `docs/seo_index_health_report.md` dosyasina yazar.
 - SEO icin uzantisiz landing sayfalari eklendi: `/pati-gezdirme`, `/pati-bnb`, `/pati-match`, `/pati-family`, `/pati-dostu-oteller`, `/veterinerler`, `/pet-kuaforleri`; Firebase Hosting `cleanUrls` aktif edildi.
 - SEO teknik kimligi profesyonellestirildi: Google'da gorunen default Flutter baslik/aciklama yerine PatiParent title, description, canonical, sosyal kartlar, schema.org JSON-LD, `robots.txt`, `sitemap.xml` ve `docs/SEO_CHECKLIST.md` eklendi.
 - Pati dostu oteller icin kaynak envanteri ve ilk seed data eklendi; `docs/data_mapping.html` icinde `Pati Dostu Oteller` sekmesi var.
