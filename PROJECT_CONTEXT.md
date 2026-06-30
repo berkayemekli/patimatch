@@ -92,6 +92,7 @@ Detayli strateji: `docs/UNICORN_PRODUCT_STRATEGY.md`.
 
 ## Son yapilanlar
 
+- SEO teknik kimligi profesyonellestirildi: Google'da gorunen default Flutter baslik/aciklama yerine PatiParent title, description, canonical, sosyal kartlar, schema.org JSON-LD, `robots.txt`, `sitemap.xml` ve `docs/SEO_CHECKLIST.md` eklendi.
 - Pati dostu oteller icin kaynak envanteri ve ilk seed data eklendi; `docs/data_mapping.html` icinde `Pati Dostu Oteller` sekmesi var.
 - Unicorn strateji dosyasi eklendi ve ilk uygulama adimi basladi: PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonuclarinda No Results Rescue karti artik filtre temizleme/esnek sonuc CTA'lari gosteriyor.
 - Hizmet alan/veren eslesme akisi kuruldu: talep kabulunde service engagement ve hizmet chat'i aciliyor; sohbet icinde konusma-planlandi-devam ediyor-tamamlandi asamalari izleniyor.

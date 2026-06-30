@@ -70,6 +70,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- SEO teknik kimligi duzeltildi: web title/description, canonical, OpenGraph/Twitter kartlari, schema.org JSON-LD, `robots.txt`, `sitemap.xml` ve Search Console checklist eklendi.
 - Pati dostu otel kaynak envanteri ve ilk seed datası eklendi; `pet_friendly_hotels_tr.json` data mapping raporunda ayrı sekme olarak görünüyor.
 - No Results Rescue v1 eklendi; PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonucunda filtre temizleme ve esnek/yakin sonuc CTA'lari gosteriyor.
 - Unicorn seviyesinde fark yaratacak urun stratejisi cikarildi: `docs/UNICORN_PRODUCT_STRATEGY.md`.

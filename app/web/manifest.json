@@ -1,11 +1,11 @@
 {
-    "name": "patimatch_app",
-    "short_name": "patimatch_app",
+    "name": "PatiParent",
+    "short_name": "PatiParent",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#F8FAFC",
+    "theme_color": "#0F8F83",
+    "description": "Pet ebeveynleri için güvenli yürüyüş, konaklama, eşleşme ve sahiplendirme platformu.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
