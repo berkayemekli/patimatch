@@ -1,0 +1,362 @@
+{
+  "sourceStatus": "mixed_unverified_seed",
+  "generatedAt": "2026-06-30T00:00:00+03:00",
+  "note": "Bu dosya pati dostu oteller icin dogrulanmamis baslangic datasidir. Kayitlar herkese acik dizinlerden ve mevcut OSM seed datasindan urun arastirmasi amaciyla derlenmistir. Kullaniciya rezervasyon oncesi otel ile pet policy, agirlik limiti, ek ucret ve ortak alan kurallari dogrulatilmalidir.",
+  "recommendedUse": [
+    "PatiCare/Yakinimda icinde pet dostu konaklama kesfi",
+    "PatiBnB detayinda alternatif otel/tesis onerisi",
+    "Blog/SEO ve kaynak zenginlestirme",
+    "Otel partner aday listesi"
+  ],
+  "sourceDirectories": [
+    {
+      "name": "BringFido Turkey",
+      "url": "https://www.bringfido.com/lodging/country/turkey/",
+      "observedSignal": "Turkiye icin binlerce pet-friendly lodging kaydi, pet fee, big dogs OK, pet count gibi politika sinyalleri sunuyor.",
+      "integrationNote": "API/partnerlik olmadan toplu kopyalama yapma; sehir bazli elle dogrulanmis partner adaylari veya kullanici onayi ile ilerle."
+    },
+    {
+      "name": "Booking.com Pet-Friendly Turkey",
+      "url": "https://www.booking.com/pets/country/tr.html",
+      "observedSignal": "Pet-friendly filter, guest rating, review count ve fiyat sinyalleri var.",
+      "integrationNote": "Rezervasyon/fiyat canli verisi icin affiliate/partner veya kullaniciyi Booking'e yonlendirme modeli dusun."
+    },
+    {
+      "name": "Setur Evcil Hayvan Kabul Eden Oteller",
+      "url": "https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller",
+      "observedSignal": "Turkiye odakli evcil hayvan kabul eden otel listesi ve turizm paketi bilgileri var.",
+      "integrationNote": "Yerel partnerlik ve dogrulama icin guclu aday kaynak."
+    },
+    {
+      "name": "Etstur Evcil Hayvan Dostu Oteller",
+      "url": "https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller",
+      "observedSignal": "Populer evcil hayvan dostu tesis listeleri ve tatil oteli segmenti var.",
+      "integrationNote": "Tatil destinasyonu icin katalog ve partner aday havuzu."
+    },
+    {
+      "name": "TatilBudur Hayvan Dostu Oteller",
+      "url": "https://www.tatilbudur.com/hayvan-dostu-oteller",
+      "observedSignal": "Kedi/kopek kabul eden oteller ve bolgesel tatil oteli anlatimi var.",
+      "integrationNote": "SEO ve tatil bolgesi sinyal kaynagi."
+    },
+    {
+      "name": "Oggusto Hayvan Dostu Oteller",
+      "url": "https://www.oggusto.com/pets/hayvan-dostu-oteller",
+      "observedSignal": "Otel politikasi, agirlik siniri, ek ucret ve ortak alan kurallari gibi karar bilgilerini vurguluyor.",
+      "integrationNote": "PatiParent otel detay sayfasinda hangi policy alanlari olmali sorusuna iyi referans."
+    },
+    {
+      "name": "HayvanSever Oteller",
+      "url": "https://hayvanseveroteller.com/",
+      "observedSignal": "Turkiye odakli pet-friendly otel rehberi, sehir ve pet turu filtreleri iddia ediyor.",
+      "integrationNote": "Dogruysa niş rakip/partner adayi; veri kalitesi manuel kontrol edilmeli."
+    },
+    {
+      "name": "OpenStreetMap pets/dog tags",
+      "url": "https://www.openstreetmap.org/copyright",
+      "observedSignal": "pets_allowed/dog etiketleri ile dogrulanmamis konaklama, restoran, park sinyalleri alinabilir.",
+      "integrationNote": "ODbL atif ve veri dogrulama gerektirir; mevcut seed dosyamizda sadece az sayida accommodation var."
+    }
+  ],
+  "policyFieldsToVerify": [
+    "petSpeciesAllowed",
+    "maxWeightKg",
+    "maxPetCount",
+    "petFee",
+    "depositRequired",
+    "roomOnlyOrCommonAreas",
+    "canBeLeftAloneInRoom",
+    "requiredDocuments",
+    "nearbyVetOrEmergencyPlan",
+    "lastVerifiedAt"
+  ],
+  "hotels": [
+    {
+      "id": "hotel_radisson_blu_istanbul_asia_osm",
+      "name": "Radisson Blu Hotel Istanbul Asia",
+      "city": "İstanbul",
+      "district": "Ataşehir",
+      "category": "hotel",
+      "source": "openstreetmap",
+      "sourceUrl": "https://www.openstreetmap.org/way/462301240",
+      "website": "https://www.radissonhotels.com/en-us/hotels/radisson-blu-istanbul-asia",
+      "phone": "+90 216 579 11 00",
+      "latitude": 40.990939,
+      "longitude": 29.1158832,
+      "verificationStatus": "unverified_seed",
+      "petPolicy": {
+        "status": "allowed_signal",
+        "species": [
+          "pet"
+        ],
+        "policySummary": "OSM pets_allowed sinyali var; otel ile güncel politika doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_yildizkoy_camping_osm",
+      "name": "Yıldızkoy Camping",
+      "city": "Çanakkale",
+      "district": "Gökçeada",
+      "category": "camp_site",
+      "source": "openstreetmap",
+      "sourceUrl": "https://www.openstreetmap.org/node/4322875973",
+      "website": "https://www.yildizkoy.com",
+      "phone": "+90 286 887 2846",
+      "latitude": 40.2338932,
+      "longitude": 25.9043888,
+      "verificationStatus": "unverified_seed",
+      "petPolicy": {
+        "status": "allowed_signal",
+        "species": [
+          "dog"
+        ],
+        "policySummary": "OSM dog=yes sinyali var; sezonluk kamp kuralları doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_phaselis_ekopark_camper_osm",
+      "name": "Phaselis EKOPark Camper Park",
+      "city": "Antalya",
+      "district": "Kemer",
+      "category": "camp_site",
+      "source": "openstreetmap",
+      "sourceUrl": "https://www.openstreetmap.org/way/183704906",
+      "website": "",
+      "phone": "",
+      "latitude": 36.5150067,
+      "longitude": 30.5310653,
+      "verificationStatus": "unverified_seed",
+      "petPolicy": {
+        "status": "allowed_signal",
+        "species": [
+          "dog"
+        ],
+        "policySummary": "OSM dog=yes sinyali var; kamp ve ortak alan kuralları doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_rixos_tersane_istanbul_booking_candidate",
+      "name": "Rixos Tersane Istanbul",
+      "city": "İstanbul",
+      "district": "",
+      "category": "hotel",
+      "source": "booking_pet_friendly_directory",
+      "sourceUrl": "https://www.booking.com/pets/country/tr.html",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Booking pet-friendly Türkiye sayfasında örnek popüler tesis olarak göründü; güncel tesis politikası doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_movenpick_istanbul_marmara_sea_booking_candidate",
+      "name": "Mövenpick Hotel Istanbul Marmara Sea",
+      "city": "İstanbul",
+      "district": "",
+      "category": "hotel",
+      "source": "booking_pet_friendly_directory",
+      "sourceUrl": "https://www.booking.com/pets/country/tr.html",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Booking pet-friendly Türkiye sayfasında listelenen aday; ücret ve ağırlık limiti doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_rustic_caves_booking_candidate",
+      "name": "Rustic Caves",
+      "city": "Nevşehir",
+      "district": "Göreme",
+      "category": "hotel",
+      "source": "booking_pet_friendly_directory",
+      "sourceUrl": "https://www.booking.com/pets/country/tr.html",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Booking pet-friendly Türkiye sayfasında Göreme örneği olarak göründü; güncel pet policy doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_d_resort_ayvalik_setur_candidate",
+      "name": "D-Resort Ayvalık",
+      "city": "Balıkesir",
+      "district": "Ayvalık",
+      "category": "hotel",
+      "source": "setur_pet_friendly_directory",
+      "sourceUrl": "https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Setur evcil hayvan kabul eden oteller sayfasında aday olarak göründü; rezervasyon öncesi otel politikası doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_doubletree_bodrum_isil_setur_candidate",
+      "name": "DoubleTree by Hilton Bodrum Işıl Club Resort",
+      "city": "Muğla",
+      "district": "Bodrum",
+      "category": "resort",
+      "source": "setur_pet_friendly_directory",
+      "sourceUrl": "https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Setur sayfasında aday olarak göründü; resort ortak alan kuralları ve ücret doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_mirage_park_ets_candidate",
+      "name": "Mirage Park Resort",
+      "city": "Antalya",
+      "district": "Kemer",
+      "category": "resort",
+      "source": "etstur_pet_friendly_directory",
+      "sourceUrl": "https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Etstur evcil hayvan dostu oteller listesinde popüler tesis olarak göründü; sezon ve ağırlık kuralları doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_d_maris_bay_ets_candidate",
+      "name": "D Maris Bay",
+      "city": "Muğla",
+      "district": "Marmaris",
+      "category": "resort",
+      "source": "etstur_pet_friendly_directory",
+      "sourceUrl": "https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [],
+        "policySummary": "Etstur listesinde görünen aday; lüks tesislerde pet fee, kilo ve oda tipi kısıtları özellikle doğrulanmalı.",
+        "feeKnown": false,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_la_brezza_bodrum_bringfido_candidate",
+      "name": "La Brezza Suite & Hotel",
+      "city": "Muğla",
+      "district": "Bodrum",
+      "category": "hotel",
+      "source": "bringfido_bodrum_directory",
+      "sourceUrl": "https://www.bringfido.com/lodging/city/bodrum_tr/",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [
+          "dog",
+          "cat_by_request"
+        ],
+        "policySummary": "BringFido Bodrum sayfasında aday; no pet fee / büyük köpek gibi politika sinyalleri sayfa bazında doğrulanmalı.",
+        "feeKnown": true,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_flamm_bodrum_bringfido_candidate",
+      "name": "Flamm",
+      "city": "Muğla",
+      "district": "Bodrum",
+      "category": "hotel",
+      "source": "bringfido_bodrum_directory",
+      "sourceUrl": "https://www.bringfido.com/lodging/city/bodrum_tr/",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [
+          "dog"
+        ],
+        "policySummary": "BringFido Bodrum sayfasında aday; güncel ücret ve oda kısıtları doğrulanmalı.",
+        "feeKnown": true,
+        "weightLimitKnown": false
+      }
+    },
+    {
+      "id": "hotel_st945_palas_izmir_bringfido_candidate",
+      "name": "St945 Palas Otel",
+      "city": "İzmir",
+      "district": "",
+      "category": "hotel",
+      "source": "bringfido_izmir_directory",
+      "sourceUrl": "https://www.bringfido.com/lodging/city/izmir_tr/",
+      "website": "",
+      "phone": "",
+      "latitude": null,
+      "longitude": null,
+      "verificationStatus": "source_directory_candidate",
+      "petPolicy": {
+        "status": "listed_as_pet_friendly",
+        "species": [
+          "dog",
+          "cat"
+        ],
+        "policySummary": "BringFido İzmir sayfasında aday; oda içi mama/su kabı gibi olanaklar doğrulanmalı.",
+        "feeKnown": true,
+        "weightLimitKnown": false
+      }
+    }
+  ]
+}

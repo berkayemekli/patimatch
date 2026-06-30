@@ -70,6 +70,7 @@ Bu dosya iki laptop / iki Codex icin ortak is tahtasidir. Is baslamadan once `gi
 
 ## Done Recently
 
+- Pati dostu otel kaynak envanteri ve ilk seed datası eklendi; `pet_friendly_hotels_tr.json` data mapping raporunda ayrı sekme olarak görünüyor.
 - No Results Rescue v1 eklendi; PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonucunda filtre temizleme ve esnek/yakin sonuc CTA'lari gosteriyor.
 - Unicorn seviyesinde fark yaratacak urun stratejisi cikarildi: `docs/UNICORN_PRODUCT_STRATEGY.md`.
 - PatiParent canlı UX akışı dünyadaki 10 güçlü ürünle karşılaştırıldı; analiz raporu `docs/global_ux_benchmark_2026.md` altında.

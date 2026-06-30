@@ -88,9 +88,11 @@ Detayli strateji: `docs/UNICORN_PRODUCT_STRATEGY.md`.
 - pati_friendly_places_tr.json: OpenStreetMap dog/pets etiketlerinden dogrulanmamis pet dostu mekan seed datası.
 - pet_groomers_tr.json: OpenStreetMap grooming/pet kuafor sinyallerinden dogrulanmamis pet kuaforu seed datasi.
 - dog_trainers_tr.json: OpenStreetMap dog training/kopek egitimi sinyallerinden dogrulanmamis kopek egitmeni seed datasi.
+- pet_friendly_hotels_tr.json: Booking/BringFido/Setur/Etstur/Oggusto/OSM kaynak sinyallerinden dogrulanmamis pati dostu otel adaylari ve dogrulanacak pet policy alanlari.
 
 ## Son yapilanlar
 
+- Pati dostu oteller icin kaynak envanteri ve ilk seed data eklendi; `docs/data_mapping.html` icinde `Pati Dostu Oteller` sekmesi var.
 - Unicorn strateji dosyasi eklendi ve ilk uygulama adimi basladi: PatiGezdirme, PatiBnB ve PatiFamily bos filtre sonuclarinda No Results Rescue karti artik filtre temizleme/esnek sonuc CTA'lari gosteriyor.
 - Hizmet alan/veren eslesme akisi kuruldu: talep kabulunde service engagement ve hizmet chat'i aciliyor; sohbet icinde konusma-planlandi-devam ediyor-tamamlandi asamalari izleniyor.
 - Load-test onerileri uygulandi: preflight, runId/TTL/cleanup, pipeline/CI, Auth Emulator, UI kontrat testleri, PatiMatch ag profilleri, yerel staging gorselleri, merkezi modul uyeligi ve HTML saglik paneli eklendi.

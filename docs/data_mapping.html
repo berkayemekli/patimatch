@@ -21,7 +21,7 @@
 <main class="wrap">
 <header class="hero"><div class="eyebrow">PatiParent Data Mapping</div><h1>Master data kontrol paneli.</h1><p class="lead">Üstteki sekmelere tıklayarak modül haritasını ve tam veteriner, kuaför, eğitmen, pet dostu mekan listelerini isim, adres, telefon, web ve harita linkleriyle kontrol edebilirsin.</p></header>
 <nav class="tabs" aria-label="Data sections">
-<button class="tab active" data-target="modules">Modüller</button><button class="tab" data-target="reference">Temel Data</button><button class="tab" data-target="vets">Veterinerler</button><button class="tab" data-target="groomers">Kuaförler</button><button class="tab" data-target="trainers">Eğitmenler</button><button class="tab" data-target="places">Pet Dostu Mekanlar</button>
+<button class="tab active" data-target="modules">Modüller</button><button class="tab" data-target="reference">Temel Data</button><button class="tab" data-target="vets">Veterinerler</button><button class="tab" data-target="groomers">Kuaförler</button><button class="tab" data-target="trainers">Eğitmenler</button><button class="tab" data-target="hotels">Pati Dostu Oteller</button><button class="tab" data-target="places">Pet Dostu Mekanlar</button>
 </nav>
 
 <section id="modules" class="panel active">
@@ -166,6 +166,91 @@
   <table id="trainers-table">
     <thead><tr><th>İsim</th><th>İl</th><th>İlçe</th><th>Adres</th><th>Telefon</th><th>Web</th><th>Saat</th><th>Kategori</th><th>Harita</th></tr></thead>
     <tbody><tr><td>Köpek eğitmeni</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>dog_trainer</td><td><a href="https://www.google.com/maps/search/?api=1&amp;query=38.5972536,34.7187541" target="_blank" rel="noreferrer">Harita</a></td></tr><tr><td>K9 Köpekli Arama Kurtarma Eğitim Merkezi</td><td>İstanbul</td><td>Başakşehir</td><td>İstiklal Caddesi, 57/6, Şahintepe Mahallesi, Başakşehir, İstanbul</td><td>+902124028224</td><td><a href="https://itfaiye.ibb.gov.tr/" target="_blank" rel="noreferrer">https://itfaiye.ibb.gov.tr/</a></td><td>-</td><td>dog_trainer</td><td><a href="https://www.google.com/maps/search/?api=1&amp;query=41.0833313,28.7409505" target="_blank" rel="noreferrer">Harita</a></td></tr></tbody>
+  </table>
+</div>
+
+</section>
+
+<section id="hotels" class="panel">
+  <div class="section-title">
+    <div><h2>Pati Dostu Oteller</h2><p class="hint">Pet-friendly konaklama için kaynak envanteri, doğrulanmamış adaylar ve policy kontrol alanları.</p></div>
+    <strong>13 kayıt</strong>
+  </div>
+  <div class="mini-stats">
+    <div><b>13</b><span>otel/kamp adayı</span></div>
+    <div><b>8</b><span>kaynak dizin</span></div>
+    <div><b>2</b><span>telefon var</span></div>
+    <div><b>3</b><span>koordinat var</span></div>
+  </div>
+  <div class="card"><h3>Doğru ürün modeli</h3><p class="hint">Bu data doğrudan rezervasyon datası değil; PatiCare/Yakınımda, PatiBnB alternatifleri ve otel partner aday havuzu için doğrulama bekleyen seed katmanıdır.</p></div>
+  <div class="card"><h3>Şehir Dağılımı</h3><span class="tag">Muğla: 4</span><span class="tag">İstanbul: 3</span><span class="tag">Antalya: 2</span><span class="tag">Çanakkale: 1</span><span class="tag">Nevşehir: 1</span><span class="tag">Balıkesir: 1</span><span class="tag">İzmir: 1</span></div>
+  <div class="card"><h3>Durum / Kaynak</h3><span class="tag">unverified_seed: 3</span><span class="tag">source_directory_candidate: 10</span><br><span class="tag">openstreetmap: 3</span><span class="tag">booking_pet_friendly_directory: 3</span><span class="tag">setur_pet_friendly_directory: 2</span><span class="tag">etstur_pet_friendly_directory: 2</span><span class="tag">bringfido_bodrum_directory: 2</span><span class="tag">bringfido_izmir_directory: 1</span></div>
+  <div class="card"><h3>Rezervasyon Öncesi Doğrulanacak Policy Alanları</h3><span class="tag">petSpeciesAllowed</span><span class="tag">maxWeightKg</span><span class="tag">maxPetCount</span><span class="tag">petFee</span><span class="tag">depositRequired</span><span class="tag">roomOnlyOrCommonAreas</span><span class="tag">canBeLeftAloneInRoom</span><span class="tag">requiredDocuments</span><span class="tag">nearbyVetOrEmergencyPlan</span><span class="tag">lastVerifiedAt</span></div>
+  <h3>Kaynak Envanteri</h3>
+  <div class="grid">
+<article class="card">
+  <h3>BringFido Turkey</h3>
+  <p class="muted">Turkiye icin binlerce pet-friendly lodging kaydi, pet fee, big dogs OK, pet count gibi politika sinyalleri sunuyor.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.bringfido.com/lodging/country/turkey/" target="_blank" rel="noreferrer">https://www.bringfido.com/lodging/country/turkey/</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>API/partnerlik olmadan toplu kopyalama yapma; sehir bazli elle dogrulanmis partner adaylari veya kullanici onayi ile ilerle.</div></div>
+</article>
+
+<article class="card">
+  <h3>Booking.com Pet-Friendly Turkey</h3>
+  <p class="muted">Pet-friendly filter, guest rating, review count ve fiyat sinyalleri var.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.booking.com/pets/country/tr.html" target="_blank" rel="noreferrer">https://www.booking.com/pets/country/tr.html</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>Rezervasyon/fiyat canli verisi icin affiliate/partner veya kullaniciyi Booking&#x27;e yonlendirme modeli dusun.</div></div>
+</article>
+
+<article class="card">
+  <h3>Setur Evcil Hayvan Kabul Eden Oteller</h3>
+  <p class="muted">Turkiye odakli evcil hayvan kabul eden otel listesi ve turizm paketi bilgileri var.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller" target="_blank" rel="noreferrer">https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>Yerel partnerlik ve dogrulama icin guclu aday kaynak.</div></div>
+</article>
+
+<article class="card">
+  <h3>Etstur Evcil Hayvan Dostu Oteller</h3>
+  <p class="muted">Populer evcil hayvan dostu tesis listeleri ve tatil oteli segmenti var.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller" target="_blank" rel="noreferrer">https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>Tatil destinasyonu icin katalog ve partner aday havuzu.</div></div>
+</article>
+
+<article class="card">
+  <h3>TatilBudur Hayvan Dostu Oteller</h3>
+  <p class="muted">Kedi/kopek kabul eden oteller ve bolgesel tatil oteli anlatimi var.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.tatilbudur.com/hayvan-dostu-oteller" target="_blank" rel="noreferrer">https://www.tatilbudur.com/hayvan-dostu-oteller</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>SEO ve tatil bolgesi sinyal kaynagi.</div></div>
+</article>
+
+<article class="card">
+  <h3>Oggusto Hayvan Dostu Oteller</h3>
+  <p class="muted">Otel politikasi, agirlik siniri, ek ucret ve ortak alan kurallari gibi karar bilgilerini vurguluyor.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.oggusto.com/pets/hayvan-dostu-oteller" target="_blank" rel="noreferrer">https://www.oggusto.com/pets/hayvan-dostu-oteller</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>PatiParent otel detay sayfasinda hangi policy alanlari olmali sorusuna iyi referans.</div></div>
+</article>
+
+<article class="card">
+  <h3>HayvanSever Oteller</h3>
+  <p class="muted">Turkiye odakli pet-friendly otel rehberi, sehir ve pet turu filtreleri iddia ediyor.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://hayvanseveroteller.com/" target="_blank" rel="noreferrer">https://hayvanseveroteller.com/</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>Dogruysa niş rakip/partner adayi; veri kalitesi manuel kontrol edilmeli.</div></div>
+</article>
+
+<article class="card">
+  <h3>OpenStreetMap pets/dog tags</h3>
+  <p class="muted">pets_allowed/dog etiketleri ile dogrulanmamis konaklama, restoran, park sinyalleri alinabilir.</p>
+  <div class="row"><b>Kaynak</b><div><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">https://www.openstreetmap.org/copyright</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>ODbL atif ve veri dogrulama gerektirir; mevcut seed dosyamizda sadece az sayida accommodation var.</div></div>
+</article>
+</div>
+  <h3>Otel Adayları</h3>
+
+<div class="table-wrap">
+
+  <table id="hotels-table">
+    <thead><tr><th>Otel</th><th>İl</th><th>İlçe</th><th>Kategori</th><th>Durum</th><th>Pet policy</th><th>Tür</th><th>Not</th><th>Telefon</th><th>Web</th><th>Kaynak</th><th>Harita</th></tr></thead>
+    <tbody><tr><td>Radisson Blu Hotel Istanbul Asia</td><td>İstanbul</td><td>Ataşehir</td><td>hotel</td><td>unverified_seed</td><td>allowed_signal</td><td>pet</td><td>OSM pets_allowed sinyali var; otel ile güncel politika doğrulanmalı.</td><td>+90 216 579 11 00</td><td><a href="https://www.radissonhotels.com/en-us/hotels/radisson-blu-istanbul-asia" target="_blank" rel="noreferrer">https://www.radissonhotels.com/en-us/hotels/radisson-blu-istanbul-asia</a></td><td>https://www.openstreetmap.org/way/462301240</td><td><a href="https://www.google.com/maps/search/?api=1&amp;query=40.990939,29.1158832" target="_blank" rel="noreferrer">Harita</a></td></tr><tr><td>Yıldızkoy Camping</td><td>Çanakkale</td><td>Gökçeada</td><td>camp_site</td><td>unverified_seed</td><td>allowed_signal</td><td>dog</td><td>OSM dog=yes sinyali var; sezonluk kamp kuralları doğrulanmalı.</td><td>+90 286 887 2846</td><td><a href="https://www.yildizkoy.com" target="_blank" rel="noreferrer">https://www.yildizkoy.com</a></td><td>https://www.openstreetmap.org/node/4322875973</td><td><a href="https://www.google.com/maps/search/?api=1&amp;query=40.2338932,25.9043888" target="_blank" rel="noreferrer">Harita</a></td></tr><tr><td>Phaselis EKOPark Camper Park</td><td>Antalya</td><td>Kemer</td><td>camp_site</td><td>unverified_seed</td><td>allowed_signal</td><td>dog</td><td>OSM dog=yes sinyali var; kamp ve ortak alan kuralları doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.openstreetmap.org/way/183704906</td><td><a href="https://www.google.com/maps/search/?api=1&amp;query=36.5150067,30.5310653" target="_blank" rel="noreferrer">Harita</a></td></tr><tr><td>Rixos Tersane Istanbul</td><td>İstanbul</td><td>-</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Booking pet-friendly Türkiye sayfasında örnek popüler tesis olarak göründü; güncel tesis politikası doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.booking.com/pets/country/tr.html</td><td>-</td></tr><tr><td>Mövenpick Hotel Istanbul Marmara Sea</td><td>İstanbul</td><td>-</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Booking pet-friendly Türkiye sayfasında listelenen aday; ücret ve ağırlık limiti doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.booking.com/pets/country/tr.html</td><td>-</td></tr><tr><td>Rustic Caves</td><td>Nevşehir</td><td>Göreme</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Booking pet-friendly Türkiye sayfasında Göreme örneği olarak göründü; güncel pet policy doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.booking.com/pets/country/tr.html</td><td>-</td></tr><tr><td>D-Resort Ayvalık</td><td>Balıkesir</td><td>Ayvalık</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Setur evcil hayvan kabul eden oteller sayfasında aday olarak göründü; rezervasyon öncesi otel politikası doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller</td><td>-</td></tr><tr><td>DoubleTree by Hilton Bodrum Işıl Club Resort</td><td>Muğla</td><td>Bodrum</td><td>resort</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Setur sayfasında aday olarak göründü; resort ortak alan kuralları ve ücret doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.setur.com.tr/evcil-hayvan-kabul-eden-oteller</td><td>-</td></tr><tr><td>Mirage Park Resort</td><td>Antalya</td><td>Kemer</td><td>resort</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Etstur evcil hayvan dostu oteller listesinde popüler tesis olarak göründü; sezon ve ağırlık kuralları doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller</td><td>-</td></tr><tr><td>D Maris Bay</td><td>Muğla</td><td>Marmaris</td><td>resort</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>-</td><td>Etstur listesinde görünen aday; lüks tesislerde pet fee, kilo ve oda tipi kısıtları özellikle doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.etstur.com/Evcil-Hayvan-Dostu-Oteller</td><td>-</td></tr><tr><td>La Brezza Suite &amp; Hotel</td><td>Muğla</td><td>Bodrum</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>dog, cat_by_request</td><td>BringFido Bodrum sayfasında aday; no pet fee / büyük köpek gibi politika sinyalleri sayfa bazında doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.bringfido.com/lodging/city/bodrum_tr/</td><td>-</td></tr><tr><td>Flamm</td><td>Muğla</td><td>Bodrum</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>dog</td><td>BringFido Bodrum sayfasında aday; güncel ücret ve oda kısıtları doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.bringfido.com/lodging/city/bodrum_tr/</td><td>-</td></tr><tr><td>St945 Palas Otel</td><td>İzmir</td><td>-</td><td>hotel</td><td>source_directory_candidate</td><td>listed_as_pet_friendly</td><td>dog, cat</td><td>BringFido İzmir sayfasında aday; oda içi mama/su kabı gibi olanaklar doğrulanmalı.</td><td>-</td><td>-</td><td>https://www.bringfido.com/lodging/city/izmir_tr/</td><td>-</td></tr></tbody>
   </table>
 </div>
 

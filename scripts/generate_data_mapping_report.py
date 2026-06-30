@@ -137,6 +137,71 @@ def service_panel(panel_id: str, title: str, rows: list[dict[str, Any]], descrip
 """
 
 
+def hotel_panel(hotels_data: dict[str, Any]) -> str:
+    hotels = hotels_data.get("hotels", [])
+    sources = hotels_data.get("sourceDirectories", [])
+    city_counter = Counter(text(row.get("city"), "Eksik") for row in hotels)
+    status_counter = Counter(text(row.get("verificationStatus"), "Eksik") for row in hotels)
+    source_counter = Counter(text(row.get("source"), "Eksik") for row in hotels)
+    policy_fields = hotels_data.get("policyFieldsToVerify", [])
+    rows = []
+    for hotel in hotels:
+        policy = hotel.get("petPolicy", {}) if isinstance(hotel.get("petPolicy"), dict) else {}
+        rows.append({
+            **hotel,
+            "policyStatus": policy.get("status", ""),
+            "species": ", ".join(policy.get("species", [])) if isinstance(policy.get("species"), list) else policy.get("species", ""),
+            "policySummary": policy.get("policySummary", ""),
+        })
+    columns = [
+        ("name", "Otel"),
+        ("city", "İl"),
+        ("district", "İlçe"),
+        ("category", "Kategori"),
+        ("verificationStatus", "Durum"),
+        ("policyStatus", "Pet policy"),
+        ("species", "Tür"),
+        ("policySummary", "Not"),
+        ("phone", "Telefon"),
+        ("website", "Web"),
+        ("sourceUrl", "Kaynak"),
+        ("maps", "Harita"),
+    ]
+    source_cards = "".join(
+        f"""
+<article class="card">
+  <h3>{esc(source.get('name'))}</h3>
+  <p class="muted">{esc(source.get('observedSignal'))}</p>
+  <div class="row"><b>Kaynak</b><div><a href="{esc(source.get('url'))}" target="_blank" rel="noreferrer">{esc(source.get('url'))}</a></div></div>
+  <div class="row"><b>Entegrasyon notu</b><div>{esc(source.get('integrationNote'))}</div></div>
+</article>
+"""
+        for source in sources
+    )
+    return f"""
+<section id="hotels" class="panel">
+  <div class="section-title">
+    <div><h2>Pati Dostu Oteller</h2><p class="hint">Pet-friendly konaklama için kaynak envanteri, doğrulanmamış adaylar ve policy kontrol alanları.</p></div>
+    <strong>{len(hotels)} kayıt</strong>
+  </div>
+  <div class="mini-stats">
+    <div><b>{len(hotels)}</b><span>otel/kamp adayı</span></div>
+    <div><b>{len(sources)}</b><span>kaynak dizin</span></div>
+    <div><b>{sum(1 for row in rows if text(row.get('phone'), ''))}</b><span>telefon var</span></div>
+    <div><b>{sum(1 for row in rows if text(row.get('latitude'), '') and text(row.get('longitude'), ''))}</b><span>koordinat var</span></div>
+  </div>
+  <div class="card"><h3>Doğru ürün modeli</h3><p class="hint">Bu data doğrudan rezervasyon datası değil; PatiCare/Yakınımda, PatiBnB alternatifleri ve otel partner aday havuzu için doğrulama bekleyen seed katmanıdır.</p></div>
+  <div class="card"><h3>Şehir Dağılımı</h3>{tag([f"{k}: {v}" for k, v in city_counter.most_common(12)], 12)}</div>
+  <div class="card"><h3>Durum / Kaynak</h3>{tag([f"{k}: {v}" for k, v in status_counter.items()], 12)}<br>{tag([f"{k}: {v}" for k, v in source_counter.items()], 18)}</div>
+  <div class="card"><h3>Rezervasyon Öncesi Doğrulanacak Policy Alanları</h3>{tag(policy_fields, 24)}</div>
+  <h3>Kaynak Envanteri</h3>
+  <div class="grid">{source_cards}</div>
+  <h3>Otel Adayları</h3>
+  {table("hotels-table", rows, columns)}
+</section>
+"""
+
+
 def module_panel(taxonomy: dict[str, Any], seed: dict[str, Any]) -> str:
     seed_keys = {
         "PatiGezdirme": "walkers",
@@ -203,6 +268,7 @@ def main() -> None:
     groomers = load_json("pet_groomers_tr.json")["groomers"]
     trainers = load_json("dog_trainers_tr.json")["trainers"]
     places = load_json("pati_friendly_places_tr.json")["places"]
+    hotels_data = load_json("pet_friendly_hotels_tr.json")
 
     place_categories = Counter(text(row.get("category"), "Eksik") for row in places)
     panels = [
@@ -211,6 +277,7 @@ def main() -> None:
         service_panel("vets", "Veterinerler", vets, "İsim, adres, telefon, web ve koordinat ile tam kontrol listesi."),
         service_panel("groomers", "Pet Kuaförleri", groomers, "Bakım, tıraş ve yıkama servisleri için OSM seed listesi."),
         service_panel("trainers", "Köpek Eğitmenleri", trainers, "İleri faz PatiTraining/PatiCare destek datası."),
+        hotel_panel(hotels_data),
         service_panel("places", "Pet Dostu Mekanlar", places, "Restoran, otel, park ve yakın çevre keşfi için seed liste.", extra=f'<div class="row"><b>Kategoriler</b><div>{tag([f"{k}: {v}" for k, v in place_categories.items()], 20)}</div></div>'),
     ]
 
@@ -237,7 +304,7 @@ def main() -> None:
 <main class="wrap">
 <header class="hero"><div class="eyebrow">PatiParent Data Mapping</div><h1>Master data kontrol paneli.</h1><p class="lead">Üstteki sekmelere tıklayarak modül haritasını ve tam veteriner, kuaför, eğitmen, pet dostu mekan listelerini isim, adres, telefon, web ve harita linkleriyle kontrol edebilirsin.</p></header>
 <nav class="tabs" aria-label="Data sections">
-<button class="tab active" data-target="modules">Modüller</button><button class="tab" data-target="reference">Temel Data</button><button class="tab" data-target="vets">Veterinerler</button><button class="tab" data-target="groomers">Kuaförler</button><button class="tab" data-target="trainers">Eğitmenler</button><button class="tab" data-target="places">Pet Dostu Mekanlar</button>
+<button class="tab active" data-target="modules">Modüller</button><button class="tab" data-target="reference">Temel Data</button><button class="tab" data-target="vets">Veterinerler</button><button class="tab" data-target="groomers">Kuaförler</button><button class="tab" data-target="trainers">Eğitmenler</button><button class="tab" data-target="hotels">Pati Dostu Oteller</button><button class="tab" data-target="places">Pet Dostu Mekanlar</button>
 </nav>
 {''.join(panels)}
 <p class="footer">Generated from app/assets/master_data · yeniden üretmek için: <code>python scripts/generate_data_mapping_report.py</code></p>
@@ -260,6 +327,7 @@ if (location.hash) {{
 </html>
 """
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    html_doc = "\n".join(line.rstrip() for line in html_doc.splitlines()) + "\n"
     OUTPUT.write_text(html_doc, encoding="utf-8")
     print(f"Wrote {OUTPUT.relative_to(ROOT)}")
 
