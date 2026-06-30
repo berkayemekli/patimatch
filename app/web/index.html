@@ -107,42 +107,28 @@
   <div id="app-loading-fallback">PatiParent yukleniyor...</div>
   <script>
     (function() {
-      var siteVersion = '2026-06-30-seo-landing-cachefix-1';
-      var versionKey = 'patiparent_site_version';
-      var refreshedKey = 'patiparent_cache_refresh_' + siteVersion;
+      var siteVersion = '2026-06-30-startup-safe-2';
+      function clearOldCachesInBackground() {
+        try {
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+              registrations.forEach(function(registration) { registration.unregister(); });
+            }).catch(function() {});
+          }
+          if ('caches' in window) {
+            caches.keys().then(function(keys) {
+              keys.forEach(function(key) { caches.delete(key); });
+            }).catch(function() {});
+          }
+        } catch (error) {}
+      }
       function loadFlutter() {
         var script = document.createElement('script');
         script.src = 'flutter_bootstrap.js?v=' + encodeURIComponent(siteVersion);
         script.async = true;
         document.body.appendChild(script);
       }
-      function clearOldCaches() {
-        var tasks = [];
-        if ('serviceWorker' in navigator) {
-          tasks.push(navigator.serviceWorker.getRegistrations().then(function(registrations) {
-            return Promise.all(registrations.map(function(registration) { return registration.unregister(); }));
-          }).catch(function() {}));
-        }
-        if ('caches' in window) {
-          tasks.push(caches.keys().then(function(keys) {
-            return Promise.all(keys.map(function(key) { return caches.delete(key); }));
-          }).catch(function() {}));
-        }
-        return Promise.all(tasks);
-      }
-      try {
-        var previousVersion = window.localStorage && localStorage.getItem(versionKey);
-        var alreadyRefreshed = window.sessionStorage && sessionStorage.getItem(refreshedKey);
-        if (previousVersion !== siteVersion && !alreadyRefreshed) {
-          if (window.sessionStorage) sessionStorage.setItem(refreshedKey, '1');
-          clearOldCaches().then(function() {
-            if (window.localStorage) localStorage.setItem(versionKey, siteVersion);
-            window.location.replace(window.location.href);
-          });
-          return;
-        }
-        if (window.localStorage) localStorage.setItem(versionKey, siteVersion);
-      } catch (error) {}
+      clearOldCachesInBackground();
       loadFlutter();
     })();
   </script>
